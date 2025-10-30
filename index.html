@@ -4364,49 +4364,72 @@ function getOrCreateSheet(spreadsheet, sheetName) {
 
         // Load laporan data with enhanced real-time updates and maximum refresh
         async function loadLaporanData() {
-			// Tampilkan loading dan nonaktifkan tombol
-			const tarikBtn = document.getElementById('tarikDataBtn');
+            const tarikBtn = document.getElementById('tarikDataBtn');
 			const tarikText = document.getElementById('tarikDataText');
 			const tarikLoader = document.getElementById('tarikDataLoader');
+			
+			// Tampilkan loading dan nonaktifkan tombol
 			tarikBtn.disabled = true;
-			tarikText.textContent = 'Memuat...';
+			tarikText.textContent = '🔄 Menarik Data...';
 			tarikLoader.classList.remove('hidden');
 
 			try {
 				// Ambil nilai filter
 				const dariTanggalElement = document.getElementById('dariTanggal');
 				const sampaiTanggalElement = document.getElementById('sampaiTanggal');
-				const jenis = document.getElementById('jenisLaporan').value;
-				const selectedKelas = document.getElementById('kelasLaporan').value;
-				const tipeLaporan = document.querySelector('input[name="tipeLaporan"]:checked').value;
-
+				
 				const dariTanggal = dariTanggalElement.value; // Format: YYYY-MM-DD
 				const sampaiTanggal = sampaiTanggalElement.value; // Format: YYYY-MM-DD
+				
+				const tipeLaporanRadio = document.querySelector('input[name="tipeLaporan"]:checked');
+				if (!tipeLaporanRadio) { 
+					showToast('❌ Pilih tipe laporan (Detail Absensi atau Rekapitulasi)', 'error'); 
+					return; 
+				} 
+				const tipeLaporan = tipeLaporanRadio.value;
+				const jenis = document.getElementById('jenisLaporan').value;
+				const kelas = document.getElementById('kelasLaporan').value;
+				const selectedKelas = kelas; // Simpan kelas yang dipilih
+
+				if (!jenis || !dariTanggal || !sampaiTanggal) {
+					showToast('❌ Lengkapi semua field laporan', 'error');
+					return;
+				}
 
 				// Hapus laporan sebelumnya
 				document.getElementById('laporanDetailContainer').innerHTML = '';
 				document.getElementById('laporanRekapContainer').innerHTML = '';
 				document.getElementById('exportButtonsContainer').classList.add('hidden');
 
-				if (!allData || !allData.absensi) {
-					await fetchDataFromGoogleSheets();
-				}
-
-				if (!allData || !allData.absensi || allData.absensi.length === 0) {
-					showToast('⚠️ Data Absensi Kosong. Tidak ada yang bisa ditarik.', 'warning');
-					return;
-				}
-
-				console.log('📋 Sample absensi records:', allData.absensi.slice(0, 3));
+				// ENHANCED: Force complete refresh of absensi data for maximum accuracy
+				console.log('🔄 Force refreshing ALL absensi data for maximum report accuracy...');
+				showToast('🔄 Memuat data terbaru dari Google Sheets...', 'info');
 				
-				// ULTIMATE FIX: Enhanced filtering dengan perbandingan string tanggal YYYY-MM-DD
+				const appsScript = new AppsScriptAPI(appsScriptConfig.webAppUrl);
+				const absensiResult = await appsScript.getData('Absensi');
+				
+				if (absensiResult.success && absensiResult.data && absensiResult.data.length > 1) { 
+					const headers = absensiResult.data[0];
+					allData.absensi = absensiResult.data.slice(1).filter(row => row.some(cell => cell && cell.toString().trim())).map(row => { 
+						const absensi = {}; 
+						headers.forEach((header, index) => { 
+							const key = header.toLowerCase().replace('/', '_').replace(' ', '_'); 
+							absensi[key] = row[index] || ''; 
+						}); 
+						return absensi; 
+					});
+				}
+				
+				console.log('✅ Total absensi records loaded:', allData.absensi.length); 
+				console.log('📋 Sample absensi records:', allData.absensi.slice(0, 3));
+
+				// ULTIMATE FIX: Enhanced filtering with perbandingan string tanggal YYYY-MM-DD
 				let filteredAbsensi = allData.absensi.filter(a => {
-					// Pastikan Anda sudah memiliki fungsi convertFromGoogleSheetsDateFormat()
-					// (Fungsi ini harus ada di kode Anda, seperti yang terlihat di bagian lain)
+					// CRITICAL: Normalize tanggal format dari DD/MM/YYYY (Google Sheets) ke YYYY-MM-DD (String Comparison)
+					// Fungsi convertFromGoogleSheetsDateFormat() HARUS ada dan berfungsi untuk mengubah DD/MM/YYYY menjadi YYYY-MM-DD
 					let absensiDateStr = convertFromGoogleSheetsDateFormat(a.tanggal);
 					
-					// Perbandingan String YYYY-MM-DD: Ini adalah FIX untuk masalah zona waktu
-					// Memastikan data yang difilter HARI INI sesuai dengan tanggal input HARI INI.
+					// Perbandingan String: Ini adalah FIX untuk masalah zona waktu
 					const isDateInRange = absensiDateStr >= dariTanggal && absensiDateStr <= sampaiTanggal;
 
 					// Filter berdasarkan Jenis (Siswa/Guru)
@@ -4449,14 +4472,11 @@ function getOrCreateSheet(spreadsheet, sheetName) {
 				showToast('❌ Gagal memuat data laporan: ' + error.message, 'error');
 			} finally {
 				// Sembunyikan loading
-				const tarikBtn = document.getElementById('tarikDataBtn');
-				const tarikText = document.getElementById('tarikDataText');
-				const tarikLoader = document.getElementById('tarikDataLoader');
 				tarikBtn.disabled = false;
 				tarikText.textContent = 'Tarik Data';
 				tarikLoader.classList.add('hidden');
-			}
-		}
+    }
+        }
 
         // Generate recap data
         function generateRekapData(absensiData, jenis, kelas) {
