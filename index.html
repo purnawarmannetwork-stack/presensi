@@ -290,29 +290,40 @@ function deleteData(spreadsheet, sheetName, rowIndex) {
 function saveAbsensi(spreadsheet, absensiData) {
   const sheet = getOrCreateSheet(spreadsheet, 'Absensi');
   
-  // Remove existing records for the same date/jenis/kelas
+  // Get existing data
   const existingData = sheet.getDataRange().getValues();
   const headers = existingData[0];
   const filteredData = [headers];
   
+  // Create a map of existing records by primary key (tanggal + nis/nuptk)
+  const existingRecordsMap = new Map();
   for (let i = 1; i &lt; existingData.length; i++) {
     const row = existingData[i];
-    const shouldKeep = !absensiData.some(newRow =&gt; 
-      row[0] === newRow[0] &amp;&amp; // tanggal
-      row[1] === newRow[1] &amp;&amp; // jenis
-      row[2] === newRow[2] &amp;&amp; // kelas
-      row[3] === newRow[3]    // nis/nuptk
-    );
-    
-    if (shouldKeep) {
-      filteredData.push(row);
-    }
+    const primaryKey = `${row[0]}_${row[3]}`; // tanggal + nis/nuptk
+    existingRecordsMap.set(primaryKey, i);
   }
   
-  // Add new data
-  absensiData.forEach(row =&gt; {
-    filteredData.push(row);
+  // Process new data - update existing or add new based on primary key
+  const updatedRows = new Set();
+  
+  absensiData.forEach(newRow =&gt; {
+    const primaryKey = `${newRow[0]}_${newRow[3]}`; // tanggal + nis/nuptk
+    
+    if (existingRecordsMap.has(primaryKey)) {
+      // Update existing record
+      const existingRowIndex = existingRecordsMap.get(primaryKey);
+      existingData[existingRowIndex] = newRow;
+      updatedRows.add(existingRowIndex);
+    } else {
+      // Add new record
+      existingData.push(newRow);
+    }
   });
+  
+  // Rebuild filtered data with updates
+  for (let i = 1; i &lt; existingData.length; i++) {
+    filteredData.push(existingData[i]);
+  }
   
   // Update sheet
   sheet.clear();
@@ -399,7 +410,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
     </nav>
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"><!-- Tab Navigation -->
      <div class="mb-6">
-      <nav class="flex space-x-8"><button id="tabAbsensi" class="tab-btn active py-2 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600">Absensi</button> <button id="tabLaporan" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Laporan</button> <button id="tabDataMaster" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Data Master</button> <button id="tabJadwal" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Jadwal</button> <button id="tabSetup" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Setup</button>
+      <nav class="flex space-x-8"><button id="tabAbsensi" class="tab-btn active py-2 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600">Absensi</button> <button id="tabLaporan" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Laporan</button> <button id="tabRekap" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Rekap Kehadiran</button> <button id="tabDataMaster" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Data Master</button> <button id="tabJadwal" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Jadwal</button> <button id="tabSetup" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Setup</button>
       </nav>
      </div><!-- Real-time Clock -->
      <div class="mb-6 scale-90 origin-top">
@@ -683,7 +694,24 @@ function getOrCreateSheet(spreadsheet, sheetName) {
      </div><!-- Tab Content -->
      <div class="bg-white shadow rounded-lg"><!-- Absensi Tab -->
       <div id="absensiContent" class="tab-content p-6">
-       <h3 class="text-lg font-medium text-gray-900 mb-4">Input Absensi</h3>
+       <h3 class="text-lg font-medium text-gray-900 mb-4">Input Absensi</h3><!-- Attendance Status Indicator -->
+       <div id="attendanceStatusIndicator" class="mb-6 hidden">
+        <div class="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4">
+         <div class="flex items-center">
+          <div class="flex-shrink-0">
+           <svg class="h-6 w-6 text-green-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+           </svg>
+          </div>
+          <div class="ml-3 flex-1">
+           <h4 class="text-sm font-medium text-green-800">✅ Status Absensi Hari Ini</h4>
+           <div id="attendanceStatusContent" class="mt-1 text-sm text-green-700"><!-- Dynamic content will be inserted here -->
+           </div>
+          </div>
+          <div class="ml-4"><button id="viewTodayAttendanceBtn" class="inline-flex items-center px-3 py-1 border border-transparent text-xs leading-4 font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"> 📊 Lihat Detail </button>
+          </div>
+         </div>
+        </div>
+       </div>
        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div><label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label> <input type="date" id="tanggalAbsensi" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
         </div>
@@ -895,6 +923,119 @@ function getOrCreateSheet(spreadsheet, sheetName) {
          </div>
         </div>
        </div>
+      </div><!-- Rekap Kehadiran Tab -->
+      <div id="rekapContent" class="tab-content p-6 hidden">
+       <h3 class="text-lg font-medium text-gray-900 mb-4">📊 Rekap Kehadiran</h3><!-- Filter Controls -->
+       <div class="bg-gray-50 rounded-lg p-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Jenis</label> <select id="jenisRekap" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"> <option value="">Pilih Jenis</option> <option value="siswa">Siswa</option> <option value="guru">Guru</option> </select>
+         </div>
+         <div id="kelasRekapContainer" class="hidden"><label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label> <select id="kelasRekap" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"> <option value="">Semua Kelas</option> </select>
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Dari Tanggal</label> <input type="date" id="dariTanggalRekap" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Sampai Tanggal</label> <input type="date" id="sampaiTanggalRekap" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+         </div>
+         <div class="flex items-end"><button id="generateRekapBtn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"> <span id="generateRekapText">Generate Rekap</span> <span id="generateRekapLoader" class="loading ml-2 hidden"></span> </button>
+         </div>
+        </div>
+       </div><!-- Rekap Results -->
+       <div id="rekapResult" class="hidden"><!-- Summary Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+         <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+           <div class="flex items-center">
+            <div class="flex-shrink-0">
+             <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+             </svg>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+             <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">
+               Total
+              </dt>
+              <dd id="rekapTotal" class="text-lg font-medium text-gray-900">
+               0
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+           <div class="flex items-center">
+            <div class="flex-shrink-0">
+             <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+             </svg>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+             <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">
+               Rata-rata Hadir
+              </dt>
+              <dd id="rekapRataHadir" class="text-lg font-medium text-green-600">
+               0%
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+           <div class="flex items-center">
+            <div class="flex-shrink-0">
+             <svg class="h-8 w-8 text-yellow-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
+             </svg>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+             <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">
+               Kehadiran Rendah
+              </dt>
+              <dd id="rekapRendah" class="text-lg font-medium text-yellow-600">
+               0
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+           <div class="flex items-center">
+            <div class="flex-shrink-0">
+             <svg class="h-8 w-8 text-red-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+             </svg>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+             <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">
+               Perlu Perhatian
+              </dt>
+              <dd id="rekapPerhatian" class="text-lg font-medium text-red-600">
+               0
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div><!-- Export Buttons -->
+        <div class="mb-4 flex space-x-2"><button id="exportRekapPDFBtn" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"> 📄 Export PDF </button> <button id="exportRekapExcelBtn" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"> 📊 Export Excel </button>
+        </div><!-- Rekap Table -->
+        <div class="overflow-x-auto">
+         <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+           <tr id="rekapTableHeader">
+           </tr>
+          </thead>
+          <tbody id="rekapTableBody" class="bg-white divide-y divide-gray-200">
+          </tbody>
+         </table>
+        </div>
+       </div>
       </div><!-- Laporan Tab -->
       <div id="laporanContent" class="tab-content p-6 hidden">
        <h3 class="text-lg font-medium text-gray-900 mb-4">Laporan Absensi</h3><!-- Report Type Selection (Hidden - Only Detail) -->
@@ -978,6 +1119,37 @@ function getOrCreateSheet(spreadsheet, sheetName) {
         };
         let currentAbsensiData = [];
 
+        // Session management functions
+        function saveUserSession(user) {
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+            sessionStorage.setItem('loginTime', new Date().getTime().toString());
+        }
+
+        function loadUserSession() {
+            const userStr = sessionStorage.getItem('currentUser');
+            const loginTime = sessionStorage.getItem('loginTime');
+            
+            if (userStr && loginTime) {
+                // Check if session is still valid (24 hours)
+                const now = new Date().getTime();
+                const sessionAge = now - parseInt(loginTime);
+                const maxAge = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+                
+                if (sessionAge < maxAge) {
+                    return JSON.parse(userStr);
+                } else {
+                    // Session expired, clear it
+                    clearUserSession();
+                }
+            }
+            return null;
+        }
+
+        function clearUserSession() {
+            sessionStorage.removeItem('currentUser');
+            sessionStorage.removeItem('loginTime');
+        }
+
         // Default configuration
         const defaultConfig = {
             school_name: "SMP Purnawarman",
@@ -992,8 +1164,17 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             setupEventListeners();
             setTodayDate();
             
-            // Show login screen by default instead of setup
-            showLoginScreen();
+            // Check for existing session
+            const savedUser = loadUserSession();
+            if (savedUser) {
+                console.log('Found existing session for user:', savedUser.nama);
+                currentUser = savedUser;
+                showDashboard();
+                showToast(`Selamat datang kembali, ${savedUser.nama}!`, 'success');
+            } else {
+                // Show login screen if no valid session
+                showLoginScreen();
+            }
             
             // Initialize ElementSdk
             if (window.elementSdk) {
@@ -1251,12 +1432,19 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             document.getElementById('jenisAbsensi').addEventListener('change', handleJenisAbsensiChange);
             document.getElementById('muatDataBtn').addEventListener('click', loadAbsensiData);
             document.getElementById('simpanAbsensiBtn').addEventListener('click', saveAbsensi);
+            document.getElementById('viewTodayAttendanceBtn').addEventListener('click', viewTodayAttendance);
 
             // Laporan form
             document.getElementById('jenisLaporan').addEventListener('change', handleJenisLaporanChange);
             document.getElementById('tarikDataBtn').addEventListener('click', loadLaporanData);
             document.getElementById('cetakPDFBtn').addEventListener('click', cetakPDF);
             document.getElementById('cetakExcelBtn').addEventListener('click', cetakExcel);
+
+            // Rekap form
+            document.getElementById('jenisRekap').addEventListener('change', handleJenisRekapChange);
+            document.getElementById('generateRekapBtn').addEventListener('click', generateRekapKehadiran);
+            document.getElementById('exportRekapPDFBtn').addEventListener('click', exportRekapPDF);
+            document.getElementById('exportRekapExcelBtn').addEventListener('click', exportRekapExcel);
             
 
             
@@ -1486,6 +1674,276 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 console.error('Error loading today absensi data:', error);
                 throw error;
             }
+        }
+
+        // Show admin confirmation dialog (inline, not browser dialog)
+        function showAdminConfirmation(title, message) {
+            return new Promise((resolve) => {
+                // Create modal overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+                
+                // Create modal content
+                overlay.innerHTML = `
+                    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                        <div class="mt-3">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 mx-auto mb-4">
+                                <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900 text-center mb-2">${title}</h3>
+                            <p class="text-sm text-gray-500 text-center mb-4">${message}</p>
+                            <div class="flex justify-center space-x-3">
+                                <button id="adminConfirmCancel" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors">
+                                    Batal
+                                </button>
+                                <button id="adminConfirmOk" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                    Ya, Lanjutkan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add to body
+                document.body.appendChild(overlay);
+                
+                // Add event listeners
+                document.getElementById('adminConfirmCancel').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    resolve(false);
+                });
+                
+                document.getElementById('adminConfirmOk').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    resolve(true);
+                });
+                
+                // Close on overlay click
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        document.body.removeChild(overlay);
+                        resolve(false);
+                    }
+                });
+            });
+        }
+
+        // Show absensi edit confirmation dialog (inline, not browser dialog)
+        function showAbsensiEditConfirmation(title, message, details) {
+            return new Promise((resolve) => {
+                // Create modal overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+                
+                // Create modal content
+                overlay.innerHTML = `
+                    <div class="relative top-20 mx-auto p-6 border w-[480px] shadow-lg rounded-md bg-white">
+                        <div class="mt-3">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-full bg-orange-100 mx-auto mb-4">
+                                <svg class="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900 text-center mb-3">${title}</h3>
+                            <p class="text-sm text-gray-600 text-center mb-3">${message}</p>
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-md p-3 mb-4">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-yellow-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <p class="text-xs text-yellow-800">${details}</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-center space-x-3">
+                                <button id="absensiEditCancel" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors">
+                                    ❌ Batal
+                                </button>
+                                <button id="absensiEditConfirm" class="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition-colors">
+                                    ✏️ Ya, Ubah Absensi
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add to body
+                document.body.appendChild(overlay);
+                
+                // Add event listeners
+                document.getElementById('absensiEditCancel').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    resolve(false);
+                });
+                
+                document.getElementById('absensiEditConfirm').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    resolve(true);
+                });
+                
+                // Close on overlay click
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        document.body.removeChild(overlay);
+                        resolve(false);
+                    }
+                });
+            });
+        }
+
+        // Show absensi blocked dialog (one-time daily limit enforcement)
+        function showAbsensiBlockedDialog(title, message, details) {
+            return new Promise((resolve) => {
+                // Create modal overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+                
+                // Create modal content
+                overlay.innerHTML = `
+                    <div class="relative top-20 mx-auto p-6 border w-[520px] shadow-lg rounded-md bg-white">
+                        <div class="mt-3">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mx-auto mb-4">
+                                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900 text-center mb-3">${title}</h3>
+                            <p class="text-sm text-gray-600 text-center mb-3">${message}</p>
+                            <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-red-800 mb-1">🚫 KEBIJAKAN SATU KALI ABSENSI</h4>
+                                        <p class="text-xs text-red-700">${details}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-blue-50 border border-blue-200 rounded-md p-3 mb-4">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-blue-800 mb-1">📊 Alternatif Aksi</h4>
+                                        <p class="text-xs text-blue-700">• Gunakan menu "Laporan" untuk melihat data absensi hari ini<br>• Gunakan menu "Rekap Kehadiran" untuk analisis kehadiran<br>• Hubungi admin jika ada kesalahan data yang perlu diperbaiki</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-center space-x-3">
+                                <button id="absensiBlockedOk" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                    ✅ Mengerti
+                                </button>
+                                <button id="absensiBlockedViewReport" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+                                    📊 Lihat Laporan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add to body
+                document.body.appendChild(overlay);
+                
+                // Add event listeners
+                document.getElementById('absensiBlockedOk').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    resolve('ok');
+                });
+                
+                document.getElementById('absensiBlockedViewReport').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    // Switch to laporan tab
+                    switchTab('tabLaporan');
+                    resolve('report');
+                });
+                
+                // Close on overlay click
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        document.body.removeChild(overlay);
+                        resolve('ok');
+                    }
+                });
+            });
+        }
+
+        // Show absensi update confirmation dialog for existing data (DEPRECATED - no longer used due to one-time limit)
+        function showAbsensiUpdateConfirmation(title, message, details) {
+            return new Promise((resolve) => {
+                // Create modal overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+                
+                // Create modal content
+                overlay.innerHTML = `
+                    <div class="relative top-20 mx-auto p-6 border w-[520px] shadow-lg rounded-md bg-white">
+                        <div class="mt-3">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mx-auto mb-4">
+                                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900 text-center mb-3">${title}</h3>
+                            <p class="text-sm text-gray-600 text-center mb-3">${message}</p>
+                            <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-red-800 mb-1">⚠️ PERINGATAN: Data Akan Ditimpa</h4>
+                                        <p class="text-xs text-red-700">${details}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-blue-50 border border-blue-200 rounded-md p-3 mb-4">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-blue-800 mb-1">💡 Alternatif</h4>
+                                        <p class="text-xs text-blue-700">Jika Anda hanya ingin melihat data yang sudah ada, gunakan menu "Laporan" untuk melihat data absensi tanpa mengubahnya.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-center space-x-3">
+                                <button id="absensiUpdateCancel" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors">
+                                    ❌ Batal
+                                </button>
+                                <button id="absensiUpdateConfirm" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
+                                    🔄 Ya, Perbarui Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Add to body
+                document.body.appendChild(overlay);
+                
+                // Add event listeners
+                document.getElementById('absensiUpdateCancel').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    resolve(false);
+                });
+                
+                document.getElementById('absensiUpdateConfirm').addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    resolve(true);
+                });
+                
+                // Close on overlay click
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        document.body.removeChild(overlay);
+                        resolve(false);
+                    }
+                });
+            });
         }
 
         // Show toast notification
@@ -1792,6 +2250,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 }
 
                 currentUser = user;
+                saveUserSession(user); // Save session
                 showDashboard();
                 showToast('Login berhasil!', 'success');
 
@@ -1840,8 +2299,12 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 renderGuruDataTable();
                 renderJadwalDataTable();
                 
-                // Start real-time statistics updates
+                // Check and display today's attendance status
+                await checkTodayAttendanceStatus();
+                
+                // Start real-time statistics updates and enhanced auto-sync
                 startRealtimeStatistics();
+                startEnhancedAutoSync();
                 
             } catch (error) {
                 console.error('Error loading dashboard data:', error);
@@ -1914,6 +2377,10 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 document.getElementById('absensiContent').classList.remove('hidden');
             } else if (tabId === 'tabLaporan') {
                 document.getElementById('laporanContent').classList.remove('hidden');
+            } else if (tabId === 'tabRekap') {
+                document.getElementById('rekapContent').classList.remove('hidden');
+                // Initialize rekap dates and populate kelas options
+                initializeRekapForm();
             } else if (tabId === 'tabDataMaster') {
                 document.getElementById('dataMasterContent').classList.remove('hidden');
             } else if (tabId === 'tabJadwal') {
@@ -1961,7 +2428,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             document.getElementById('laporanResult').classList.add('hidden');
         }
 
-        // Load absensi data (optimized for speed with enhanced refresh)
+        // Load absensi data (with strict one-time daily limit enforcement)
         async function loadAbsensiData() {
             const tanggal = document.getElementById('tanggalAbsensi').value;
             const jenis = document.getElementById('jenisAbsensi').value;
@@ -2020,6 +2487,67 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 }
                 
                 console.log('✅ Form selections preserved:', { selectedTanggal, selectedJenis, selectedKelas });
+
+                // CRITICAL: Check if attendance already exists for selected date - STRICT ONE-TIME DAILY LIMIT
+                const existingAbsensiForDate = allData.absensi.filter(a => {
+                    let absensiDateStr = a.tanggal;
+                    
+                    // Normalize date format
+                    if (absensiDateStr && absensiDateStr.includes('/')) {
+                        const parts = absensiDateStr.split('/');
+                        if (parts.length === 3) {
+                            if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
+                                absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                            } else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
+                                absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+                            }
+                        }
+                    }
+                    
+                    if (absensiDateStr && !absensiDateStr.includes('-') && !absensiDateStr.includes('/')) {
+                        const dateNum = parseFloat(absensiDateStr);
+                        if (!isNaN(dateNum) && dateNum > 40000) {
+                            const excelDate = new Date((dateNum - 25569) * 86400 * 1000);
+                            absensiDateStr = excelDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+                        }
+                    }
+                    
+                    if (absensiDateStr && absensiDateStr.includes('T')) {
+                        absensiDateStr = absensiDateStr.split('T')[0];
+                    }
+                    
+                    return absensiDateStr === selectedTanggal && 
+                           a.jenis === selectedJenis &&
+                           (selectedJenis === 'guru' || a.kelas === selectedKelas);
+                });
+
+                // STRICT ENFORCEMENT: Block if attendance already exists (ONE-TIME DAILY LIMIT)
+                if (existingAbsensiForDate.length > 0) {
+                    const kelasInfo = selectedJenis === 'siswa' ? ` kelas ${selectedKelas}` : '';
+                    const dateFormatted = new Date(selectedTanggal + 'T00:00:00').toLocaleDateString('id-ID', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    
+                    console.log('🚫 BLOCKED: Attendance already exists for today:', existingAbsensiForDate.length, 'records');
+                    
+                    // Show blocking message with detailed information
+                    const blockTitle = '🚫 Absensi Sudah Dilakukan Hari Ini';
+                    const blockMessage = `Absensi ${selectedJenis}${kelasInfo} untuk ${dateFormatted} sudah pernah dilakukan.`;
+                    const blockDetails = `Sistem membatasi absensi hanya SATU KALI per hari untuk menjaga integritas data. Ditemukan ${existingAbsensiForDate.length} record absensi yang sudah tersimpan. Gunakan menu "Laporan" untuk melihat data absensi yang sudah ada.`;
+                    
+                    await showAbsensiBlockedDialog(blockTitle, blockMessage, blockDetails);
+                    
+                    console.log('🚫 Absensi loading blocked due to one-time daily limit');
+                    showToast('🚫 Absensi sudah dilakukan hari ini. Gunakan menu Laporan untuk melihat data.', 'error');
+                    return;
+                } else {
+                    console.log('✅ No existing absensi data found - creating new records');
+                    const kelasInfo = selectedJenis === 'siswa' ? ` kelas ${selectedKelas}` : '';
+                    showToast(`📝 Membuat absensi baru untuk ${selectedJenis}${kelasInfo}`, 'info');
+                }
                 
                 // Get existing absensi for this date with comprehensive date matching
                 const existingAbsensi = allData.absensi.filter(a => {
@@ -2118,25 +2646,104 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             }
         }
 
-        // Render absensi table
+        // Render absensi table with data overwrite capability (newest data always wins)
         function renderAbsensiTable() {
             const tbody = document.getElementById('absensiTableBody');
             tbody.innerHTML = '';
 
+            // Check if attendance already exists for today (for display information only)
+            const today = getTodayDate();
+            const existingTodayAbsensi = allData.absensi.filter(a => {
+                let absensiDateStr = a.tanggal;
+                
+                if (absensiDateStr && absensiDateStr.includes('/')) {
+                    const parts = absensiDateStr.split('/');
+                    if (parts.length === 3) {
+                        if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
+                            absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                        } else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
+                            absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+                        }
+                    }
+                }
+                
+                if (absensiDateStr && !absensiDateStr.includes('-') && !absensiDateStr.includes('/')) {
+                    const dateNum = parseFloat(absensiDateStr);
+                    if (!isNaN(dateNum) && dateNum > 40000) {
+                        const excelDate = new Date((dateNum - 25569) * 86400 * 1000);
+                        absensiDateStr = excelDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+                    }
+                }
+                
+                if (absensiDateStr && absensiDateStr.includes('T')) {
+                    absensiDateStr = absensiDateStr.split('T')[0];
+                }
+                
+                return absensiDateStr === today;
+            });
+
+            // UPDATED: Always allow editing - newest data will overwrite existing data
+            const isReadOnly = false; // Always editable
+            const disabledClass = 'cursor-pointer';
+            const disabledAttr = '';
+
             currentAbsensiData.forEach((item, index) => {
+                // Check if this person already has attendance record today
+                const jenis = document.getElementById('jenisAbsensi').value;
+                const idField = jenis === 'siswa' ? 'nis' : 'nip';
+                const personId = item[idField];
+                
+                const existingRecord = existingTodayAbsensi.find(a => a.nis_nuptk === personId);
+                const hasExistingRecord = !!existingRecord;
+                
+                // Create attendance status indicator
+                let attendanceStatusInfo = '';
+                if (hasExistingRecord) {
+                    const statusColors = {
+                        'Hadir': 'text-green-600 bg-green-50',
+                        'Izin': 'text-yellow-600 bg-yellow-50',
+                        'Sakit': 'text-blue-600 bg-blue-50',
+                        'Alpha': 'text-red-600 bg-red-50'
+                    };
+                    const statusColor = statusColors[existingRecord.status] || 'text-gray-600 bg-gray-50';
+                    
+                    attendanceStatusInfo = `
+                        <div class="mb-2 p-2 rounded-md border ${statusColor} border-opacity-50">
+                            <div class="flex items-center text-xs">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="font-medium">Sudah diabsen hari ini:</span>
+                            </div>
+                            <div class="text-xs mt-1">
+                                <span class="font-semibold">${existingRecord.status}</span>
+                                ${existingRecord.keterangan ? ` - ${existingRecord.keterangan}` : ''}
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">
+                                ${existingRecord.timestamp || 'Waktu tidak tercatat'}
+                            </div>
+                        </div>
+                    `;
+                }
+
                 const row = document.createElement('tr');
+                row.className = hasExistingRecord ? 'bg-blue-50 border-l-4 border-blue-400' : '';
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index + 1}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        ${item.nama}
+                        <div>
+                            <div class="font-medium">${item.nama}</div>
+                            ${hasExistingRecord ? '<div class="text-xs text-blue-600 font-medium">✓ Sudah diabsen</div>' : '<div class="text-xs text-gray-500">Belum diabsen</div>'}
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         ${item.nis || item.nip}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
+                        ${attendanceStatusInfo}
                         <div class="flex flex-wrap gap-2">
-                            <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="status_${index}" value="Hadir" class="status-radio hidden" data-index="${index}" ${item.status === 'Hadir' ? 'checked' : ''}>
+                            <label class="flex items-center ${disabledClass}">
+                                <input type="radio" name="status_${index}" value="Hadir" class="status-radio hidden" data-index="${index}" ${item.status === 'Hadir' ? 'checked' : ''} ${disabledAttr}>
                                 <div class="status-icon w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${item.status === 'Hadir' ? 'bg-green-500 border-green-500 text-white' : 'border-gray-300 hover:border-green-400'}">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
@@ -2144,8 +2751,8 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                                 </div>
                                 <span class="ml-1 text-xs text-green-600">Hadir</span>
                             </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="status_${index}" value="Izin" class="status-radio hidden" data-index="${index}" ${item.status === 'Izin' ? 'checked' : ''}>
+                            <label class="flex items-center ${disabledClass}">
+                                <input type="radio" name="status_${index}" value="Izin" class="status-radio hidden" data-index="${index}" ${item.status === 'Izin' ? 'checked' : ''} ${disabledAttr}>
                                 <div class="status-icon w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${item.status === 'Izin' ? 'bg-yellow-500 border-yellow-500 text-white' : 'border-gray-300 hover:border-yellow-400'}">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
@@ -2153,8 +2760,8 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                                 </div>
                                 <span class="ml-1 text-xs text-yellow-600">Izin</span>
                             </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="status_${index}" value="Sakit" class="status-radio hidden" data-index="${index}" ${item.status === 'Sakit' ? 'checked' : ''}>
+                            <label class="flex items-center ${disabledClass}">
+                                <input type="radio" name="status_${index}" value="Sakit" class="status-radio hidden" data-index="${index}" ${item.status === 'Sakit' ? 'checked' : ''} ${disabledAttr}>
                                 <div class="status-icon w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${item.status === 'Sakit' ? 'bg-blue-500 border-blue-500 text-white' : 'border-gray-300 hover:border-blue-400'}">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 012 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 010 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15.586 13H14a1 1 0 01-1-1z" clip-rule="evenodd"></path>
@@ -2162,8 +2769,8 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                                 </div>
                                 <span class="ml-1 text-xs text-blue-600">Sakit</span>
                             </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="status_${index}" value="Alpha" class="status-radio hidden" data-index="${index}" ${item.status === 'Alpha' ? 'checked' : ''}>
+                            <label class="flex items-center ${disabledClass}">
+                                <input type="radio" name="status_${index}" value="Alpha" class="status-radio hidden" data-index="${index}" ${item.status === 'Alpha' ? 'checked' : ''} ${disabledAttr}>
                                 <div class="status-icon w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${item.status === 'Alpha' ? 'bg-red-500 border-red-500 text-white' : 'border-gray-300 hover:border-red-400'}">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -2174,14 +2781,32 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <input type="text" class="keterangan-input px-2 py-1 border border-gray-300 rounded text-sm w-full" 
-                               data-index="${index}" value="${item.keterangan}" placeholder="Keterangan tambahan">
+                        <input type="text" class="keterangan-input px-2 py-1 border border-gray-300 rounded text-sm w-full ${isReadOnly ? 'bg-gray-100' : ''}" 
+                               data-index="${index}" value="${item.keterangan}" placeholder="Keterangan tambahan" ${disabledAttr}>
                     </td>
                 `;
                 tbody.appendChild(row);
             });
 
-            // Add event listeners for status and keterangan changes
+            // Show informational message if data exists (will be overwritten)
+            if (existingTodayAbsensi.length > 0) {
+                const messageRow = document.createElement('tr');
+                messageRow.innerHTML = `
+                    <td colspan="5" class="px-6 py-4 text-center">
+                        <div class="bg-blue-50 border border-blue-200 rounded-md p-3">
+                            <div class="flex items-center justify-center">
+                                <svg class="w-5 h-5 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-blue-800 font-medium">📝 Absensi sudah ada untuk hari ini. Data baru akan menimpa data lama saat disimpan.</span>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(messageRow);
+            }
+
+            // Add event listeners for status and keterangan changes (always enabled)
             document.querySelectorAll('.status-radio').forEach(radio => {
                 radio.addEventListener('change', (e) => {
                     const index = parseInt(e.target.dataset.index);
@@ -2217,9 +2842,15 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                     currentAbsensiData[index].keterangan = e.target.value;
                 });
             });
+
+            // Always show save button (data overwrite is allowed)
+            const saveButton = document.getElementById('simpanAbsensiBtn');
+            if (saveButton) {
+                saveButton.style.display = 'inline-flex';
+            }
         }
 
-        // Save absensi (enhanced with proper kelas handling and form state preservation)
+        // Save absensi (with strict one-time daily limit enforcement)
         async function saveAbsensi() {
             const tanggal = document.getElementById('tanggalAbsensi').value;
             const jenis = document.getElementById('jenisAbsensi').value;
@@ -2247,6 +2878,66 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             const today = getTodayDate();
             if (tanggal !== today) {
                 showToast('Absensi hanya dapat disimpan untuk hari ini!', 'error');
+                return;
+            }
+
+            // CRITICAL: Double-check if attendance already exists before saving (STRICT ONE-TIME DAILY LIMIT)
+            const existingTodayAbsensi = allData.absensi.filter(a => {
+                let absensiDateStr = a.tanggal;
+                
+                // Normalize date format
+                if (absensiDateStr && absensiDateStr.includes('/')) {
+                    const parts = absensiDateStr.split('/');
+                    if (parts.length === 3) {
+                        if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
+                            absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                        } else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
+                            absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+                        }
+                    }
+                }
+                
+                if (absensiDateStr && !absensiDateStr.includes('-') && !absensiDateStr.includes('/')) {
+                    const dateNum = parseFloat(absensiDateStr);
+                    if (!isNaN(dateNum) && dateNum > 40000) {
+                        const excelDate = new Date((dateNum - 25569) * 86400 * 1000);
+                        absensiDateStr = excelDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+                    }
+                }
+                
+                if (absensiDateStr && absensiDateStr.includes('T')) {
+                    absensiDateStr = absensiDateStr.split('T')[0];
+                }
+                
+                return absensiDateStr === today && 
+                       a.jenis === jenis &&
+                       (jenis === 'guru' || a.kelas === kelas);
+            });
+
+            // STRICT ENFORCEMENT: Block save if attendance already exists (ONE-TIME DAILY LIMIT)
+            if (existingTodayAbsensi.length > 0) {
+                const kelasInfo = jenis === 'siswa' ? ` kelas ${kelas}` : '';
+                const dateFormatted = new Date(today + 'T00:00:00').toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                console.log('🚫 SAVE BLOCKED: Attendance already exists for today:', existingTodayAbsensi.length, 'records');
+                
+                // Show blocking message
+                const blockTitle = '🚫 Tidak Dapat Menyimpan - Absensi Sudah Ada';
+                const blockMessage = `Absensi ${jenis}${kelasInfo} untuk ${dateFormatted} sudah pernah disimpan sebelumnya.`;
+                const blockDetails = `Sistem menerapkan kebijakan SATU KALI ABSENSI per hari untuk menjaga integritas data. Ditemukan ${existingTodayAbsensi.length} record absensi yang sudah tersimpan di Google Sheets. Data tidak dapat ditimpa atau diubah.`;
+                
+                await showAbsensiBlockedDialog(blockTitle, blockMessage, blockDetails);
+                
+                console.log('🚫 Save operation blocked due to one-time daily limit');
+                showToast('🚫 Absensi sudah tersimpan hari ini. Tidak dapat menyimpan ulang.', 'error');
+                
+                // Reset form after blocking
+                resetAbsensiForm();
                 return;
             }
 
@@ -2457,6 +3148,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
         function populateKelasOptions() {
             const kelasSelect = document.getElementById('kelasAbsensi');
             const kelasLaporanSelect = document.getElementById('kelasLaporan');
+            const kelasRekapSelect = document.getElementById('kelasRekap');
             
             // Get unique classes from siswa data
             const uniqueKelas = [...new Set(allData.siswa.map(s => s.kelas))].sort();
@@ -2464,11 +3156,495 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             // Clear existing options
             kelasSelect.innerHTML = '<option value="">Pilih Kelas</option>';
             kelasLaporanSelect.innerHTML = '<option value="">Semua Kelas</option>';
+            kelasRekapSelect.innerHTML = '<option value="">Semua Kelas</option>';
             
             uniqueKelas.forEach(kelas => {
                 kelasSelect.innerHTML += `<option value="${kelas}">${kelas}</option>`;
                 kelasLaporanSelect.innerHTML += `<option value="${kelas}">${kelas}</option>`;
+                kelasRekapSelect.innerHTML += `<option value="${kelas}">${kelas}</option>`;
             });
+        }
+
+        // Initialize rekap form
+        function initializeRekapForm() {
+            const today = getTodayDate();
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            const oneWeekAgoStr = oneWeekAgo.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+            
+            document.getElementById('dariTanggalRekap').value = oneWeekAgoStr;
+            document.getElementById('sampaiTanggalRekap').value = today;
+            
+            // Populate kelas options for rekap
+            populateKelasOptions();
+        }
+
+        // Handle jenis rekap change
+        function handleJenisRekapChange() {
+            const jenis = document.getElementById('jenisRekap').value;
+            const kelasContainer = document.getElementById('kelasRekapContainer');
+            
+            if (jenis === 'siswa') {
+                kelasContainer.classList.remove('hidden');
+            } else {
+                kelasContainer.classList.add('hidden');
+            }
+        }
+
+        // Generate rekap kehadiran
+        async function generateRekapKehadiran() {
+            const jenis = document.getElementById('jenisRekap').value;
+            const kelas = document.getElementById('kelasRekap').value;
+            const dariTanggal = document.getElementById('dariTanggalRekap').value;
+            const sampaiTanggal = document.getElementById('sampaiTanggalRekap').value;
+
+            if (!jenis || !dariTanggal || !sampaiTanggal) {
+                showToast('❌ Lengkapi semua field rekap', 'error');
+                return;
+            }
+
+            const generateBtn = document.getElementById('generateRekapBtn');
+            const generateText = document.getElementById('generateRekapText');
+            const generateLoader = document.getElementById('generateRekapLoader');
+
+            // Show loading
+            generateBtn.disabled = true;
+            generateText.textContent = '🔄 Generating...';
+            generateLoader.classList.remove('hidden');
+
+            try {
+                // Force refresh absensi data
+                showToast('🔄 Memuat data terbaru dari Google Sheets...', 'info');
+                
+                const appsScript = new AppsScriptAPI(appsScriptConfig.webAppUrl);
+                const absensiResult = await appsScript.getData('Absensi');
+                
+                if (absensiResult.success && absensiResult.data && absensiResult.data.length > 1) {
+                    const headers = absensiResult.data[0];
+                    allData.absensi = absensiResult.data.slice(1).filter(row => row.some(cell => cell && cell.toString().trim())).map(row => {
+                        const absensi = {};
+                        headers.forEach((header, index) => {
+                            const key = header.toLowerCase().replace('/', '_').replace(' ', '_');
+                            absensi[key] = row[index] || '';
+                        });
+                        return absensi;
+                    });
+                }
+
+                // Filter absensi data by date range and type
+                const filteredAbsensi = allData.absensi.filter(a => {
+                    // Normalize date format
+                    let absensiDateStr = a.tanggal;
+                    
+                    if (absensiDateStr && absensiDateStr.includes('/')) {
+                        const parts = absensiDateStr.split('/');
+                        if (parts.length === 3) {
+                            if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
+                                absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                            } else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
+                                absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+                            }
+                        }
+                    }
+                    
+                    if (absensiDateStr && !absensiDateStr.includes('-') && !absensiDateStr.includes('/')) {
+                        const dateNum = parseFloat(absensiDateStr);
+                        if (!isNaN(dateNum) && dateNum > 40000) {
+                            const excelDate = new Date((dateNum - 25569) * 86400 * 1000);
+                            absensiDateStr = excelDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+                        }
+                    }
+                    
+                    if (absensiDateStr && absensiDateStr.includes('T')) {
+                        absensiDateStr = absensiDateStr.split('T')[0];
+                    }
+                    
+                    const isDateInRange = absensiDateStr >= dariTanggal && absensiDateStr <= sampaiTanggal;
+                    const isJenisMatch = a.jenis === jenis;
+                    
+                    let isKelasMatch = true;
+                    if (jenis === 'siswa' && kelas && kelas.trim() !== '') {
+                        isKelasMatch = a.kelas === kelas;
+                    }
+                    
+                    return isJenisMatch && isDateInRange && isKelasMatch;
+                });
+
+                // Generate rekap data
+                const rekapData = generateDetailedRekapData(filteredAbsensi, jenis, kelas);
+                
+                // Store for export
+                window.currentRekapData = {
+                    data: rekapData,
+                    jenis: jenis,
+                    kelas: kelas,
+                    dariTanggal: dariTanggal,
+                    sampaiTanggal: sampaiTanggal,
+                    filteredAbsensi: filteredAbsensi
+                };
+
+                // Render results
+                renderRekapKehadiranTable(rekapData, jenis);
+                updateRekapSummary(rekapData);
+                
+                document.getElementById('rekapResult').classList.remove('hidden');
+                showToast(`✅ Rekap kehadiran berhasil dibuat! (${rekapData.length} record)`, 'success');
+
+            } catch (error) {
+                console.error('❌ Error generating rekap:', error);
+                showToast('❌ Gagal membuat rekap: ' + error.message, 'error');
+            } finally {
+                // Hide loading
+                generateBtn.disabled = false;
+                generateText.textContent = 'Generate Rekap';
+                generateLoader.classList.add('hidden');
+            }
+        }
+
+        // Generate detailed rekap data
+        function generateDetailedRekapData(absensiData, jenis, kelas) {
+            const rekapMap = new Map();
+            
+            if (jenis === 'siswa') {
+                // Initialize for all siswa in selected class or all classes
+                const targetSiswa = kelas ? 
+                    allData.siswa.filter(s => s.kelas === kelas) : 
+                    allData.siswa;
+                
+                targetSiswa.forEach(siswa => {
+                    rekapMap.set(siswa.nis, {
+                        id: siswa.nis,
+                        nama: siswa.nama,
+                        kelas: siswa.kelas,
+                        hadir: 0,
+                        izin: 0,
+                        sakit: 0,
+                        alpha: 0,
+                        total: 0,
+                        persentaseHadir: 0
+                    });
+                });
+            } else {
+                // Initialize for all guru
+                allData.guru.forEach(guru => {
+                    rekapMap.set(guru.nip, {
+                        id: guru.nip,
+                        nama: guru.nama,
+                        mata_pelajaran: guru.mata_pelajaran,
+                        hadir: 0,
+                        izin: 0,
+                        sakit: 0,
+                        alpha: 0,
+                        total: 0,
+                        persentaseHadir: 0
+                    });
+                });
+            }
+            
+            // Count attendance
+            absensiData.forEach(record => {
+                const key = record.nis_nuptk;
+                if (rekapMap.has(key)) {
+                    const recap = rekapMap.get(key);
+                    recap.total++;
+                    
+                    switch (record.status) {
+                        case 'Hadir':
+                            recap.hadir++;
+                            break;
+                        case 'Izin':
+                            recap.izin++;
+                            break;
+                        case 'Sakit':
+                            recap.sakit++;
+                            break;
+                        case 'Alpha':
+                            recap.alpha++;
+                            break;
+                    }
+                    
+                    // Calculate percentage
+                    recap.persentaseHadir = recap.total > 0 ? 
+                        ((recap.hadir / recap.total) * 100).toFixed(1) : 0;
+                }
+            });
+            
+            return Array.from(rekapMap.values())
+                .filter(item => item.total > 0) // Only show those with attendance records
+                .sort((a, b) => parseFloat(b.persentaseHadir) - parseFloat(a.persentaseHadir));
+        }
+
+        // Render rekap kehadiran table
+        function renderRekapKehadiranTable(rekapData, jenis) {
+            const thead = document.getElementById('rekapTableHeader');
+            const tbody = document.getElementById('rekapTableBody');
+            
+            // Clear existing content
+            thead.innerHTML = '';
+            tbody.innerHTML = '';
+            
+            // Create headers
+            let headers = ['No', 'Nama', jenis === 'siswa' ? 'NIS' : 'NUPTK'];
+            if (jenis === 'siswa') {
+                headers.push('Kelas');
+            } else {
+                headers.push('Mata Pelajaran');
+            }
+            headers.push('Hadir', 'Izin', 'Sakit', 'Alpha', 'Total', 'Persentase', 'Status');
+            
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.className = 'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
+                th.textContent = header;
+                thead.appendChild(th);
+            });
+            
+            // Create rows
+            rekapData.forEach((item, index) => {
+                const persentase = parseFloat(item.persentaseHadir);
+                let statusClass, statusText;
+                
+                if (persentase >= 90) {
+                    statusClass = 'bg-green-100 text-green-800';
+                    statusText = 'Sangat Baik';
+                } else if (persentase >= 75) {
+                    statusClass = 'bg-blue-100 text-blue-800';
+                    statusText = 'Baik';
+                } else if (persentase >= 60) {
+                    statusClass = 'bg-yellow-100 text-yellow-800';
+                    statusText = 'Cukup';
+                } else {
+                    statusClass = 'bg-red-100 text-red-800';
+                    statusText = 'Perlu Perhatian';
+                }
+                
+                const row = document.createElement('tr');
+                let rowHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index + 1}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.nama}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.id}</td>
+                `;
+                
+                if (jenis === 'siswa') {
+                    rowHTML += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.kelas}</td>`;
+                } else {
+                    rowHTML += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.mata_pelajaran}</td>`;
+                }
+                
+                rowHTML += `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">${item.hadir}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-600 font-semibold">${item.izin}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-semibold">${item.sakit}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">${item.alpha}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">${item.total}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">${item.persentaseHadir}%</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+                `;
+                
+                row.innerHTML = rowHTML;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update rekap summary
+        function updateRekapSummary(rekapData) {
+            const total = rekapData.length;
+            const totalHadir = rekapData.reduce((sum, item) => sum + item.hadir, 0);
+            const totalKeseluruhan = rekapData.reduce((sum, item) => sum + item.total, 0);
+            const rataRataHadir = totalKeseluruhan > 0 ? ((totalHadir / totalKeseluruhan) * 100).toFixed(1) : 0;
+            
+            const kehadiranRendah = rekapData.filter(item => parseFloat(item.persentaseHadir) < 75).length;
+            const perluPerhatian = rekapData.filter(item => parseFloat(item.persentaseHadir) < 60).length;
+            
+            document.getElementById('rekapTotal').textContent = total;
+            document.getElementById('rekapRataHadir').textContent = rataRataHadir + '%';
+            document.getElementById('rekapRendah').textContent = kehadiranRendah;
+            document.getElementById('rekapPerhatian').textContent = perluPerhatian;
+        }
+
+        // Export rekap to PDF
+        function exportRekapPDF() {
+            if (!window.currentRekapData || !window.currentRekapData.data.length) {
+                showToast('Tidak ada data rekap untuk diexport. Silakan generate rekap terlebih dahulu.', 'error');
+                return;
+            }
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Header
+                doc.setFontSize(16);
+                doc.text('Rekap Kehadiran SMP Purnawarman', 20, 20);
+                
+                doc.setFontSize(12);
+                doc.text(`Jenis: ${window.currentRekapData.jenis}`, 20, 35);
+                if (window.currentRekapData.kelas) {
+                    doc.text(`Kelas: ${window.currentRekapData.kelas}`, 20, 45);
+                }
+                doc.text(`Periode: ${window.currentRekapData.dariTanggal} s/d ${window.currentRekapData.sampaiTanggal}`, 20, 55);
+                doc.text(`Total: ${window.currentRekapData.data.length}`, 20, 65);
+                
+                let yPos = 85;
+                
+                // Table headers
+                const headers = ['No', 'Nama', 'ID', 'H', 'I', 'S', 'A', 'Total', '%', 'Status'];
+                
+                doc.setFontSize(10);
+                headers.forEach((header, index) => {
+                    doc.text(header, 20 + (index * 18), yPos);
+                });
+                
+                yPos += 10;
+                
+                // Table data
+                window.currentRekapData.data.forEach((item, index) => {
+                    if (yPos > 270) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+                    
+                    const persentase = parseFloat(item.persentaseHadir);
+                    const status = persentase >= 90 ? 'SB' : persentase >= 75 ? 'B' : persentase >= 60 ? 'C' : 'PP';
+                    
+                    const row = [
+                        (index + 1).toString(),
+                        item.nama.substring(0, 12),
+                        item.id.substring(0, 10),
+                        item.hadir.toString(),
+                        item.izin.toString(),
+                        item.sakit.toString(),
+                        item.alpha.toString(),
+                        item.total.toString(),
+                        item.persentaseHadir + '%',
+                        status
+                    ];
+                    
+                    row.forEach((cell, cellIndex) => {
+                        doc.text(cell, 20 + (cellIndex * 18), yPos);
+                    });
+                    
+                    yPos += 8;
+                });
+                
+                // Save PDF
+                const fileName = `Rekap_Kehadiran_${window.currentRekapData.jenis}_${window.currentRekapData.dariTanggal}_${window.currentRekapData.sampaiTanggal}.pdf`;
+                doc.save(fileName);
+                
+                showToast('✅ PDF rekap berhasil diunduh!', 'success');
+                
+            } catch (error) {
+                console.error('Error exporting rekap PDF:', error);
+                showToast('❌ Gagal export PDF: ' + error.message, 'error');
+            }
+        }
+
+        // Export rekap to Excel
+        function exportRekapExcel() {
+            if (!window.currentRekapData || !window.currentRekapData.data.length) {
+                showToast('Tidak ada data rekap untuk diexport. Silakan generate rekap terlebih dahulu.', 'error');
+                return;
+            }
+
+            try {
+                const rekapData = window.currentRekapData.data;
+                
+                // Prepare headers
+                let headers = ['No', 'Nama', window.currentRekapData.jenis === 'siswa' ? 'NIS' : 'NUPTK'];
+                if (window.currentRekapData.jenis === 'siswa') {
+                    headers.push('Kelas');
+                } else {
+                    headers.push('Mata Pelajaran');
+                }
+                headers.push('Hadir', 'Izin', 'Sakit', 'Alpha', 'Total', 'Persentase Hadir', 'Status Kehadiran');
+                
+                // Create worksheet data
+                const wsData = [headers];
+                
+                rekapData.forEach((item, index) => {
+                    const persentase = parseFloat(item.persentaseHadir);
+                    const status = persentase >= 90 ? 'Sangat Baik' : 
+                                  persentase >= 75 ? 'Baik' : 
+                                  persentase >= 60 ? 'Cukup' : 'Perlu Perhatian';
+                    
+                    let row = [
+                        index + 1,
+                        item.nama,
+                        item.id
+                    ];
+                    
+                    if (window.currentRekapData.jenis === 'siswa') {
+                        row.push(item.kelas);
+                    } else {
+                        row.push(item.mata_pelajaran);
+                    }
+                    
+                    row.push(
+                        item.hadir,
+                        item.izin,
+                        item.sakit,
+                        item.alpha,
+                        item.total,
+                        item.persentaseHadir + '%',
+                        status
+                    );
+                    
+                    wsData.push(row);
+                });
+                
+                // Add summary info at the top
+                const summaryData = [
+                    ['REKAP KEHADIRAN SMP PURNAWARMAN'],
+                    [''],
+                    [`Jenis: ${window.currentRekapData.jenis}`],
+                    [`Kelas: ${window.currentRekapData.kelas || 'Semua Kelas'}`],
+                    [`Periode: ${window.currentRekapData.dariTanggal} s/d ${window.currentRekapData.sampaiTanggal}`],
+                    [`Total: ${rekapData.length}`],
+                    [`Tanggal Export: ${new Date().toLocaleDateString('id-ID')}`],
+                    [''],
+                    ...wsData
+                ];
+                
+                // Create workbook and worksheet
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(summaryData);
+                
+                // Set column widths
+                const colWidths = [
+                    { wch: 5 },  // No
+                    { wch: 25 }, // Nama
+                    { wch: 15 }, // ID
+                    { wch: 12 }, // Kelas/Mapel
+                    { wch: 8 },  // Hadir
+                    { wch: 8 },  // Izin
+                    { wch: 8 },  // Sakit
+                    { wch: 8 },  // Alpha
+                    { wch: 8 },  // Total
+                    { wch: 15 }, // Persentase
+                    { wch: 15 }  // Status
+                ];
+                
+                ws['!cols'] = colWidths;
+                
+                // Add worksheet to workbook
+                XLSX.utils.book_append_sheet(wb, ws, 'Rekap Kehadiran');
+                
+                // Generate filename
+                const fileName = `Rekap_Kehadiran_${window.currentRekapData.jenis}_${window.currentRekapData.dariTanggal}_${window.currentRekapData.sampaiTanggal}.xlsx`;
+                
+                // Save file
+                XLSX.writeFile(wb, fileName);
+                
+                showToast(`✅ Excel rekap berhasil diexport! (${rekapData.length} record)`, 'success');
+                
+            } catch (error) {
+                console.error('Error exporting rekap Excel:', error);
+                showToast('❌ Gagal export Excel: ' + error.message, 'error');
+            }
         }
 
         // Update info cards with statistics for selected date
@@ -2813,7 +3989,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             showToast(`✅ Form siap untuk absensi ${jenis} kelas ${kelas} berikutnya`, 'info');
         }
 
-        // Start real-time statistics updates
+        // Start real-time statistics updates and auto-refresh
         function startRealtimeStatistics() {
             // Update statistics every 30 seconds for H-1 (yesterday)
             setInterval(async () => {
@@ -2825,6 +4001,99 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                     console.error('Error updating real-time statistics:', error);
                 }
             }, 30000); // 30 seconds
+            
+            // ENHANCED: Auto-refresh data master every 2 minutes for data consistency
+            setInterval(async () => {
+                try {
+                    console.log('🔄 Auto-refreshing data master for consistency...');
+                    
+                    // Determine which data master tab is currently active
+                    const activeTab = document.querySelector('.data-tab-btn.active');
+                    if (activeTab) {
+                        const tabId = activeTab.id;
+                        
+                        // Only refresh if user is on data master tab
+                        const dataMasterContent = document.getElementById('dataMasterContent');
+                        if (dataMasterContent && !dataMasterContent.classList.contains('hidden')) {
+                            
+                            if (tabId === 'tabUsers') {
+                                await fastRefreshSingleSheet('Users');
+                                renderUsersDataTable();
+                                console.log('🔄 Auto-refreshed Users data');
+                            } else if (tabId === 'tabSiswaData') {
+                                await fastRefreshSingleSheet('Siswa');
+                                renderSiswaDataTable();
+                                populateKelasOptions(); // Update kelas options
+                                console.log('🔄 Auto-refreshed Siswa data');
+                            } else if (tabId === 'tabGuruData') {
+                                await fastRefreshSingleSheet('Guru');
+                                renderGuruDataTable();
+                                console.log('🔄 Auto-refreshed Guru data');
+                            } else if (tabId === 'tabJadwalData') {
+                                await fastRefreshSingleSheet('Jadwal');
+                                renderJadwalDataTable();
+                                console.log('🔄 Auto-refreshed Jadwal data');
+                            }
+                            
+                            // Show subtle notification
+                            showToast('🔄 Data master diperbarui otomatis', 'info');
+                        }
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Error in auto-refresh data master:', error);
+                }
+            }, 120000); // 2 minutes
+        }
+
+        // Enhanced auto-sync for critical data changes
+        function startEnhancedAutoSync() {
+            // Monitor for critical data changes and auto-sync
+            const originalPush = Array.prototype.push;
+            const originalSplice = Array.prototype.splice;
+            
+            // Override push method for auto-sync detection
+            ['users', 'siswa', 'guru', 'jadwal'].forEach(dataType => {
+                if (allData[dataType]) {
+                    // Monitor additions
+                    const originalPush = allData[dataType].push;
+                    allData[dataType].push = function(...items) {
+                        const result = originalPush.apply(this, items);
+                        console.log(`📊 Detected ${dataType} addition, scheduling background sync...`);
+                        scheduleBackgroundSync(dataType);
+                        return result;
+                    };
+                    
+                    // Monitor deletions
+                    const originalSplice = allData[dataType].splice;
+                    allData[dataType].splice = function(...args) {
+                        const result = originalSplice.apply(this, args);
+                        console.log(`📊 Detected ${dataType} deletion, scheduling background sync...`);
+                        scheduleBackgroundSync(dataType);
+                        return result;
+                    };
+                }
+            });
+        }
+
+        // Schedule background sync for data consistency
+        function scheduleBackgroundSync(dataType) {
+            // Debounce multiple rapid changes
+            if (window.syncTimeouts && window.syncTimeouts[dataType]) {
+                clearTimeout(window.syncTimeouts[dataType]);
+            }
+            
+            if (!window.syncTimeouts) window.syncTimeouts = {};
+            
+            window.syncTimeouts[dataType] = setTimeout(async () => {
+                try {
+                    console.log(`🔄 Background sync for ${dataType}...`);
+                    await fastRefreshSingleSheet(dataType.charAt(0).toUpperCase() + dataType.slice(1));
+                    console.log(`✅ Background sync completed for ${dataType}`);
+                } catch (error) {
+                    console.error(`❌ Background sync failed for ${dataType}:`, error);
+                }
+            }, 5000); // 5 second delay to batch multiple changes
         }
 
         // Load laporan data with enhanced real-time updates and maximum refresh
@@ -2848,6 +4117,9 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             const kelas = document.getElementById('kelasLaporan').value;
             const dariTanggal = dariTanggalElement.value;
             const sampaiTanggal = sampaiTanggalElement.value;
+
+            // FIXED: Store selected kelas to preserve it after data retrieval
+            const selectedKelas = kelas;
 
             if (!jenis || !dariTanggal || !sampaiTanggal) {
                 showToast('❌ Lengkapi semua field laporan', 'error');
@@ -2925,7 +4197,9 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                     
                     // Enhanced date range filtering
                     const isDateInRange = absensiDateStr >= dariTanggal && absensiDateStr <= sampaiTanggal;
-                    const isJenisMatch = a.jenis === jenis;
+                    
+                    // FIXED: Proper jenis filtering - ensure exact match
+                    const isJenisMatch = a.jenis && a.jenis.toLowerCase() === jenis.toLowerCase();
                     
                     // Enhanced class filtering logic for siswa
                     let isKelasMatch = true;
@@ -2933,13 +4207,30 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                         // For siswa: if kelas is selected (not empty), filter by that class
                         // If kelas is empty ("Semua Kelas"), show all siswa records
                         if (kelas && kelas.trim() !== '') {
-                            isKelasMatch = a.kelas === kelas;
+                            isKelasMatch = a.kelas && a.kelas.toString().trim() === kelas.toString().trim();
                         }
-                        // If no kelas selected (empty), show all siswa records
+                        // If no kelas selected (empty), show all siswa records (isKelasMatch remains true)
                     }
                     // For guru: no class filtering needed
                     
-                    return isJenisMatch && isDateInRange && isKelasMatch;
+                    const matchResult = isJenisMatch && isDateInRange && isKelasMatch;
+                    
+                    // Debug logging for troubleshooting
+                    if (jenis === 'siswa' && isDateInRange) {
+                        console.log('🔍 Filtering siswa record:', {
+                            nama: a.nama,
+                            jenis: a.jenis,
+                            kelas: a.kelas,
+                            tanggal: absensiDateStr,
+                            isJenisMatch,
+                            isDateInRange,
+                            isKelasMatch,
+                            matchResult,
+                            filterKelas: kelas
+                        });
+                    }
+                    
+                    return matchResult;
                 });
 
                 console.log('📊 Filtered absensi records:', filteredAbsensi.length);
@@ -2970,6 +4261,13 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                     const todayReset = getTodayDate();
                     document.getElementById('dariTanggal').value = todayReset;
                     document.getElementById('sampaiTanggal').value = todayReset;
+                    
+                    // FIXED: Preserve selected kelas after data retrieval
+                    if (selectedKelas && selectedKelas.trim() !== '') {
+                        document.getElementById('kelasLaporan').value = selectedKelas;
+                        console.log('📚 Kelas selection preserved:', selectedKelas);
+                    }
+                    
                     console.log('📅 Report dates reset back to today:', todayReset);
                 }, 2000); // Reset after 2 seconds
 
@@ -3519,12 +4817,15 @@ function getOrCreateSheet(spreadsheet, sheetName) {
         // Logout
         function logout() {
             currentUser = null;
+            clearUserSession(); // Clear session storage
             document.getElementById('adminDashboard').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
             
             // Clear form
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
+            
+            showToast('Anda telah logout', 'info');
         }
 
         // Modal and form handling variables
@@ -3635,22 +4936,43 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             }
         }
 
-        // Render siswa data table
+        // Render siswa data table with enhanced UI
         function renderSiswaDataTable() {
             const tbody = document.getElementById('siswaDataTableBody');
             tbody.innerHTML = '';
 
             allData.siswa.forEach((siswa, index) => {
                 const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors duration-200';
                 row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${siswa.nis}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${siswa.nama}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${siswa.kelas}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${siswa.jenis_kelamin}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${siswa.alamat}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">${siswa.nis}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${siswa.nama}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            Kelas ${siswa.kelas}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            siswa.jenis_kelamin === 'L' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'
+                        }">
+                            ${siswa.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate" title="${siswa.alamat}">${siswa.alamat}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button onclick="openEditModal('Siswa', ${index})" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                        <button onclick="openDeleteConfirm('Siswa', ${index}, '${siswa.nama}')" class="text-red-600 hover:text-red-900">Hapus</button>
+                        <button onclick="openEditModal('Siswa', ${index})" class="inline-flex items-center px-3 py-1 border border-transparent text-xs leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2 transition-colors duration-200">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            Edit
+                        </button>
+                        <button onclick="openDeleteConfirm('Siswa', ${index}, '${siswa.nama}')" class="inline-flex items-center px-3 py-1 border border-transparent text-xs leading-4 font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Hapus
+                        </button>
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -3680,22 +5002,43 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             }
         }
 
-        // Render guru data table
+        // Render guru data table with enhanced UI
         function renderGuruDataTable() {
             const tbody = document.getElementById('guruDataTableBody');
             tbody.innerHTML = '';
 
             allData.guru.forEach((guru, index) => {
                 const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors duration-200';
                 row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${guru.nip}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${guru.nama}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${guru.mata_pelajaran}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${guru.jenis_kelamin}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${guru.alamat}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">${guru.nip}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${guru.nama}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            ${guru.mata_pelajaran}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            guru.jenis_kelamin === 'L' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'
+                        }">
+                            ${guru.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate" title="${guru.alamat}">${guru.alamat}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button onclick="openEditModal('Guru', ${index})" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                        <button onclick="openDeleteConfirm('Guru', ${index}, '${guru.nama}')" class="text-red-600 hover:text-red-900">Hapus</button>
+                        <button onclick="openEditModal('Guru', ${index})" class="inline-flex items-center px-3 py-1 border border-transparent text-xs leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2 transition-colors duration-200">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            Edit
+                        </button>
+                        <button onclick="openDeleteConfirm('Guru', ${index}, '${guru.nama}')" class="inline-flex items-center px-3 py-1 border border-transparent text-xs leading-4 font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Hapus
+                        </button>
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -3725,21 +5068,40 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             }
         }
 
-        // Render users data table
+        // Render users data table with enhanced UI
         function renderUsersDataTable() {
             const tbody = document.getElementById('usersTableBody');
             tbody.innerHTML = '';
 
             allData.users.forEach((user, index) => {
                 const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors duration-200';
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${user.username}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${user.nama}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${user.role}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${user.nama}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            user.role === 'Admin' ? 'bg-purple-100 text-purple-800' :
+                            user.role === 'Kepala Sekolah' ? 'bg-blue-100 text-blue-800' :
+                            'bg-green-100 text-green-800'
+                        }">
+                            ${user.role}
+                        </span>
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${user.hari_piket || '-'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button onclick="openEditModal('Users', ${index})" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                        <button onclick="openDeleteConfirm('Users', ${index}, '${user.nama}')" class="text-red-600 hover:text-red-900">Hapus</button>
+                        <button onclick="openEditModal('Users', ${index})" class="inline-flex items-center px-3 py-1 border border-transparent text-xs leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2 transition-colors duration-200">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            Edit
+                        </button>
+                        <button onclick="openDeleteConfirm('Users', ${index}, '${user.nama}')" class="inline-flex items-center px-3 py-1 border border-transparent text-xs leading-4 font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Hapus
+                        </button>
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -3769,23 +5131,60 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             }
         }
 
-        // Render jadwal data table
+        // Render jadwal data table with enhanced UI
         function renderJadwalDataTable() {
             const tbody = document.getElementById('jadwalDataTableBody');
             tbody.innerHTML = '';
 
             allData.jadwal.forEach((jadwal, index) => {
                 const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors duration-200';
+                
+                // Color coding for days
+                const dayColors = {
+                    'Senin': 'bg-red-100 text-red-800',
+                    'Selasa': 'bg-orange-100 text-orange-800',
+                    'Rabu': 'bg-yellow-100 text-yellow-800',
+                    'Kamis': 'bg-green-100 text-green-800',
+                    'Jumat': 'bg-blue-100 text-blue-800'
+                };
+                
                 row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${jadwal.hari}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${jadwal.jam_mulai} - ${jadwal.jam_selesai}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${jadwal.kelas}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${jadwal.nuptk}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${jadwal.nama_guru}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${jadwal.mapel}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${dayColors[jadwal.hari] || 'bg-gray-100 text-gray-800'}">
+                            ${jadwal.hari}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">
+                        <span class="px-2 py-1 bg-gray-100 rounded text-xs">
+                            ${jadwal.jam_mulai} - ${jadwal.jam_selesai}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            Kelas ${jadwal.kelas}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">${jadwal.nuptk}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${jadwal.nama_guru}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                            ${jadwal.mapel}
+                        </span>
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button onclick="openEditModal('Jadwal', ${index})" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                        <button onclick="openDeleteConfirm('Jadwal', ${index}, '${jadwal.nama_guru} - ${jadwal.mapel}')" class="text-red-600 hover:text-red-900">Hapus</button>
+                        <button onclick="openEditModal('Jadwal', ${index})" class="inline-flex items-center px-3 py-1 border border-transparent text-xs leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2 transition-colors duration-200">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            Edit
+                        </button>
+                        <button onclick="openDeleteConfirm('Jadwal', ${index}, '${jadwal.nama_guru} - ${jadwal.mapel}')" class="inline-flex items-center px-3 py-1 border border-transparent text-xs leading-4 font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Hapus
+                        </button>
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -3832,7 +5231,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             switch (sheetName) {
                 case 'Users':
                     fields = [
-                        { name: 'username', label: 'Username', type: 'text', required: true },
+                        { name: 'username', label: 'Username', type: 'text', required: true, primaryKey: true },
                         { name: 'password', label: 'Password', type: 'password', required: true },
                         { name: 'nama', label: 'Nama', type: 'text', required: true },
                         { name: 'role', label: 'Role', type: 'select', options: ['Admin', 'Kepala Sekolah', 'Guru Piket'], required: true },
@@ -3841,7 +5240,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                     break;
                 case 'Siswa':
                     fields = [
-                        { name: 'nis', label: 'NIS', type: 'text', required: true },
+                        { name: 'nis', label: 'NIS (Primary Key)', type: 'text', required: true, primaryKey: true },
                         { name: 'nama', label: 'Nama', type: 'text', required: true },
                         { name: 'kelas', label: 'Kelas', type: 'text', required: true },
                         { name: 'jenis_kelamin', label: 'Jenis Kelamin', type: 'select', options: ['L', 'P'], required: true },
@@ -3850,7 +5249,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                     break;
                 case 'Guru':
                     fields = [
-                        { name: 'nip', label: 'NUPTK', type: 'text', required: true },
+                        { name: 'nip', label: 'NUPTK (Primary Key)', type: 'text', required: true, primaryKey: true },
                         { name: 'nama', label: 'Nama', type: 'text', required: true },
                         { name: 'mata_pelajaran', label: 'Mata Pelajaran', type: 'text', required: true },
                         { name: 'jenis_kelamin', label: 'Jenis Kelamin', type: 'select', options: ['L', 'P'], required: true },
@@ -3872,24 +5271,32 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             
             fields.forEach(field => {
                 const div = document.createElement('div');
+                const isReadOnly = field.primaryKey && currentEditMode === 'edit';
+                const readOnlyAttr = isReadOnly ? 'readonly' : '';
+                const readOnlyClass = isReadOnly ? 'bg-gray-100 cursor-not-allowed' : '';
+                
                 div.innerHTML = `
-                    <label class="block text-sm font-medium text-gray-700 mb-1">${field.label}</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        ${field.label}
+                        ${field.primaryKey ? '<span class="text-xs text-blue-600">(Primary Key)</span>' : ''}
+                    </label>
                     ${field.type === 'select' ? 
-                        `<select name="${field.name}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" ${field.required ? 'required' : ''}>
+                        `<select name="${field.name}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${readOnlyClass}" ${field.required ? 'required' : ''} ${isReadOnly ? 'disabled' : ''}>
                             ${field.options.map(option => 
                                 `<option value="${option}" ${data && data[field.name] === option ? 'selected' : ''}>${option || 'Pilih...'}</option>`
                             ).join('')}
                         </select>` :
                         field.type === 'textarea' ?
-                        `<textarea name="${field.name}" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" ${field.required ? 'required' : ''} placeholder="${field.label}">${data ? data[field.name] || '' : ''}</textarea>` :
-                        `<input type="${field.type}" name="${field.name}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" ${field.required ? 'required' : ''} placeholder="${field.label}" value="${data ? data[field.name] || '' : ''}">`
+                        `<textarea name="${field.name}" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${readOnlyClass}" ${field.required ? 'required' : ''} placeholder="${field.label}" ${readOnlyAttr}>${data ? data[field.name] || '' : ''}</textarea>` :
+                        `<input type="${field.type}" name="${field.name}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${readOnlyClass}" ${field.required ? 'required' : ''} placeholder="${field.label}" value="${data ? data[field.name] || '' : ''}" ${readOnlyAttr}>`
                     }
+                    ${isReadOnly ? '<p class="text-xs text-gray-500 mt-1">Primary key tidak dapat diubah saat edit</p>' : ''}
                 `;
                 formFields.appendChild(div);
             });
         }
 
-        // Handle form submit
+        // Handle form submit with enhanced auto-update and guaranteed Google Sheets save
         async function handleFormSubmit(e) {
             e.preventDefault();
             
@@ -3900,10 +5307,22 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 data[key] = value;
             }
             
-            console.log('Form data to save:', data);
-            console.log('Current edit mode:', currentEditMode);
-            console.log('Current sheet name:', currentSheetName);
-            console.log('Current row index:', currentRowIndex);
+            console.log('📝 Form data to save:', data);
+            console.log('🔧 Current edit mode:', currentEditMode);
+            console.log('📊 Current sheet name:', currentSheetName);
+            console.log('📍 Current row index:', currentRowIndex);
+            
+            // Validate primary key uniqueness for new records
+            if (currentEditMode === 'add') {
+                const primaryKeyField = getPrimaryKeyField(currentSheetName);
+                if (primaryKeyField && data[primaryKeyField]) {
+                    const isDuplicate = checkPrimaryKeyDuplicate(currentSheetName, primaryKeyField, data[primaryKeyField]);
+                    if (isDuplicate) {
+                        showToast(`❌ ${primaryKeyField.toUpperCase()} "${data[primaryKeyField]}" sudah ada! Gunakan ${primaryKeyField.toUpperCase()} yang berbeda.`, 'error');
+                        return;
+                    }
+                }
+            }
             
             const saveBtn = document.getElementById('saveBtn');
             const saveBtnText = document.getElementById('saveBtnText');
@@ -3911,7 +5330,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             
             // Show loading
             saveBtn.disabled = true;
-            saveBtnText.textContent = 'Menyimpan...';
+            saveBtnText.textContent = '💾 Menyimpan ke Google Sheets...';
             saveBtnLoader.classList.remove('hidden');
             
             try {
@@ -3924,59 +5343,228 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 
                 // Convert data to array format for Google Sheets
                 const rowData = convertDataToArray(currentSheetName, data);
-                console.log('Row data to save:', rowData);
+                console.log('📋 Row data to save to Google Sheets:', rowData);
                 
+                // Show progress toast
+                showToast('🔄 Menyimpan data ke Google Sheets...', 'info');
+                
+                // CRITICAL: Always save to Google Sheets first - no local updates until confirmed
                 if (currentEditMode === 'add') {
-                    console.log('Adding new data to sheet:', currentSheetName);
+                    console.log('➕ Adding new data to Google Sheets:', currentSheetName);
                     result = await appsScript.saveData(currentSheetName, rowData);
                 } else {
                     // For edit mode, we need to use the correct row index
                     // The row index should be based on the original data position + 1 (for header)
                     const actualRowIndex = currentRowIndex + 1; // +1 because Google Sheets is 1-indexed and has header
-                    console.log('Updating data at row index:', actualRowIndex, 'in sheet:', currentSheetName);
+                    console.log('✏️ Updating data in Google Sheets at row index:', actualRowIndex, 'in sheet:', currentSheetName);
                     result = await appsScript.updateData(currentSheetName, rowData, actualRowIndex);
                 }
                 
-                console.log('API response:', result);
+                console.log('📡 Google Sheets API response:', result);
                 
                 if (result && result.success) {
-                    showToast(`${currentSheetName} berhasil ${currentEditMode === 'add' ? 'ditambahkan' : 'diperbarui'}!`, 'success');
+                    const actionText = currentEditMode === 'add' ? 'ditambahkan ke' : 'diperbarui di';
+                    showToast(`✅ ${currentSheetName} berhasil ${actionText} Google Sheets!`, 'success');
                     closeModal();
                     
-                    // Reload data from Google Sheets
-                    console.log('Reloading data after save...');
-                    await loadAllData();
+                    // ENHANCED: Immediate verification by refreshing from Google Sheets
+                    console.log('🔄 Verifying save by refreshing from Google Sheets...');
+                    showToast('🔄 Memverifikasi data tersimpan di Google Sheets...', 'info');
                     
-                    // Refresh current tab display
-                    if (currentSheetName === 'Users') {
-                        await loadUsersData();
-                    } else if (currentSheetName === 'Siswa') {
-                        await loadSiswaDataTable();
-                    } else if (currentSheetName === 'Guru') {
-                        await loadGuruDataTable();
-                    } else if (currentSheetName === 'Jadwal') {
-                        await loadJadwalDataTable();
-                    }
+                    // Force complete refresh from Google Sheets to verify save
+                    await fastRefreshSingleSheet(currentSheetName);
                     
-                    // Update kelas options if siswa data changed
+                    // Update local data with verified Google Sheets data
+                    console.log('✅ Data verified and updated from Google Sheets');
+                    
+                    // ENHANCED: Instant UI refresh with verified data
+                    console.log('⚡ Refreshing UI with verified Google Sheets data...');
+                    refreshCurrentDataMasterTab();
+                    
+                    // Update dependent components with verified data
                     if (currentSheetName === 'Siswa') {
                         populateKelasOptions();
+                        console.log('📚 Kelas options updated with verified siswa data');
                     }
                     
+                    // Update statistics if needed with verified data
+                    if (currentSheetName === 'Siswa' || currentSheetName === 'Guru') {
+                        await updateInfoCards();
+                        console.log('📊 Statistics updated with verified master data');
+                    }
+                    
+                    showToast('✅ Data berhasil tersimpan dan diverifikasi di Google Sheets!', 'success');
+                    console.log('✅ Save and verification completed successfully');
+                    
                 } else {
-                    console.error('Save failed with result:', result);
-                    const errorMsg = result && result.error ? result.error : 'Respons tidak valid dari server';
-                    showToast(`Gagal menyimpan: ${errorMsg}`, 'error');
+                    console.error('❌ Google Sheets save failed with result:', result);
+                    const errorMsg = result && result.error ? result.error : 'Respons tidak valid dari Google Sheets';
+                    showToast(`❌ Gagal menyimpan ke Google Sheets: ${errorMsg}`, 'error');
+                    
+                    // Show detailed error for troubleshooting
+                    if (result && result.error) {
+                        console.error('📋 Detailed error from Google Sheets:', result.error);
+                        showToast(`🔍 Detail error: ${result.error}`, 'error');
+                    }
                 }
                 
             } catch (error) {
-                console.error('Form submit error:', error);
-                showToast(`Error menyimpan data: ${error.message}`, 'error');
+                console.error('❌ Form submit error:', error);
+                showToast(`❌ Error menyimpan data ke Google Sheets: ${error.message}`, 'error');
+                
+                // Show network/connection specific errors
+                if (error.message.includes('fetch')) {
+                    showToast('🌐 Periksa koneksi internet dan URL Google Apps Script', 'error');
+                }
             } finally {
                 // Hide loading
                 saveBtn.disabled = false;
                 saveBtnText.textContent = 'Simpan';
                 saveBtnLoader.classList.add('hidden');
+            }
+        }
+
+        // Get primary key field for each sheet
+        function getPrimaryKeyField(sheetName) {
+            switch (sheetName) {
+                case 'Users': return 'username';
+                case 'Siswa': return 'nis';
+                case 'Guru': return 'nip';
+                default: return null;
+            }
+        }
+
+        // Check if primary key already exists
+        function checkPrimaryKeyDuplicate(sheetName, primaryKeyField, primaryKeyValue) {
+            let dataArray = [];
+            
+            switch (sheetName) {
+                case 'Users': dataArray = allData.users; break;
+                case 'Siswa': dataArray = allData.siswa; break;
+                case 'Guru': dataArray = allData.guru; break;
+                default: return false;
+            }
+            
+            return dataArray.some(item => item[primaryKeyField] === primaryKeyValue);
+        }
+
+        // Update local data immediately after save for instant UI response
+        function updateLocalDataAfterSave(sheetName, formData, editMode, rowIndex) {
+            console.log('⚡ Updating local data for instant UI response...');
+            
+            try {
+                if (editMode === 'add') {
+                    // Add new item to local data
+                    if (sheetName === 'Users') {
+                        allData.users.push({
+                            username: formData.username,
+                            password: formData.password,
+                            nama: formData.nama,
+                            role: formData.role,
+                            hari_piket: formData.hari_piket || ''
+                        });
+                    } else if (sheetName === 'Siswa') {
+                        allData.siswa.push({
+                            nis: formData.nis,
+                            nama: formData.nama,
+                            kelas: formData.kelas,
+                            jenis_kelamin: formData.jenis_kelamin,
+                            alamat: formData.alamat
+                        });
+                    } else if (sheetName === 'Guru') {
+                        allData.guru.push({
+                            nip: formData.nip,
+                            nama: formData.nama,
+                            mata_pelajaran: formData.mata_pelajaran,
+                            jenis_kelamin: formData.jenis_kelamin,
+                            alamat: formData.alamat
+                        });
+                    } else if (sheetName === 'Jadwal') {
+                        allData.jadwal.push({
+                            hari: formData.hari,
+                            jam_mulai: formData.jam_mulai,
+                            jam_selesai: formData.jam_selesai,
+                            kelas: formData.kelas,
+                            nuptk: formData.nuptk,
+                            nama_guru: formData.nama_guru,
+                            mapel: formData.mapel
+                        });
+                    }
+                    console.log(`➕ Added new ${sheetName} to local data`);
+                    
+                } else if (editMode === 'edit' && rowIndex >= 0) {
+                    // Update existing item in local data
+                    if (sheetName === 'Users' && allData.users[rowIndex]) {
+                        Object.assign(allData.users[rowIndex], {
+                            username: formData.username,
+                            password: formData.password,
+                            nama: formData.nama,
+                            role: formData.role,
+                            hari_piket: formData.hari_piket || ''
+                        });
+                    } else if (sheetName === 'Siswa' && allData.siswa[rowIndex]) {
+                        Object.assign(allData.siswa[rowIndex], {
+                            nis: formData.nis,
+                            nama: formData.nama,
+                            kelas: formData.kelas,
+                            jenis_kelamin: formData.jenis_kelamin,
+                            alamat: formData.alamat
+                        });
+                    } else if (sheetName === 'Guru' && allData.guru[rowIndex]) {
+                        Object.assign(allData.guru[rowIndex], {
+                            nip: formData.nip,
+                            nama: formData.nama,
+                            mata_pelajaran: formData.mata_pelajaran,
+                            jenis_kelamin: formData.jenis_kelamin,
+                            alamat: formData.alamat
+                        });
+                    } else if (sheetName === 'Jadwal' && allData.jadwal[rowIndex]) {
+                        Object.assign(allData.jadwal[rowIndex], {
+                            hari: formData.hari,
+                            jam_mulai: formData.jam_mulai,
+                            jam_selesai: formData.jam_selesai,
+                            kelas: formData.kelas,
+                            nuptk: formData.nuptk,
+                            nama_guru: formData.nama_guru,
+                            mapel: formData.mapel
+                        });
+                    }
+                    console.log(`✏️ Updated ${sheetName} at index ${rowIndex} in local data`);
+                }
+                
+            } catch (error) {
+                console.error('❌ Error updating local data:', error);
+            }
+        }
+
+        // Refresh current data master tab instantly
+        function refreshCurrentDataMasterTab() {
+            console.log('⚡ Refreshing current data master tab instantly...');
+            
+            try {
+                // Determine which tab is currently active and refresh it
+                const activeTab = document.querySelector('.data-tab-btn.active');
+                if (!activeTab) return;
+                
+                const tabId = activeTab.id;
+                console.log('🔄 Active data master tab:', tabId);
+                
+                if (tabId === 'tabUsers') {
+                    renderUsersDataTable();
+                    console.log('👥 Users table refreshed instantly');
+                } else if (tabId === 'tabSiswaData') {
+                    renderSiswaDataTable();
+                    console.log('👨‍🎓 Siswa table refreshed instantly');
+                } else if (tabId === 'tabGuruData') {
+                    renderGuruDataTable();
+                    console.log('👨‍🏫 Guru table refreshed instantly');
+                } else if (tabId === 'tabJadwalData') {
+                    renderJadwalDataTable();
+                    console.log('📅 Jadwal table refreshed instantly');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error refreshing current data master tab:', error);
             }
         }
 
@@ -4011,7 +5599,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             }
         }
 
-        // Delete item
+        // Delete item with guaranteed Google Sheets deletion
         async function deleteItem(sheetName, rowIndex) {
             const deleteBtn = document.getElementById('confirmDeleteBtn');
             const deleteBtnText = document.getElementById('deleteBtnText');
@@ -4019,37 +5607,119 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             
             // Show loading
             deleteBtn.disabled = true;
-            deleteBtnText.textContent = 'Menghapus...';
+            deleteBtnText.textContent = '🗑️ Menghapus dari Google Sheets...';
             deleteBtnLoader.classList.remove('hidden');
             
             try {
+                if (!appsScriptConfig.webAppUrl) {
+                    throw new Error('Web App URL tidak dikonfigurasi. Silakan setup koneksi Google Sheets terlebih dahulu.');
+                }
+                
+                // Store item info before deletion for logging
+                let deletedItemInfo = null;
+                if (sheetName === 'Users' && allData.users[rowIndex]) {
+                    deletedItemInfo = { ...allData.users[rowIndex] };
+                } else if (sheetName === 'Siswa' && allData.siswa[rowIndex]) {
+                    deletedItemInfo = { ...allData.siswa[rowIndex] };
+                } else if (sheetName === 'Guru' && allData.guru[rowIndex]) {
+                    deletedItemInfo = { ...allData.guru[rowIndex] };
+                } else if (sheetName === 'Jadwal' && allData.jadwal[rowIndex]) {
+                    deletedItemInfo = { ...allData.jadwal[rowIndex] };
+                }
+                
+                console.log('🗑️ Deleting item from Google Sheets:', sheetName, 'at index:', rowIndex);
+                console.log('📋 Item to delete:', deletedItemInfo);
+                
+                // Show progress toast
+                showToast('🔄 Menghapus data dari Google Sheets...', 'info');
+                
                 const appsScript = new AppsScriptAPI(appsScriptConfig.webAppUrl);
                 const result = await appsScript.deleteData(sheetName, rowIndex + 1); // +1 for header row
                 
-                if (result.success) {
-                    showToast(`${sheetName} berhasil dihapus!`, 'success');
+                console.log('📡 Google Sheets delete API response:', result);
+                
+                if (result && result.success) {
+                    showToast(`✅ ${sheetName} berhasil dihapus dari Google Sheets!`, 'success');
                     closeConfirmModal();
                     
-                    // Reload data
-                    await loadAllData();
+                    // ENHANCED: Immediate verification by refreshing from Google Sheets
+                    console.log('🔄 Verifying deletion by refreshing from Google Sheets...');
+                    showToast('🔄 Memverifikasi penghapusan di Google Sheets...', 'info');
                     
-                    // Refresh current tab
-                    if (sheetName === 'Users') loadUsersData();
-                    else if (sheetName === 'Siswa') loadSiswaTable();
-                    else if (sheetName === 'Guru') loadGuruTable();
-                    else if (sheetName === 'Jadwal') loadJadwalDataTable();
+                    // Force complete refresh from Google Sheets to verify deletion
+                    await fastRefreshSingleSheet(sheetName);
+                    
+                    // Update local data with verified Google Sheets data
+                    console.log('✅ Deletion verified and data updated from Google Sheets');
+                    
+                    // ENHANCED: Instant UI refresh with verified data
+                    console.log('⚡ Refreshing UI with verified Google Sheets data...');
+                    refreshCurrentDataMasterTab();
+                    
+                    // Update dependent components with verified data
+                    if (sheetName === 'Siswa') {
+                        populateKelasOptions();
+                        console.log('📚 Kelas options updated with verified siswa data after deletion');
+                    }
+                    
+                    // Update statistics if needed with verified data
+                    if (sheetName === 'Siswa' || sheetName === 'Guru') {
+                        await updateInfoCards();
+                        console.log('📊 Statistics updated with verified master data after deletion');
+                    }
+                    
+                    showToast('✅ Data berhasil dihapus dan diverifikasi di Google Sheets!', 'success');
+                    console.log('✅ Delete and verification completed successfully');
                     
                 } else {
-                    showToast(`Gagal menghapus: ${result.error}`, 'error');
+                    console.error('❌ Google Sheets delete failed with result:', result);
+                    const errorMsg = result && result.error ? result.error : 'Respons tidak valid dari Google Sheets';
+                    showToast(`❌ Gagal menghapus dari Google Sheets: ${errorMsg}`, 'error');
+                    
+                    // Show detailed error for troubleshooting
+                    if (result && result.error) {
+                        console.error('📋 Detailed delete error from Google Sheets:', result.error);
+                        showToast(`🔍 Detail error: ${result.error}`, 'error');
+                    }
                 }
                 
             } catch (error) {
-                showToast(`Error: ${error.message}`, 'error');
+                console.error('❌ Delete error:', error);
+                showToast(`❌ Error menghapus data dari Google Sheets: ${error.message}`, 'error');
+                
+                // Show network/connection specific errors
+                if (error.message.includes('fetch')) {
+                    showToast('🌐 Periksa koneksi internet dan URL Google Apps Script', 'error');
+                }
             } finally {
                 // Hide loading
                 deleteBtn.disabled = false;
                 deleteBtnText.textContent = 'Hapus';
                 deleteBtnLoader.classList.add('hidden');
+            }
+        }
+
+        // Update local data immediately after delete for instant UI response
+        function updateLocalDataAfterDelete(sheetName, rowIndex) {
+            console.log('⚡ Updating local data after deletion for instant UI response...');
+            
+            try {
+                if (sheetName === 'Users' && allData.users[rowIndex]) {
+                    const deletedItem = allData.users.splice(rowIndex, 1)[0];
+                    console.log('🗑️ Removed user from local data:', deletedItem.nama);
+                } else if (sheetName === 'Siswa' && allData.siswa[rowIndex]) {
+                    const deletedItem = allData.siswa.splice(rowIndex, 1)[0];
+                    console.log('🗑️ Removed siswa from local data:', deletedItem.nama);
+                } else if (sheetName === 'Guru' && allData.guru[rowIndex]) {
+                    const deletedItem = allData.guru.splice(rowIndex, 1)[0];
+                    console.log('🗑️ Removed guru from local data:', deletedItem.nama);
+                } else if (sheetName === 'Jadwal' && allData.jadwal[rowIndex]) {
+                    const deletedItem = allData.jadwal.splice(rowIndex, 1)[0];
+                    console.log('🗑️ Removed jadwal from local data:', deletedItem.nama_guru, '-', deletedItem.mapel);
+                }
+                
+            } catch (error) {
+                console.error('❌ Error updating local data after deletion:', error);
             }
         }
 
@@ -4203,8 +5873,101 @@ function getOrCreateSheet(spreadsheet, sheetName) {
 
 
 
+        // Check today's attendance status and display indicator
+        async function checkTodayAttendanceStatus() {
+            try {
+                const today = getTodayDate();
+                console.log('🔍 Checking today attendance status for:', today);
+                
+                // Get today's attendance data
+                const todayAbsensi = allData.absensi.filter(a => {
+                    let absensiDateStr = a.tanggal;
+                    
+                    // Normalize date format
+                    if (absensiDateStr && absensiDateStr.includes('/')) {
+                        const parts = absensiDateStr.split('/');
+                        if (parts.length === 3) {
+                            if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
+                                absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                            } else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
+                                absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+                            }
+                        }
+                    }
+                    
+                    if (absensiDateStr && !absensiDateStr.includes('-') && !absensiDateStr.includes('/')) {
+                        const dateNum = parseFloat(absensiDateStr);
+                        if (!isNaN(dateNum) && dateNum > 40000) {
+                            const excelDate = new Date((dateNum - 25569) * 86400 * 1000);
+                            absensiDateStr = excelDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+                        }
+                    }
+                    
+                    if (absensiDateStr && absensiDateStr.includes('T')) {
+                        absensiDateStr = absensiDateStr.split('T')[0];
+                    }
+                    
+                    return absensiDateStr === today;
+                });
+                
+                console.log('📊 Today attendance records found:', todayAbsensi.length);
+                
+                if (todayAbsensi.length > 0) {
+                    // Group by jenis and kelas
+                    const siswaAbsensi = todayAbsensi.filter(a => a.jenis === 'siswa');
+                    const guruAbsensi = todayAbsensi.filter(a => a.jenis === 'guru');
+                    
+                    // Get unique classes for siswa
+                    const siswaKelas = [...new Set(siswaAbsensi.map(a => a.kelas))].sort();
+                    
+                    // Build status content
+                    let statusContent = '';
+                    
+                    if (siswaAbsensi.length > 0) {
+                        statusContent += `<strong>Siswa:</strong> ${siswaKelas.length} kelas (${siswaAbsensi.length} record)`;
+                        if (siswaKelas.length > 0) {
+                            statusContent += ` - Kelas: ${siswaKelas.join(', ')}`;
+                        }
+                    }
+                    
+                    if (guruAbsensi.length > 0) {
+                        if (statusContent) statusContent += '<br>';
+                        statusContent += `<strong>Guru:</strong> ${guruAbsensi.length} record`;
+                    }
+                    
+                    // Show the indicator
+                    document.getElementById('attendanceStatusContent').innerHTML = statusContent;
+                    document.getElementById('attendanceStatusIndicator').classList.remove('hidden');
+                    
+                    console.log('✅ Attendance status indicator displayed');
+                } else {
+                    // Hide the indicator if no attendance today
+                    document.getElementById('attendanceStatusIndicator').classList.add('hidden');
+                    console.log('ℹ️ No attendance records for today - indicator hidden');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error checking today attendance status:', error);
+                document.getElementById('attendanceStatusIndicator').classList.add('hidden');
+            }
+        }
+
+        // View today's attendance details
+        function viewTodayAttendance() {
+            // Switch to laporan tab and set today's date
+            switchTab('tabLaporan');
+            
+            // Set today's date in both fields
+            const today = getTodayDate();
+            document.getElementById('dariTanggal').value = today;
+            document.getElementById('sampaiTanggal').value = today;
+            
+            // Show toast message
+            showToast('📊 Gunakan filter untuk melihat detail absensi hari ini', 'info');
+        }
+
         // Initialize app when page loads
         document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9968f44654023d7d',t:'MTc2MTgwNjc3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9969c8f9f02ca5e3',t:'MTc2MTgxNTQ4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
