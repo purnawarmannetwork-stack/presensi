@@ -399,7 +399,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
     </nav>
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"><!-- Tab Navigation -->
      <div class="mb-6">
-      <nav class="flex space-x-8"><button id="tabAbsensi" class="tab-btn active py-2 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600">Absensi</button> <button id="tabLaporan" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Laporan</button> <button id="tabDataMaster" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Data Master</button> <button id="tabJadwal" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Jadwal</button>
+      <nav class="flex space-x-8"><button id="tabAbsensi" class="tab-btn active py-2 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600">Absensi</button> <button id="tabLaporan" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Laporan</button> <button id="tabDataMaster" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Data Master</button> <button id="tabJadwal" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Jadwal</button> <button id="tabSetup" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Setup</button>
       </nav>
      </div><!-- Real-time Clock -->
      <div class="mb-6 scale-90 origin-top">
@@ -849,6 +849,299 @@ function getOrCreateSheet(spreadsheet, sheetName) {
          </tbody>
         </table>
        </div>
+      </div><!-- Setup Tab -->
+      <div id="setupContent" class="tab-content p-6 hidden">
+       <h3 class="text-lg font-medium text-gray-900 mb-4">Setup Google Apps Script</h3><!-- Setup Instructions -->
+       <div class="setup-card rounded-lg p-8 mb-8">
+        <h3 class="text-2xl font-bold mb-6">📋 Panduan Setup Google Apps Script</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><!-- Step 1 -->
+         <div class="bg-white bg-opacity-10 rounded-lg p-6">
+          <div class="flex items-center mb-4">
+           <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3">
+            1
+           </div>
+           <h4 class="text-lg font-semibold">Buat Google Spreadsheet</h4>
+          </div>
+          <ul class="text-sm space-y-2 opacity-90">
+           <li>• Buka Google Sheets (sheets.google.com)</li>
+           <li>• Buat spreadsheet baru: "Sistem Absensi SMP"</li>
+           <li>• Buat 5 sheet: Users, Siswa, Guru, Jadwal, Absensi</li>
+           <li>• Salin ID dari URL spreadsheet</li>
+          </ul>
+         </div><!-- Step 2 -->
+         <div class="bg-white bg-opacity-10 rounded-lg p-6">
+          <div class="flex items-center mb-4">
+           <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3">
+            2
+           </div>
+           <h4 class="text-lg font-semibold">Buat Apps Script</h4>
+          </div>
+          <ul class="text-sm space-y-2 opacity-90">
+           <li>• Di spreadsheet, klik Extensions &gt; Apps Script</li>
+           <li>• Hapus kode default, paste kode yang disediakan</li>
+           <li>• Simpan project dengan nama "AbsensiAPI"</li>
+           <li>• Deploy sebagai Web App</li>
+          </ul>
+         </div><!-- Step 3 -->
+         <div class="bg-white bg-opacity-10 rounded-lg p-6">
+          <div class="flex items-center mb-4">
+           <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3">
+            3
+           </div>
+           <h4 class="text-lg font-semibold">Deploy Web App</h4>
+          </div>
+          <ul class="text-sm space-y-2 opacity-90">
+           <li>• Klik Deploy &gt; New deployment</li>
+           <li>• Type: Web app</li>
+           <li>• Execute as: Me</li>
+           <li>• Who has access: Anyone</li>
+           <li>• Salin Web App URL</li>
+          </ul>
+         </div><!-- Step 4 -->
+         <div class="bg-white bg-opacity-10 rounded-lg p-6">
+          <div class="flex items-center mb-4">
+           <div class="step-number w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3">
+            4
+           </div>
+           <h4 class="text-lg font-semibold">Kode Apps Script</h4>
+          </div>
+          <ul class="text-sm space-y-2 opacity-90">
+           <li>• Copy kode dari panduan lengkap</li>
+           <li>• Paste ke Apps Script editor</li>
+           <li>• Authorize permissions saat diminta</li>
+           <li>• Test dengan URL deployment</li>
+          </ul>
+         </div>
+        </div>
+       </div><!-- Apps Script Code -->
+       <div class="bg-gray-800 text-green-400 rounded-lg p-6 mb-6">
+        <div class="flex justify-between items-center mb-4">
+         <h4 class="text-lg font-semibold text-white">📝 Kode Google Apps Script</h4><button id="copyCodeBtnAdmin" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"> Copy Code </button>
+        </div>
+        <pre id="appsScriptCodeAdmin" class="text-xs overflow-x-auto whitespace-pre-wrap">function doGet(e) {
+  return handleRequest(e);
+}
+
+function doPost(e) {
+  return handleRequest(e);
+}
+
+function handleRequest(e) {
+  const action = e.parameter.action;
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  
+  try {
+    switch(action) {
+      case 'test':
+        return createResponse({success: true, message: 'Connection successful'});
+        
+      case 'initialize':
+        return initializeData(spreadsheet);
+        
+      case 'getData':
+        return getData(spreadsheet, e.parameter.sheet);
+        
+      case 'saveAbsensi':
+        return saveAbsensi(spreadsheet, JSON.parse(e.parameter.data));
+        
+      case 'saveData':
+        return saveData(spreadsheet, e.parameter.sheet, JSON.parse(e.parameter.data));
+        
+      case 'updateData':
+        return updateData(spreadsheet, e.parameter.sheet, JSON.parse(e.parameter.data), e.parameter.rowIndex);
+        
+      case 'deleteData':
+        return deleteData(spreadsheet, e.parameter.sheet, e.parameter.rowIndex);
+        
+      default:
+        return createResponse({success: false, error: 'Invalid action'});
+    }
+  } catch (error) {
+    return createResponse({success: false, error: error.toString()});
+  }
+}
+
+function createResponse(data) {
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function initializeData(spreadsheet) {
+  // Initialize Users sheet
+  const usersSheet = getOrCreateSheet(spreadsheet, 'Users');
+  const usersData = [
+    ['Username', 'Password', 'Nama', 'Role', 'Hari Piket'],
+    ['admin', 'admin123', 'Administrator', 'Admin', ''],
+    ['kepsek', 'kepsek123', 'Kepala Sekolah', 'Kepala Sekolah', ''],
+    ['piket1', 'piket123', 'Guru Piket Senin', 'Guru Piket', 'Senin'],
+    ['piket2', 'piket123', 'Guru Piket Selasa', 'Guru Piket', 'Selasa']
+  ];
+  usersSheet.clear();
+  usersSheet.getRange(1, 1, usersData.length, usersData[0].length).setValues(usersData);
+
+  // Initialize Siswa sheet
+  const siswaSheet = getOrCreateSheet(spreadsheet, 'Siswa');
+  const siswaData = [
+    ['NIS', 'Nama', 'Kelas', 'JK', 'Alamat'],
+    ['2024001', 'Ahmad Fauzi', '71', 'L', 'Jl. Merdeka No. 1'],
+    ['2024002', 'Siti Nurhaliza', '71', 'P', 'Jl. Sudirman No. 2'],
+    ['2024003', 'Budi Santoso', '72', 'L', 'Jl. Thamrin No. 3'],
+    ['2024004', 'Dewi Sartika', '81', 'P', 'Jl. Diponegoro No. 4'],
+    ['2024005', 'Rudi Hartono', '81', 'L', 'Jl. Gatot Subroto No. 5']
+  ];
+  siswaSheet.clear();
+  siswaSheet.getRange(1, 1, siswaData.length, siswaData[0].length).setValues(siswaData);
+
+  // Initialize Guru sheet
+  const guruSheet = getOrCreateSheet(spreadsheet, 'Guru');
+  const guruData = [
+    ['NUPTK', 'Nama', 'Mapel', 'JK', 'Alamat'],
+    ['196501011990032001', 'Dra. Siti Aminah', 'Matematika', 'P', 'Jl. Guru No. 1'],
+    ['197203151998021001', 'Ahmad Wijaya, S.Pd', 'Bahasa Indonesia', 'L', 'Jl. Guru No. 2'],
+    ['196803121995121001', 'Dr. Budi Setiawan', 'IPA', 'L', 'Jl. Guru No. 3'],
+    ['197505201998032002', 'Sari Indah, S.Pd', 'IPS', 'P', 'Jl. Guru No. 4']
+  ];
+  guruSheet.clear();
+  guruSheet.getRange(1, 1, guruData.length, guruData[0].length).setValues(guruData);
+
+  // Initialize Jadwal sheet
+  const jadwalSheet = getOrCreateSheet(spreadsheet, 'Jadwal');
+  const jadwalData = [
+    ['Hari', 'Jam Mulai', 'Jam Selesai', 'Kelas', 'NUPTK', 'Nama Guru', 'Mapel'],
+    ['Senin', '07:00', '08:30', '71', '196501011990032001', 'Dra. Siti Aminah', 'Matematika'],
+    ['Senin', '08:30', '10:00', '71', '197203151998021001', 'Ahmad Wijaya, S.Pd', 'Bahasa Indonesia'],
+    ['Selasa', '07:00', '08:30', '81', '196803121995121001', 'Dr. Budi Setiawan', 'IPA'],
+    ['Rabu', '09:00', '10:30', '72', '197505201998032002', 'Sari Indah, S.Pd', 'IPS']
+  ];
+  jadwalSheet.clear();
+  jadwalSheet.getRange(1, 1, jadwalData.length, jadwalData[0].length).setValues(jadwalData);
+
+  // Initialize Absensi sheet
+  const absensiSheet = getOrCreateSheet(spreadsheet, 'Absensi');
+  const absensiData = [
+    ['Tanggal', 'Jenis', 'Kelas', 'NIS/NUPTK', 'Nama', 'Status', 'Keterangan', 'Timestamp']
+  ];
+  absensiSheet.clear();
+  absensiSheet.getRange(1, 1, absensiData.length, absensiData[0].length).setValues(absensiData);
+
+  return createResponse({success: true, message: 'Data initialized successfully'});
+}
+
+function getData(spreadsheet, sheetName) {
+  const sheet = spreadsheet.getSheetByName(sheetName);
+  if (!sheet) {
+    return createResponse({success: false, error: 'Sheet not found: ' + sheetName});
+  }
+  
+  const data = sheet.getDataRange().getValues();
+  return createResponse({success: true, data: data});
+}
+
+function saveData(spreadsheet, sheetName, rowData) {
+  const sheet = getOrCreateSheet(spreadsheet, sheetName);
+  
+  // Add new row to the end
+  sheet.appendRow(rowData);
+  
+  return createResponse({success: true, message: 'Data saved successfully'});
+}
+
+function updateData(spreadsheet, sheetName, rowData, rowIndex) {
+  const sheet = spreadsheet.getSheetByName(sheetName);
+  if (!sheet) {
+    return createResponse({success: false, error: 'Sheet not found: ' + sheetName});
+  }
+  
+  const row = parseInt(rowIndex) + 1; // Convert to 1-based index
+  const range = sheet.getRange(row, 1, 1, rowData.length);
+  range.setValues([rowData]);
+  
+  return createResponse({success: true, message: 'Data updated successfully'});
+}
+
+function deleteData(spreadsheet, sheetName, rowIndex) {
+  const sheet = spreadsheet.getSheetByName(sheetName);
+  if (!sheet) {
+    return createResponse({success: false, error: 'Sheet not found: ' + sheetName});
+  }
+  
+  const row = parseInt(rowIndex) + 1; // Convert to 1-based index
+  sheet.deleteRow(row);
+  
+  return createResponse({success: true, message: 'Data deleted successfully'});
+}
+
+function saveAbsensi(spreadsheet, absensiData) {
+  const sheet = getOrCreateSheet(spreadsheet, 'Absensi');
+  
+  // Remove existing records for the same date/jenis/kelas
+  const existingData = sheet.getDataRange().getValues();
+  const headers = existingData[0];
+  const filteredData = [headers];
+  
+  for (let i = 1; i &lt; existingData.length; i++) {
+    const row = existingData[i];
+    const shouldKeep = !absensiData.some(newRow =&gt; 
+      row[0] === newRow[0] &amp;&amp; // tanggal
+      row[1] === newRow[1] &amp;&amp; // jenis
+      row[2] === newRow[2] &amp;&amp; // kelas
+      row[3] === newRow[3]    // nis/nuptk
+    );
+    
+    if (shouldKeep) {
+      filteredData.push(row);
+    }
+  }
+  
+  // Add new data
+  absensiData.forEach(row =&gt; {
+    filteredData.push(row);
+  });
+  
+  // Update sheet
+  sheet.clear();
+  if (filteredData.length &gt; 0) {
+    sheet.getRange(1, 1, filteredData.length, filteredData[0].length).setValues(filteredData);
+  }
+  
+  return createResponse({success: true, message: 'Absensi saved successfully'});
+}
+
+function getOrCreateSheet(spreadsheet, sheetName) {
+  let sheet = spreadsheet.getSheetByName(sheetName);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(sheetName);
+  }
+  return sheet;
+}</pre>
+       </div><!-- Configuration Form -->
+       <div class="bg-white shadow rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Konfigurasi Apps Script</h3>
+        <form id="setupFormAdmin" class="space-y-4">
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Web App URL</label> <input type="url" id="webAppUrlAdmin" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec" required>
+          <p class="text-xs text-gray-500 mt-1">URL dari deployment Google Apps Script</p>
+         </div>
+         <div class="flex space-x-4"><button type="submit" id="testConnectionBtnAdmin" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"> <span id="testConnectionTextAdmin">Test Koneksi</span> <span id="testConnectionLoaderAdmin" class="loading ml-2 hidden"></span> </button> <button type="button" id="initializeDataBtnAdmin" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 hidden"> <span id="initializeDataTextAdmin">Inisialisasi Data Sample</span> <span id="initializeDataLoaderAdmin" class="loading ml-2 hidden"></span> </button> <button type="button" id="copyCodeBtnAdmin2" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"> Copy Code </button>
+         </div>
+        </form><!-- Connection Status -->
+        <div id="connectionStatusAdmin" class="mt-4 hidden">
+         <div class="bg-green-50 border-l-4 border-green-400 p-4">
+          <div class="flex">
+           <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-green-400" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+           </div>
+           <div class="ml-3">
+            <h3 class="text-sm font-medium text-green-800">Koneksi Berhasil!</h3>
+            <div class="mt-2 text-sm text-green-700">
+             <p>Google Sheets berhasil terhubung dan siap digunakan.</p>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
       </div><!-- Laporan Tab -->
       <div id="laporanContent" class="tab-content p-6 hidden">
        <h3 class="text-lg font-medium text-gray-900 mb-4">Laporan Absensi</h3><!-- Report Type Selection (Hidden - Only Detail) -->
@@ -946,6 +1239,9 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             setupEventListeners();
             setTodayDate();
             
+            // Show login screen by default instead of setup
+            showLoginScreen();
+            
             // Initialize ElementSdk
             if (window.elementSdk) {
                 try {
@@ -960,7 +1256,11 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                             // Update apps script config if provided
                             if (config.web_app_url) {
                                 appsScriptConfig.webAppUrl = config.web_app_url;
-                                document.getElementById('webAppUrl').value = config.web_app_url;
+                                // Update both setup forms
+                                const webAppUrlEl = document.getElementById('webAppUrl');
+                                const webAppUrlAdminEl = document.getElementById('webAppUrlAdmin');
+                                if (webAppUrlEl) webAppUrlEl.value = config.web_app_url;
+                                if (webAppUrlAdminEl) webAppUrlAdminEl.value = config.web_app_url;
                             }
                         },
                         mapToCapabilities: (config) => ({
@@ -981,6 +1281,13 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             }
             
             console.log('App initialization completed');
+        }
+
+        // Show login screen
+        function showLoginScreen() {
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
         }
 
         // Google Apps Script API functions
@@ -1211,6 +1518,12 @@ function getOrCreateSheet(spreadsheet, sheetName) {
 
             // Logout button
             document.getElementById('logoutBtn').addEventListener('click', logout);
+            
+            // Setup admin form
+            document.getElementById('setupFormAdmin').addEventListener('submit', testConnectionAdmin);
+            document.getElementById('initializeDataBtnAdmin').addEventListener('click', initializeSampleDataAdmin);
+            document.getElementById('copyCodeBtnAdmin').addEventListener('click', copyAppsScriptCodeAdmin);
+            document.getElementById('copyCodeBtnAdmin2').addEventListener('click', copyAppsScriptCodeAdmin);
         }
 
         // Get today's date in Indonesia timezone (YYYY-MM-DD format)
@@ -1703,8 +2016,24 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             loginLoader.classList.remove('hidden');
 
             try {
-                // Find user in data
-                const user = allData.users.find(u => u.username === username && u.password === password);
+                // Default users for login (when Google Sheets not configured yet)
+                const defaultUsers = [
+                    { username: 'admin', password: 'admin123', nama: 'Administrator', role: 'Admin', hari_piket: '' },
+                    { username: 'kepsek', password: 'kepsek123', nama: 'Kepala Sekolah', role: 'Kepala Sekolah', hari_piket: '' },
+                    { username: 'piket1', password: 'piket123', nama: 'Guru Piket Senin', role: 'Guru Piket', hari_piket: 'Senin' },
+                    { username: 'piket2', password: 'piket123', nama: 'Guru Piket Selasa', role: 'Guru Piket', hari_piket: 'Selasa' }
+                ];
+
+                // Try to find user in loaded data first, fallback to default users
+                let user = null;
+                if (allData.users && allData.users.length > 0) {
+                    user = allData.users.find(u => u.username === username && u.password === password);
+                }
+                
+                // If not found in loaded data, check default users
+                if (!user) {
+                    user = defaultUsers.find(u => u.username === username && u.password === password);
+                }
                 
                 if (!user) {
                     showToast('Username atau password salah!', 'error');
@@ -1732,12 +2061,31 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             document.getElementById('adminDashboard').classList.remove('hidden');
             document.getElementById('userInfo').textContent = `${currentUser.nama} (${currentUser.role})`;
             
+            // Populate admin setup form with current URL if available
+            if (appsScriptConfig.webAppUrl) {
+                document.getElementById('webAppUrlAdmin').value = appsScriptConfig.webAppUrl;
+                document.getElementById('connectionStatusAdmin').classList.remove('hidden');
+                document.getElementById('initializeDataBtnAdmin').classList.remove('hidden');
+            }
+            
+            // Initialize with default data if Google Sheets not configured
+            if (!appsScriptConfig.webAppUrl) {
+                initializeDefaultData();
+                showToast('⚠️ Google Sheets belum dikonfigurasi. Menggunakan data default. Silakan setup di tab Setup.', 'info');
+            }
+            
             // Load initial data for dashboard
             try {
-                // Auto refresh: Load ALL data from Google Sheets when login successful
-                showToast('🔄 Memuat semua data dari Google Sheets...', 'info');
-                await loadAllData(); // Load complete fresh data from Google Sheets
-                await updateInfoCards(); // Update statistics with fresh data
+                if (appsScriptConfig.webAppUrl) {
+                    // Auto refresh: Load ALL data from Google Sheets when login successful
+                    showToast('🔄 Memuat semua data dari Google Sheets...', 'info');
+                    await loadAllData(); // Load complete fresh data from Google Sheets
+                    await updateInfoCards(); // Update statistics with fresh data
+                    showToast('✅ Semua data berhasil dimuat!', 'success');
+                } else {
+                    // Use default data and update UI
+                    await updateInfoCards();
+                }
                 
                 // Auto refresh data master tables after login
                 console.log('Auto refreshing data master tables...');
@@ -1749,11 +2097,52 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 // Start real-time statistics updates
                 startRealtimeStatistics();
                 
-                showToast('✅ Semua data berhasil dimuat!', 'success');
             } catch (error) {
                 console.error('Error loading dashboard data:', error);
                 showToast('❌ Gagal memuat data dashboard', 'error');
             }
+        }
+
+        // Initialize default data when Google Sheets not configured
+        function initializeDefaultData() {
+            // Default users
+            allData.users = [
+                { username: 'admin', password: 'admin123', nama: 'Administrator', role: 'Admin', hari_piket: '' },
+                { username: 'kepsek', password: 'kepsek123', nama: 'Kepala Sekolah', role: 'Kepala Sekolah', hari_piket: '' },
+                { username: 'piket1', password: 'piket123', nama: 'Guru Piket Senin', role: 'Guru Piket', hari_piket: 'Senin' },
+                { username: 'piket2', password: 'piket123', nama: 'Guru Piket Selasa', role: 'Guru Piket', hari_piket: 'Selasa' }
+            ];
+
+            // Default siswa
+            allData.siswa = [
+                { nis: '2024001', nama: 'Ahmad Fauzi', kelas: '71', jenis_kelamin: 'L', alamat: 'Jl. Merdeka No. 1' },
+                { nis: '2024002', nama: 'Siti Nurhaliza', kelas: '71', jenis_kelamin: 'P', alamat: 'Jl. Sudirman No. 2' },
+                { nis: '2024003', nama: 'Budi Santoso', kelas: '72', jenis_kelamin: 'L', alamat: 'Jl. Thamrin No. 3' },
+                { nis: '2024004', nama: 'Dewi Sartika', kelas: '81', jenis_kelamin: 'P', alamat: 'Jl. Diponegoro No. 4' },
+                { nis: '2024005', nama: 'Rudi Hartono', kelas: '81', jenis_kelamin: 'L', alamat: 'Jl. Gatot Subroto No. 5' }
+            ];
+
+            // Default guru
+            allData.guru = [
+                { nip: '196501011990032001', nama: 'Dra. Siti Aminah', mata_pelajaran: 'Matematika', jenis_kelamin: 'P', alamat: 'Jl. Guru No. 1' },
+                { nip: '197203151998021001', nama: 'Ahmad Wijaya, S.Pd', mata_pelajaran: 'Bahasa Indonesia', jenis_kelamin: 'L', alamat: 'Jl. Guru No. 2' },
+                { nip: '196803121995121001', nama: 'Dr. Budi Setiawan', mata_pelajaran: 'IPA', jenis_kelamin: 'L', alamat: 'Jl. Guru No. 3' },
+                { nip: '197505201998032002', nama: 'Sari Indah, S.Pd', mata_pelajaran: 'IPS', jenis_kelamin: 'P', alamat: 'Jl. Guru No. 4' }
+            ];
+
+            // Default jadwal
+            allData.jadwal = [
+                { hari: 'Senin', jam_mulai: '07:00', jam_selesai: '08:30', kelas: '71', nuptk: '196501011990032001', nama_guru: 'Dra. Siti Aminah', mapel: 'Matematika' },
+                { hari: 'Senin', jam_mulai: '08:30', jam_selesai: '10:00', kelas: '71', nuptk: '197203151998021001', nama_guru: 'Ahmad Wijaya, S.Pd', mapel: 'Bahasa Indonesia' },
+                { hari: 'Selasa', jam_mulai: '07:00', jam_selesai: '08:30', kelas: '81', nuptk: '196803121995121001', nama_guru: 'Dr. Budi Setiawan', mapel: 'IPA' },
+                { hari: 'Rabu', jam_mulai: '09:00', jam_selesai: '10:30', kelas: '72', nuptk: '197505201998032002', nama_guru: 'Sari Indah, S.Pd', mapel: 'IPS' }
+            ];
+
+            // Default absensi (empty)
+            allData.absensi = [];
+
+            // Update kelas options
+            populateKelasOptions();
         }
 
         // Switch tab
@@ -1783,6 +2172,8 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 document.getElementById('dataMasterContent').classList.remove('hidden');
             } else if (tabId === 'tabJadwal') {
                 document.getElementById('jadwalContent').classList.remove('hidden');
+            } else if (tabId === 'tabSetup') {
+                document.getElementById('setupContent').classList.remove('hidden');
             }
         }
 
@@ -3930,8 +4321,124 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             });
         }
 
+        // Test Apps Script connection from admin panel
+        async function testConnectionAdmin(e) {
+            e.preventDefault();
+            
+            const webAppUrl = document.getElementById('webAppUrlAdmin').value;
+            
+            if (!webAppUrl) {
+                showToast('Harap isi Web App URL', 'error');
+                return;
+            }
+
+            const testBtn = document.getElementById('testConnectionBtnAdmin');
+            const testText = document.getElementById('testConnectionTextAdmin');
+            const testLoader = document.getElementById('testConnectionLoaderAdmin');
+
+            // Show loading
+            testBtn.disabled = true;
+            testText.textContent = 'Testing...';
+            testLoader.classList.remove('hidden');
+
+            try {
+                const appsScript = new AppsScriptAPI(webAppUrl);
+                const result = await appsScript.testConnection();
+                
+                if (result.success) {
+                    appsScriptConfig.webAppUrl = webAppUrl;
+                    
+                    // Update config via ElementSdk
+                    if (window.elementSdk) {
+                        await window.elementSdk.setConfig({
+                            web_app_url: webAppUrl
+                        });
+                    }
+                    
+                    document.getElementById('connectionStatusAdmin').classList.remove('hidden');
+                    document.getElementById('initializeDataBtnAdmin').classList.remove('hidden');
+                    showToast('Koneksi berhasil!', 'success');
+                    
+                    // Load existing data
+                    await loadAllData();
+                } else {
+                    showToast(`Koneksi gagal: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showToast(`Error: ${error.message}`, 'error');
+            } finally {
+                // Hide loading
+                testBtn.disabled = false;
+                testText.textContent = 'Test Koneksi';
+                testLoader.classList.add('hidden');
+            }
+        }
+
+        // Initialize sample data from admin panel
+        async function initializeSampleDataAdmin() {
+            const initBtn = document.getElementById('initializeDataBtnAdmin');
+            const initText = document.getElementById('initializeDataTextAdmin');
+            const initLoader = document.getElementById('initializeDataLoaderAdmin');
+
+            // Show loading
+            initBtn.disabled = true;
+            initText.textContent = 'Menginisialisasi...';
+            initLoader.classList.remove('hidden');
+
+            try {
+                const appsScript = new AppsScriptAPI(appsScriptConfig.webAppUrl);
+                const result = await appsScript.initializeData();
+                
+                if (result.success) {
+                    showToast('Data sample berhasil diinisialisasi!', 'success');
+                    
+                    // Load the initialized data
+                    await loadAllData();
+                    
+                    // Refresh all data master tables
+                    renderUsersDataTable();
+                    renderSiswaDataTable();
+                    renderGuruDataTable();
+                    renderJadwalDataTable();
+                    
+                    // Update statistics
+                    await updateInfoCards();
+                    
+                } else {
+                    showToast(`Error inisialisasi: ${result.error}`, 'error');
+                }
+                
+            } catch (error) {
+                showToast(`Error inisialisasi: ${error.message}`, 'error');
+            } finally {
+                // Hide loading
+                initBtn.disabled = false;
+                initText.textContent = 'Inisialisasi Data Sample';
+                initLoader.classList.add('hidden');
+            }
+        }
+
+        // Copy Apps Script code from admin panel
+        function copyAppsScriptCodeAdmin() {
+            const codeElement = document.getElementById('appsScriptCodeAdmin');
+            const code = codeElement.textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('Kode berhasil disalin!', 'success');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = code;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Kode berhasil disalin!', 'success');
+            });
+        }
+
         // Initialize app when page loads
         document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9968bf57833aa3e0',t:'MTc2MTgwNDYwNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9968cd944158a3e0',t:'MTc2MTgwNTE4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
