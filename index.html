@@ -410,7 +410,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
     </nav>
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"><!-- Tab Navigation -->
      <div class="mb-6">
-      <nav class="flex space-x-8"><button id="tabAbsensi" class="tab-btn active py-2 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600">Absensi</button> <button id="tabLaporan" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Laporan</button> <button id="tabRekap" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Rekap Kehadiran</button> <button id="tabDataMaster" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Data Master</button> <button id="tabJadwal" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Jadwal</button> <button id="tabSetup" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Setup</button>
+      <nav class="flex space-x-8"><button id="tabAbsensi" class="tab-btn active py-2 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600">Absensi</button> <button id="tabDataMaster" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Data Master</button> <button id="tabJadwal" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Jadwal</button> <button id="tabSetup" class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Setup</button>
       </nav>
      </div><!-- Real-time Clock -->
      <div class="mb-6 scale-90 origin-top">
@@ -693,52 +693,108 @@ function getOrCreateSheet(spreadsheet, sheetName) {
       </div>
      </div><!-- Tab Content -->
      <div class="bg-white shadow rounded-lg"><!-- Absensi Tab -->
-      <div id="absensiContent" class="tab-content p-6">
-       <h3 class="text-lg font-medium text-gray-900 mb-4">Input Absensi</h3><!-- Attendance Status Indicator -->
-       <div id="attendanceStatusIndicator" class="mb-6 hidden">
-        <div class="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4">
-         <div class="flex items-center">
-          <div class="flex-shrink-0">
-           <svg class="h-6 w-6 text-green-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-           </svg>
-          </div>
-          <div class="ml-3 flex-1">
-           <h4 class="text-sm font-medium text-green-800">✅ Status Absensi Hari Ini</h4>
-           <div id="attendanceStatusContent" class="mt-1 text-sm text-green-700"><!-- Dynamic content will be inserted here -->
+      <div id="absensiContent" class="tab-content p-6"><!-- Sub Tab Navigation for Absensi -->
+       <div class="mb-6">
+        <nav class="flex space-x-8"><button id="tabInputAbsensi" class="absensi-tab-btn active py-2 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600">Input Absensi</button> <button id="tabLaporanAbsensi" class="absensi-tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">Laporan Absensi</button>
+        </nav>
+       </div><!-- Input Absensi Content -->
+       <div id="inputAbsensiContent" class="absensi-tab-content">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Input Absensi</h3><!-- Attendance Status Indicator -->
+        <div id="attendanceStatusIndicator" class="mb-6 hidden">
+         <div class="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4">
+          <div class="flex items-center">
+           <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-green-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
            </div>
-          </div>
-          <div class="ml-4"><button id="viewTodayAttendanceBtn" class="inline-flex items-center px-3 py-1 border border-transparent text-xs leading-4 font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"> 📊 Lihat Detail </button>
+           <div class="ml-3 flex-1">
+            <h4 class="text-sm font-medium text-green-800">✅ Status Absensi Hari Ini</h4>
+            <div id="attendanceStatusContent" class="mt-1 text-sm text-green-700"><!-- Dynamic content will be inserted here -->
+            </div>
+           </div>
+           <div class="ml-4"><button id="viewTodayAttendanceBtn" class="inline-flex items-center px-3 py-1 border border-transparent text-xs leading-4 font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"> 📊 Lihat Detail </button>
+           </div>
           </div>
          </div>
         </div>
-       </div>
-       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div><label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label> <input type="date" id="tanggalAbsensi" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label> <input type="date" id="tanggalAbsensi" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Jenis Absensi</label> <select id="jenisAbsensi" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"> <option value="">Pilih Jenis</option> <option value="siswa">Siswa</option> <option value="guru">Guru</option> </select>
+         </div>
+         <div id="kelasContainer" class="hidden"><label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label> <select id="kelasAbsensi" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"> <option value="">Pilih Kelas</option> </select>
+         </div>
+         <div class="flex items-end"><button id="muatDataBtn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"> <span id="muatDataText">Tarik Data</span> <span id="muatDataLoader" class="loading ml-2 hidden"></span> </button>
+         </div>
         </div>
-        <div><label class="block text-sm font-medium text-gray-700 mb-2">Jenis Absensi</label> <select id="jenisAbsensi" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"> <option value="">Pilih Jenis</option> <option value="siswa">Siswa</option> <option value="guru">Guru</option> </select>
+        <div id="absensiList" class="hidden">
+         <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+           <thead class="bg-gray-50">
+            <tr>
+             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS/NUPTK</th>
+             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
+            </tr>
+           </thead>
+           <tbody id="absensiTableBody" class="bg-white divide-y divide-gray-200">
+           </tbody>
+          </table>
+         </div>
+         <div class="mt-6 flex justify-end"><button id="simpanAbsensiBtn" class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"> <span id="simpanAbsensiText">Simpan Absensi</span> <span id="simpanAbsensiLoader" class="loading ml-2 hidden"></span> </button>
+         </div>
         </div>
-        <div id="kelasContainer" class="hidden"><label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label> <select id="kelasAbsensi" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"> <option value="">Pilih Kelas</option> </select>
+       </div><!-- Laporan Absensi Content -->
+       <div id="laporanAbsensiContent" class="absensi-tab-content hidden">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Laporan Absensi</h3><!-- Tipe Laporan Radio Buttons -->
+        <div class="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200"><label class="block text-sm font-medium text-gray-700 mb-4">📊 Pilih Tipe Laporan</label>
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><label class="flex items-start p-4 border-2 border-gray-200 rounded-lg hover:border-blue-300 cursor-pointer transition-colors duration-200"> <input type="radio" name="tipeLaporan" value="detail" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 mt-1" checked>
+           <div class="ml-3"><span class="text-sm font-medium text-gray-900">📋 Detail Absensi</span>
+            <p class="text-xs text-gray-600 mt-1">Menampilkan data absensi harian secara detail per individu dengan tanggal, status, dan keterangan lengkap</p>
+           </div></label> <label class="flex items-start p-4 border-2 border-gray-200 rounded-lg hover:border-blue-300 cursor-pointer transition-colors duration-200"> <input type="radio" name="tipeLaporan" value="rekap" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 mt-1">
+           <div class="ml-3"><span class="text-sm font-medium text-gray-900">📈 Rekapitulasi Kehadiran</span>
+            <p class="text-xs text-gray-600 mt-1">Menampilkan ringkasan kehadiran per individu dengan total hadir, izin, sakit, alpha, dan persentase kehadiran</p>
+           </div></label>
+         </div><!-- Info Box -->
+         <div class="mt-4 p-3 bg-blue-100 border border-blue-300 rounded-md">
+          <div class="flex items-start">
+           <svg class="w-5 h-5 text-blue-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+           </svg>
+           <div>
+            <h4 class="text-sm font-medium text-blue-800">💡 Tips Penggunaan</h4>
+            <p class="text-xs text-blue-700 mt-1">• <strong>Detail Absensi:</strong> Cocok untuk melihat kehadiran harian dan mencari data spesifik<br>
+              • <strong>Rekapitulasi:</strong> Cocok untuk evaluasi kehadiran, laporan bulanan, dan analisis performa</p>
+           </div>
+          </div>
+         </div>
         </div>
-        <div class="flex items-end"><button id="muatDataBtn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"> <span id="muatDataText">Muat Data</span> <span id="muatDataLoader" class="loading ml-2 hidden"></span> </button>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Jenis Laporan</label> <select id="jenisLaporan" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"> <option value="">Pilih Jenis</option> <option value="siswa">Siswa</option> <option value="guru">Guru</option> </select>
+         </div>
+         <div id="kelasLaporanContainer" class="hidden"><label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label> <select id="kelasLaporan" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"> <option value="">Semua Kelas</option> </select>
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Dari Tanggal</label> <input type="date" id="dariTanggal" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+         </div>
+         <div><label class="block text-sm font-medium text-gray-700 mb-2">Sampai Tanggal</label> <input type="date" id="sampaiTanggal" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+         </div>
+         <div class="flex items-end"><button id="tarikDataBtn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"> <span id="tarikDataText">Tarik Data</span> <span id="tarikDataLoader" class="loading ml-2 hidden"></span> </button>
+         </div>
         </div>
-       </div>
-       <div id="absensiList" class="hidden">
-        <div class="overflow-x-auto">
-         <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS/NUPTK</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
-           </tr>
-          </thead>
-          <tbody id="absensiTableBody" class="bg-white divide-y divide-gray-200">
-          </tbody>
-         </table>
-        </div>
-        <div class="mt-6 flex justify-end"><button id="simpanAbsensiBtn" class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"> <span id="simpanAbsensiText">Simpan Absensi</span> <span id="simpanAbsensiLoader" class="loading ml-2 hidden"></span> </button>
+        <div id="laporanResult" class="hidden">
+         <div class="mb-4 flex space-x-2"><button id="cetakPDFBtn" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">Cetak PDF</button> <button id="cetakExcelBtn" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">Export Excel</button>
+         </div>
+         <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+           <thead class="bg-gray-50">
+            <tr id="laporanTableHeader">
+            </tr>
+           </thead>
+           <tbody id="laporanTableBody" class="bg-white divide-y divide-gray-200">
+           </tbody>
+          </table>
+         </div>
         </div>
        </div>
       </div><!-- Data Master Tab -->
@@ -923,152 +979,6 @@ function getOrCreateSheet(spreadsheet, sheetName) {
          </div>
         </div>
        </div>
-      </div><!-- Rekap Kehadiran Tab -->
-      <div id="rekapContent" class="tab-content p-6 hidden">
-       <h3 class="text-lg font-medium text-gray-900 mb-4">📊 Rekap Kehadiran</h3><!-- Filter Controls -->
-       <div class="bg-gray-50 rounded-lg p-4 mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-         <div><label class="block text-sm font-medium text-gray-700 mb-2">Jenis</label> <select id="jenisRekap" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"> <option value="">Pilih Jenis</option> <option value="siswa">Siswa</option> <option value="guru">Guru</option> </select>
-         </div>
-         <div id="kelasRekapContainer" class="hidden"><label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label> <select id="kelasRekap" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"> <option value="">Semua Kelas</option> </select>
-         </div>
-         <div><label class="block text-sm font-medium text-gray-700 mb-2">Dari Tanggal</label> <input type="date" id="dariTanggalRekap" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-         </div>
-         <div><label class="block text-sm font-medium text-gray-700 mb-2">Sampai Tanggal</label> <input type="date" id="sampaiTanggalRekap" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-         </div>
-         <div class="flex items-end"><button id="generateRekapBtn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"> <span id="generateRekapText">Generate Rekap</span> <span id="generateRekapLoader" class="loading ml-2 hidden"></span> </button>
-         </div>
-        </div>
-       </div><!-- Rekap Results -->
-       <div id="rekapResult" class="hidden"><!-- Summary Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-         <div class="bg-white overflow-hidden shadow rounded-lg">
-          <div class="p-5">
-           <div class="flex items-center">
-            <div class="flex-shrink-0">
-             <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-             </svg>
-            </div>
-            <div class="ml-5 w-0 flex-1">
-             <dl>
-              <dt class="text-sm font-medium text-gray-500 truncate">
-               Total
-              </dt>
-              <dd id="rekapTotal" class="text-lg font-medium text-gray-900">
-               0
-              </dd>
-             </dl>
-            </div>
-           </div>
-          </div>
-         </div>
-         <div class="bg-white overflow-hidden shadow rounded-lg">
-          <div class="p-5">
-           <div class="flex items-center">
-            <div class="flex-shrink-0">
-             <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-             </svg>
-            </div>
-            <div class="ml-5 w-0 flex-1">
-             <dl>
-              <dt class="text-sm font-medium text-gray-500 truncate">
-               Rata-rata Hadir
-              </dt>
-              <dd id="rekapRataHadir" class="text-lg font-medium text-green-600">
-               0%
-              </dd>
-             </dl>
-            </div>
-           </div>
-          </div>
-         </div>
-         <div class="bg-white overflow-hidden shadow rounded-lg">
-          <div class="p-5">
-           <div class="flex items-center">
-            <div class="flex-shrink-0">
-             <svg class="h-8 w-8 text-yellow-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
-             </svg>
-            </div>
-            <div class="ml-5 w-0 flex-1">
-             <dl>
-              <dt class="text-sm font-medium text-gray-500 truncate">
-               Kehadiran Rendah
-              </dt>
-              <dd id="rekapRendah" class="text-lg font-medium text-yellow-600">
-               0
-              </dd>
-             </dl>
-            </div>
-           </div>
-          </div>
-         </div>
-         <div class="bg-white overflow-hidden shadow rounded-lg">
-          <div class="p-5">
-           <div class="flex items-center">
-            <div class="flex-shrink-0">
-             <svg class="h-8 w-8 text-red-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-             </svg>
-            </div>
-            <div class="ml-5 w-0 flex-1">
-             <dl>
-              <dt class="text-sm font-medium text-gray-500 truncate">
-               Perlu Perhatian
-              </dt>
-              <dd id="rekapPerhatian" class="text-lg font-medium text-red-600">
-               0
-              </dd>
-             </dl>
-            </div>
-           </div>
-          </div>
-         </div>
-        </div><!-- Export Buttons -->
-        <div class="mb-4 flex space-x-2"><button id="exportRekapPDFBtn" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"> 📄 Export PDF </button> <button id="exportRekapExcelBtn" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"> 📊 Export Excel </button>
-        </div><!-- Rekap Table -->
-        <div class="overflow-x-auto">
-         <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-           <tr id="rekapTableHeader">
-           </tr>
-          </thead>
-          <tbody id="rekapTableBody" class="bg-white divide-y divide-gray-200">
-          </tbody>
-         </table>
-        </div>
-       </div>
-      </div><!-- Laporan Tab -->
-      <div id="laporanContent" class="tab-content p-6 hidden">
-       <h3 class="text-lg font-medium text-gray-900 mb-4">Laporan Absensi</h3><!-- Report Type Selection (Hidden - Only Detail) -->
-       <div class="mb-6" style="display: none;"><label class="block text-sm font-medium text-gray-700 mb-2">Tipe Laporan</label>
-        <div class="flex space-x-4"><label class="flex items-center"> <input type="radio" name="tipeLaporan" value="detail" class="mr-2" checked> <span class="text-sm">Laporan Detail</span> </label>
-        </div>
-       </div>
-       <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-        <div><label class="block text-sm font-medium text-gray-700 mb-2">Jenis Laporan</label> <select id="jenisLaporan" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"> <option value="">Pilih Jenis</option> <option value="siswa">Siswa</option> <option value="guru">Guru</option> </select>
-        </div>
-        <div id="kelasLaporanContainer" class="hidden"><label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label> <select id="kelasLaporan" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"> <option value="">Semua Kelas</option> </select>
-        </div>
-        <div><label class="block text-sm font-medium text-gray-700 mb-2">Dari Tanggal</label> <input type="date" id="dariTanggal" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-        </div>
-        <div><label class="block text-sm font-medium text-gray-700 mb-2">Sampai Tanggal</label> <input type="date" id="sampaiTanggal" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-        </div>
-        <div class="flex items-end"><button id="tarikDataBtn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"> <span id="tarikDataText">Tarik Data</span> <span id="tarikDataLoader" class="loading ml-2 hidden"></span> </button>
-        </div>
-       </div>
-       <div id="laporanResult" class="hidden">
-        <div class="mb-4 flex space-x-2"><button id="cetakPDFBtn" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">Cetak PDF</button> <button id="cetakExcelBtn" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">Export Excel</button>
-        </div>
-        <div class="overflow-x-auto">
-         <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-           <tr id="laporanTableHeader">
-           </tr>
-          </thead>
-          <tbody id="laporanTableBody" class="bg-white divide-y divide-gray-200">
-          </tbody>
-         </table>
-        </div>
-       </div>
       </div>
      </div>
     </div>
@@ -1118,6 +1028,172 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             absensi: []
         };
         let currentAbsensiData = [];
+
+        // Date conversion functions for Indonesian format (DD/MM/YYYY)
+        function convertToIndonesianDateFormat(dateStr) {
+            // Convert YYYY-MM-DD to DD/MM/YYYY (Indonesian format)
+            if (dateStr && dateStr.includes('-')) {
+                const parts = dateStr.split('-');
+                if (parts.length === 3) {
+                    return `${parts[2].padStart(2, '0')}/${parts[1].padStart(2, '0')}/${parts[0]}`;
+                }
+            }
+            return dateStr;
+        }
+
+        function convertFromIndonesianDateFormat(dateStr) {
+            // Convert DD/MM/YYYY to YYYY-MM-DD for internal processing
+            if (dateStr && dateStr.includes('/')) {
+                const parts = dateStr.split('/');
+                if (parts.length === 3) {
+                    // Check if it's DD/MM/YYYY format (Indonesian format)
+                    if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
+                        return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                    }
+                }
+            }
+            return dateStr;
+        }
+
+        // 🚀 FIXED DATE CONVERSION SYSTEM - Prioritas format Indonesia DD/MM/YYYY
+        function convertFromGoogleSheetsDateFormat(dateStr) {
+            if (!dateStr) return dateStr;
+            
+            console.log('🔍 FIXED Converting date from Google Sheets:', dateStr);
+            
+            // PATTERN 1: Standard DD/MM/YYYY format (PRIORITAS UTAMA - Format Indonesia)
+            if (dateStr.includes('/') && !dateStr.includes('T')) {
+                const parts = dateStr.split('/');
+                if (parts.length === 3) {
+                    // SELALU anggap DD/MM/YYYY (format Indonesia)
+                    if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
+                        const day = parts[0].padStart(2, '0');
+                        const month = parts[1].padStart(2, '0');
+                        const year = parts[2];
+                        
+                        // Validasi range tanggal dan bulan
+                        const dayNum = parseInt(day);
+                        const monthNum = parseInt(month);
+                        
+                        if (dayNum >= 1 && dayNum <= 31 && monthNum >= 1 && monthNum <= 12) {
+                            const converted = `${year}-${month}-${day}`;
+                            console.log('✅ PATTERN 1 - DD/MM/YYYY (Indonesia):', dateStr, '→', converted);
+                            return converted;
+                        }
+                    }
+                }
+            }
+            
+            // PATTERN 2: Malformed ISO with slash (29T17:00:00.000Z/10/2025)
+            if (dateStr.includes('T') && dateStr.includes('Z') && dateStr.includes('/')) {
+                const match = dateStr.match(/(\d{1,2})T.*?\/(\d{1,2})\/(\d{4})/);
+                if (match) {
+                    const day = match[1].padStart(2, '0');
+                    const month = match[2].padStart(2, '0');
+                    const year = match[3];
+                    const converted = `${year}-${month}-${day}`;
+                    console.log('✅ PATTERN 2 - Malformed ISO:', dateStr, '→', converted);
+                    return converted;
+                }
+            }
+            
+            // PATTERN 3: T format with slash (29T.../10/2025)
+            if (dateStr.includes('T') && dateStr.includes('/')) {
+                const match = dateStr.match(/(\d{1,2})T[^\/]*\/(\d{1,2})\/(\d{4})/);
+                if (match) {
+                    const day = match[1].padStart(2, '0');
+                    const month = match[2].padStart(2, '0');
+                    const year = match[3];
+                    const converted = `${year}-${month}-${day}`;
+                    console.log('✅ PATTERN 3 - T format:', dateStr, '→', converted);
+                    return converted;
+                }
+            }
+            
+            // PATTERN 4: Google Sheets serial numbers
+            if (!dateStr.includes('-') && !dateStr.includes('/') && !dateStr.includes('T')) {
+                const dateNum = parseFloat(dateStr);
+                if (!isNaN(dateNum) && dateNum > 40000 && dateNum < 100000) {
+                    // Excel/Google Sheets epoch starts at 1900-01-01, but with 1900 leap year bug
+                    const excelEpoch = new Date(1899, 11, 30); // December 30, 1899
+                    const resultDate = new Date(excelEpoch.getTime() + (dateNum * 24 * 60 * 60 * 1000));
+                    const converted = resultDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+                    console.log('✅ PATTERN 4 - Serial number:', dateStr, '→', converted);
+                    return converted;
+                }
+            }
+            
+            // PATTERN 5: Standard ISO with time (2025-10-29T17:00:00.000Z)
+            if (dateStr.includes('T') && !dateStr.includes('/')) {
+                const converted = dateStr.split('T')[0];
+                console.log('✅ PATTERN 5 - ISO with time:', dateStr, '→', converted);
+                return converted;
+            }
+            
+            // PATTERN 6: YYYY-MM-DD format (sudah benar)
+            if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                console.log('✅ PATTERN 6 - Already YYYY-MM-DD:', dateStr);
+                return dateStr;
+            }
+            
+            // PATTERN 7: BRUTE FORCE - Extract numbers dengan prioritas DD/MM/YYYY
+            if (dateStr.match(/\d/)) {
+                const numbers = dateStr.match(/\d+/g);
+                if (numbers && numbers.length >= 3) {
+                    // Find year (4 digits, 2020-2030 range)
+                    const year = numbers.find(n => n.length === 4 && parseInt(n) >= 2020 && parseInt(n) <= 2030);
+                    if (year) {
+                        const otherNumbers = numbers.filter(n => n !== year);
+                        if (otherNumbers.length >= 2) {
+                            // PRIORITAS: Anggap format DD/MM (Indonesia)
+                            const day = otherNumbers[0].padStart(2, '0');
+                            const month = otherNumbers[1].padStart(2, '0');
+                            
+                            // Validate day and month ranges
+                            const dayNum = parseInt(day);
+                            const monthNum = parseInt(month);
+                            
+                            if (dayNum >= 1 && dayNum <= 31 && monthNum >= 1 && monthNum <= 12) {
+                                const converted = `${year}-${month}-${day}`;
+                                console.log('✅ PATTERN 7 - Brute force DD/MM:', dateStr, '→', converted);
+                                return converted;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            console.log('⚠️ ALL PATTERNS FAILED - Date format not recognized:', dateStr);
+            
+            // Show toast notification for problematic dates
+            if (typeof showToast === 'function') {
+                showToast(`⚠️ Format tanggal bermasalah: ${dateStr}`, 'error');
+            }
+            
+            return dateStr;
+        }
+
+        // Format date for display in Indonesian format
+        function formatDateForDisplay(dateStr) {
+            if (!dateStr) return '-';
+            
+            // If it's YYYY-MM-DD format, convert to DD/MM/YYYY
+            if (dateStr.includes('-')) {
+                return convertToIndonesianDateFormat(dateStr);
+            }
+            
+            // If it's already DD/MM/YYYY, return as is
+            return dateStr;
+        }
+
+        // Get today's date in Indonesian format (DD/MM/YYYY)
+        function getTodayIndonesianFormat() {
+            const today = new Date();
+            const day = today.getDate().toString().padStart(2, '0');
+            const month = (today.getMonth() + 1).toString().padStart(2, '0');
+            const year = today.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
 
         // Session management functions
         function saveUserSession(user) {
@@ -1409,6 +1485,11 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 btn.addEventListener('click', (e) => switchDataTab(e.target.id));
             });
 
+            // Absensi sub-tab navigation
+            document.querySelectorAll('.absensi-tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => switchAbsensiTab(e.target.id));
+            });
+
             // Modal event listeners
             document.getElementById('closeModalBtn').addEventListener('click', closeModal);
             document.getElementById('cancelBtn').addEventListener('click', closeModal);
@@ -1440,11 +1521,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             document.getElementById('cetakPDFBtn').addEventListener('click', cetakPDF);
             document.getElementById('cetakExcelBtn').addEventListener('click', cetakExcel);
 
-            // Rekap form
-            document.getElementById('jenisRekap').addEventListener('change', handleJenisRekapChange);
-            document.getElementById('generateRekapBtn').addEventListener('click', generateRekapKehadiran);
-            document.getElementById('exportRekapPDFBtn').addEventListener('click', exportRekapPDF);
-            document.getElementById('exportRekapExcelBtn').addEventListener('click', exportRekapExcel);
+
             
 
             
@@ -1496,7 +1573,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             // Absensi input uses today's date
             document.getElementById('tanggalAbsensi').value = today;
             
-            // Reports use today's date by default (will change to yesterday when "Tarik Data" is clicked)
+            // Reports use today's date by default
             document.getElementById('dariTanggal').value = today;
             document.getElementById('sampaiTanggal').value = today;
             
@@ -1633,19 +1710,9 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                     allData.absensi = allAbsensi.filter(a => {
                         let absensiDateStr = a.tanggal;
                         
-                        // Handle different date formats from Google Sheets
+                        // Handle DD/MM/YYYY format from Google Sheets (our standard format)
                         if (absensiDateStr && absensiDateStr.includes('/')) {
-                            const parts = absensiDateStr.split('/');
-                            if (parts.length === 3) {
-                                // Check if it's DD/MM/YYYY format (day first)
-                                if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
-                                    absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                                }
-                                // Check if it's MM/DD/YYYY format (month first)
-                                else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
-                                    absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-                                }
-                            }
+                            absensiDateStr = convertFromGoogleSheetsDateFormat(absensiDateStr);
                         }
                         
                         // Handle Google Sheets date serial numbers
@@ -1855,8 +1922,9 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 
                 document.getElementById('absensiBlockedViewReport').addEventListener('click', () => {
                     document.body.removeChild(overlay);
-                    // Switch to laporan tab
-                    switchTab('tabLaporan');
+                    // Switch to absensi tab and then to laporan sub-tab
+                    switchTab('tabAbsensi');
+                    switchAbsensiTab('tabLaporanAbsensi');
                     resolve('report');
                 });
                 
@@ -2271,6 +2339,21 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             document.getElementById('adminDashboard').classList.remove('hidden');
             document.getElementById('userInfo').textContent = `${currentUser.nama} (${currentUser.role})`;
             
+            // Initialize report type radio buttons after dashboard is shown
+            setTimeout(() => {
+                const radioButtons = document.querySelectorAll('input[name="tipeLaporan"]');
+                console.log('🔧 Found radio buttons:', radioButtons.length);
+                if (radioButtons.length > 0) {
+                    radioButtons.forEach(radio => {
+                        radio.addEventListener('change', handleTipeLaporanChange);
+                    });
+                    console.log('✅ Radio button event listeners attached successfully');
+                } else {
+                    console.log('⚠️ No radio buttons found, will retry...');
+                    // Retry after laporan tab is accessed
+                }
+            }, 500);
+            
             // Apps Script URL is now permanently configured
             
             // Initialize with default data if Google Sheets not configured
@@ -2375,18 +2458,51 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             // Show corresponding content
             if (tabId === 'tabAbsensi') {
                 document.getElementById('absensiContent').classList.remove('hidden');
-            } else if (tabId === 'tabLaporan') {
-                document.getElementById('laporanContent').classList.remove('hidden');
-            } else if (tabId === 'tabRekap') {
-                document.getElementById('rekapContent').classList.remove('hidden');
-                // Initialize rekap dates and populate kelas options
-                initializeRekapForm();
             } else if (tabId === 'tabDataMaster') {
                 document.getElementById('dataMasterContent').classList.remove('hidden');
             } else if (tabId === 'tabJadwal') {
                 document.getElementById('jadwalContent').classList.remove('hidden');
             } else if (tabId === 'tabSetup') {
                 document.getElementById('setupContent').classList.remove('hidden');
+            }
+        }
+
+        // Switch absensi sub-tab
+        function switchAbsensiTab(tabId) {
+            // Remove active class from all absensi tabs
+            document.querySelectorAll('.absensi-tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'border-blue-500', 'text-blue-600');
+                btn.classList.add('border-transparent', 'text-gray-500');
+            });
+
+            // Hide all absensi tab contents
+            document.querySelectorAll('.absensi-tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // Show selected tab
+            const selectedTab = document.getElementById(tabId);
+            selectedTab.classList.add('active', 'border-blue-500', 'text-blue-600');
+            selectedTab.classList.remove('border-transparent', 'text-gray-500');
+
+            // Show corresponding content
+            if (tabId === 'tabInputAbsensi') {
+                document.getElementById('inputAbsensiContent').classList.remove('hidden');
+            } else if (tabId === 'tabLaporanAbsensi') {
+                document.getElementById('laporanAbsensiContent').classList.remove('hidden');
+                
+                // Initialize radio button event listeners when laporan tab is shown
+                setTimeout(() => {
+                    const radioButtons = document.querySelectorAll('input[name="tipeLaporan"]');
+                    console.log('🔧 Initializing radio buttons on laporan tab:', radioButtons.length);
+                    radioButtons.forEach(radio => {
+                        // Remove existing listeners to avoid duplicates
+                        radio.removeEventListener('change', handleTipeLaporanChange);
+                        // Add new listener
+                        radio.addEventListener('change', handleTipeLaporanChange);
+                    });
+                    console.log('✅ Radio button event listeners initialized for laporan tab');
+                }, 100);
             }
         }
 
@@ -2428,7 +2544,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             document.getElementById('laporanResult').classList.add('hidden');
         }
 
-        // Load absensi data (with strict one-time daily limit enforcement)
+        // Load absensi data with enhanced filtering and display (combined from laporan functionality)
         async function loadAbsensiData() {
             const tanggal = document.getElementById('tanggalAbsensi').value;
             const jenis = document.getElementById('jenisAbsensi').value;
@@ -2440,23 +2556,18 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             const selectedTanggal = tanggal;
             const selectedJenis = jenis;
             const selectedKelas = kelas;
+            
+            // Store kelas selection to preserve it throughout the process
+            window.currentSelectedKelas = selectedKelas;
 
             // Validasi input
             if (!tanggal || !jenis) {
-                showToast('Pilih tanggal dan jenis absensi', 'error');
+                showToast('❌ Pilih tanggal dan jenis absensi', 'error');
                 return;
             }
 
             if (jenis === 'siswa' && !kelas) {
-                showToast('Pilih kelas untuk absensi siswa', 'error');
-                return;
-            }
-
-            // Validasi tanggal harus hari ini untuk absensi realtime
-            const today = getTodayDate();
-            if (tanggal !== today) {
-                showToast('Absensi hanya dapat dilakukan untuk hari ini!', 'error');
-                document.getElementById('tanggalAbsensi').value = today;
+                showToast('❌ Pilih kelas untuk absensi siswa', 'error');
                 return;
             }
 
@@ -2466,166 +2577,114 @@ function getOrCreateSheet(spreadsheet, sheetName) {
 
             // Show loading
             muatDataBtn.disabled = true;
-            muatDataText.textContent = '🔄 Memuat Data...';
+            muatDataText.textContent = '🔄 Menarik Data...';
             muatDataLoader.classList.remove('hidden');
 
             try {
-                // ENHANCED: Force complete refresh of ALL data from Google Sheets
-                console.log('🔄 Force refreshing ALL data from Google Sheets for maximum accuracy...');
+                // ENHANCED: Force complete refresh of absensi data for maximum accuracy (copied from loadLaporanData)
+                console.log('🔄 Force refreshing ALL absensi data for maximum report accuracy...');
+                console.log('📊 Filter parameters:', { jenis, kelas, tanggal });
+                
                 showToast('🔄 Memuat data terbaru dari Google Sheets...', 'info');
                 
-                await loadAllData(); // Complete refresh of all master data and absensi
+                const appsScript = new AppsScriptAPI(appsScriptConfig.webAppUrl);
+                const absensiResult = await appsScript.getData('Absensi');
                 
-                console.log('✅ Data refreshed - Siswa:', allData.siswa.length, 'Guru:', allData.guru.length, 'Absensi:', allData.absensi.length);
-                
-                // FIXED: Restore form selections after data refresh to preserve user choices
-                document.getElementById('tanggalAbsensi').value = selectedTanggal;
-                document.getElementById('jenisAbsensi').value = selectedJenis;
-                if (selectedJenis === 'siswa') {
-                    document.getElementById('kelasContainer').classList.remove('hidden');
-                    document.getElementById('kelasAbsensi').value = selectedKelas;
-                }
-                
-                console.log('✅ Form selections preserved:', { selectedTanggal, selectedJenis, selectedKelas });
-
-                // CRITICAL: Check if attendance already exists for selected date - STRICT ONE-TIME DAILY LIMIT
-                const existingAbsensiForDate = allData.absensi.filter(a => {
-                    let absensiDateStr = a.tanggal;
-                    
-                    // Normalize date format
-                    if (absensiDateStr && absensiDateStr.includes('/')) {
-                        const parts = absensiDateStr.split('/');
-                        if (parts.length === 3) {
-                            if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
-                                absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                            } else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
-                                absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-                            }
-                        }
-                    }
-                    
-                    if (absensiDateStr && !absensiDateStr.includes('-') && !absensiDateStr.includes('/')) {
-                        const dateNum = parseFloat(absensiDateStr);
-                        if (!isNaN(dateNum) && dateNum > 40000) {
-                            const excelDate = new Date((dateNum - 25569) * 86400 * 1000);
-                            absensiDateStr = excelDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
-                        }
-                    }
-                    
-                    if (absensiDateStr && absensiDateStr.includes('T')) {
-                        absensiDateStr = absensiDateStr.split('T')[0];
-                    }
-                    
-                    return absensiDateStr === selectedTanggal && 
-                           a.jenis === selectedJenis &&
-                           (selectedJenis === 'guru' || a.kelas === selectedKelas);
-                });
-
-                // STRICT ENFORCEMENT: Block if attendance already exists (ONE-TIME DAILY LIMIT)
-                if (existingAbsensiForDate.length > 0) {
-                    const kelasInfo = selectedJenis === 'siswa' ? ` kelas ${selectedKelas}` : '';
-                    const dateFormatted = new Date(selectedTanggal + 'T00:00:00').toLocaleDateString('id-ID', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
+                if (absensiResult.success && absensiResult.data && absensiResult.data.length > 1) {
+                    const headers = absensiResult.data[0];
+                    allData.absensi = absensiResult.data.slice(1).filter(row => row.some(cell => cell && cell.toString().trim())).map(row => {
+                        const absensi = {};
+                        headers.forEach((header, index) => {
+                            const key = header.toLowerCase().replace('/', '_').replace(' ', '_');
+                            absensi[key] = row[index] || '';
+                        });
+                        return absensi;
                     });
-                    
-                    console.log('🚫 BLOCKED: Attendance already exists for today:', existingAbsensiForDate.length, 'records');
-                    
-                    // Show blocking message with detailed information
-                    const blockTitle = '🚫 Absensi Sudah Dilakukan Hari Ini';
-                    const blockMessage = `Absensi ${selectedJenis}${kelasInfo} untuk ${dateFormatted} sudah pernah dilakukan.`;
-                    const blockDetails = `Sistem membatasi absensi hanya SATU KALI per hari untuk menjaga integritas data. Ditemukan ${existingAbsensiForDate.length} record absensi yang sudah tersimpan. Gunakan menu "Laporan" untuk melihat data absensi yang sudah ada.`;
-                    
-                    await showAbsensiBlockedDialog(blockTitle, blockMessage, blockDetails);
-                    
-                    console.log('🚫 Absensi loading blocked due to one-time daily limit');
-                    showToast('🚫 Absensi sudah dilakukan hari ini. Gunakan menu Laporan untuk melihat data.', 'error');
-                    return;
-                } else {
-                    console.log('✅ No existing absensi data found - creating new records');
-                    const kelasInfo = selectedJenis === 'siswa' ? ` kelas ${selectedKelas}` : '';
-                    showToast(`📝 Membuat absensi baru untuk ${selectedJenis}${kelasInfo}`, 'info');
                 }
-                
-                // Get existing absensi for this date with comprehensive date matching
-                const existingAbsensi = allData.absensi.filter(a => {
-                    // Normalize date format for comparison
+
+                console.log('✅ Total absensi records loaded:', allData.absensi.length);
+                console.log('📋 Sample absensi records:', allData.absensi.slice(0, 3));
+
+                // Enhanced filtering with comprehensive date handling and class filtering (copied from loadLaporanData)
+                let filteredAbsensi = allData.absensi.filter(a => {
+                    // Normalize tanggal format - ensure it's YYYY-MM-DD
                     let absensiDateStr = a.tanggal;
                     
-                    // Handle different date formats from Google Sheets
-                    if (absensiDateStr && absensiDateStr.includes('/')) {
-                        const parts = absensiDateStr.split('/');
-                        if (parts.length === 3) {
-                            // Check if it's DD/MM/YYYY format (day first)
-                            if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
-                                absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                            }
-                            // Check if it's MM/DD/YYYY format (month first)
-                            else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
-                                absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-                            }
+                    // Use enhanced Google Sheets date conversion
+                    absensiDateStr = convertFromGoogleSheetsDateFormat(absensiDateStr);
+                    
+                    // Enhanced date filtering
+                    const isDateMatch = absensiDateStr === selectedTanggal;
+                    
+                    // FIXED: Proper jenis filtering - ensure exact match
+                    const isJenisMatch = a.jenis && a.jenis.toLowerCase() === selectedJenis.toLowerCase();
+                    
+                    // Enhanced class filtering logic for siswa
+                    let isKelasMatch = true;
+                    if (selectedJenis === 'siswa') {
+                        // For siswa: if kelas is selected (not empty), filter by that class
+                        if (selectedKelas && selectedKelas.trim() !== '') {
+                            isKelasMatch = a.kelas && a.kelas.toString().trim() === selectedKelas.toString().trim();
                         }
                     }
+                    // For guru: no class filtering needed
                     
-                    // Handle Google Sheets date serial numbers
-                    if (absensiDateStr && !absensiDateStr.includes('-') && !absensiDateStr.includes('/')) {
-                        const dateNum = parseFloat(absensiDateStr);
-                        if (!isNaN(dateNum) && dateNum > 40000) {
-                            const excelDate = new Date((dateNum - 25569) * 86400 * 1000);
-                            absensiDateStr = excelDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
-                        }
+                    const matchResult = isJenisMatch && isDateMatch && isKelasMatch;
+                    
+                    // Debug logging for troubleshooting
+                    if (selectedJenis === 'siswa' && isDateMatch) {
+                        console.log('🔍 Filtering siswa record:', {
+                            nama: a.nama,
+                            jenis: a.jenis,
+                            kelas: a.kelas,
+                            tanggal: absensiDateStr,
+                            isJenisMatch,
+                            isDateMatch,
+                            isKelasMatch,
+                            matchResult,
+                            filterKelas: selectedKelas
+                        });
                     }
                     
-                    // Handle ISO date strings that might have time component
-                    if (absensiDateStr && absensiDateStr.includes('T')) {
-                        absensiDateStr = absensiDateStr.split('T')[0];
-                    }
-                    
-                    return absensiDateStr === selectedTanggal && 
-                           a.jenis === selectedJenis &&
-                           (selectedJenis === 'guru' || a.kelas === selectedKelas);
+                    return matchResult;
                 });
 
-                console.log('📊 Existing absensi records found:', existingAbsensi.length);
+                console.log('📊 Filtered absensi records:', filteredAbsensi.length);
 
-                let dataList = [];
+                // Get master data list for comparison
+                let masterDataList = [];
                 if (selectedJenis === 'siswa') {
-                    // Enhanced siswa filtering with better error handling using preserved kelas selection
-                    dataList = allData.siswa.filter(s => 
+                    masterDataList = allData.siswa.filter(s => 
                         s.kelas && s.kelas.toString().trim() === selectedKelas.toString().trim()
                     );
                     
-                    console.log('👥 Filtered siswa data for class', selectedKelas, ':', dataList.length, 'students');
-                    
-                    if (dataList.length === 0) {
+                    if (masterDataList.length === 0) {
                         console.log('❌ No siswa found for kelas:', selectedKelas);
                         console.log('📋 Available siswa classes:', [...new Set(allData.siswa.map(s => s.kelas))]);
                         showToast(`❌ Tidak ada siswa untuk kelas ${selectedKelas}. Periksa data siswa di menu Data Master.`, 'error');
                         return;
                     }
                 } else {
-                    dataList = allData.guru;
-                    console.log('👨‍🏫 All guru data loaded:', dataList.length, 'teachers');
+                    masterDataList = allData.guru;
                     
-                    if (dataList.length === 0) {
+                    if (masterDataList.length === 0) {
                         showToast('❌ Tidak ada data guru. Periksa data guru di menu Data Master.', 'error');
                         return;
                     }
                 }
 
-                // Enhanced data mapping with better status preservation
-                currentAbsensiData = dataList.map(item => {
-                    const idField = jenis === 'siswa' ? 'nis' : 'nip';
-                    const existingRecord = existingAbsensi.find(a => 
+                // Create absensi data by combining master data with existing attendance
+                currentAbsensiData = masterDataList.map(item => {
+                    const idField = selectedJenis === 'siswa' ? 'nis' : 'nip';
+                    const existingRecord = filteredAbsensi.find(a => 
                         a.nis_nuptk === item[idField]
                     );
                     
                     return {
                         ...item,
                         status: existingRecord ? existingRecord.status : 'Hadir',
-                        keterangan: existingRecord ? existingRecord.keterangan : ''
+                        keterangan: existingRecord ? existingRecord.keterangan : '',
+                        hasExistingData: !!existingRecord
                     };
                 });
 
@@ -2633,7 +2692,30 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 
                 renderAbsensiTable();
                 document.getElementById('absensiList').classList.remove('hidden');
-                showToast(`✅ Berhasil memuat ${currentAbsensiData.length} data ${selectedJenis} untuk kelas ${selectedKelas || 'semua'}`, 'success');
+                
+                // Show comprehensive success message
+                const kelasInfo = selectedJenis === 'siswa' ? ` kelas ${selectedKelas}` : '';
+                const dateFormatted = new Date(selectedTanggal + 'T00:00:00').toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                const existingCount = currentAbsensiData.filter(item => item.hasExistingData).length;
+                const newCount = currentAbsensiData.length - existingCount;
+                
+                if (existingCount > 0) {
+                    showToast(`✅ Data berhasil dimuat! ${existingCount} sudah ada absensi, ${newCount} belum ada untuk ${dateFormatted}`, 'success');
+                } else {
+                    showToast(`✅ Data berhasil dimuat! ${currentAbsensiData.length} data ${selectedJenis}${kelasInfo} untuk ${dateFormatted}`, 'success');
+                }
+                
+                // FIXED: Preserve kelas selection after data loading
+                if (selectedJenis === 'siswa' && selectedKelas) {
+                    document.getElementById('kelasAbsensi').value = selectedKelas;
+                    console.log('📚 Kelas selection preserved after tarik data:', selectedKelas);
+                }
 
             } catch (error) {
                 console.error('❌ Error loading absensi data:', error);
@@ -2641,7 +2723,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             } finally {
                 // Hide loading
                 muatDataBtn.disabled = false;
-                muatDataText.textContent = 'Muat Data';
+                muatDataText.textContent = 'Tarik Data';
                 muatDataLoader.classList.add('hidden');
             }
         }
@@ -2696,51 +2778,18 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 const existingRecord = existingTodayAbsensi.find(a => a.nis_nuptk === personId);
                 const hasExistingRecord = !!existingRecord;
                 
-                // Create attendance status indicator
-                let attendanceStatusInfo = '';
-                if (hasExistingRecord) {
-                    const statusColors = {
-                        'Hadir': 'text-green-600 bg-green-50',
-                        'Izin': 'text-yellow-600 bg-yellow-50',
-                        'Sakit': 'text-blue-600 bg-blue-50',
-                        'Alpha': 'text-red-600 bg-red-50'
-                    };
-                    const statusColor = statusColors[existingRecord.status] || 'text-gray-600 bg-gray-50';
-                    
-                    attendanceStatusInfo = `
-                        <div class="mb-2 p-2 rounded-md border ${statusColor} border-opacity-50">
-                            <div class="flex items-center text-xs">
-                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="font-medium">Sudah diabsen hari ini:</span>
-                            </div>
-                            <div class="text-xs mt-1">
-                                <span class="font-semibold">${existingRecord.status}</span>
-                                ${existingRecord.keterangan ? ` - ${existingRecord.keterangan}` : ''}
-                            </div>
-                            <div class="text-xs text-gray-500 mt-1">
-                                ${existingRecord.timestamp || 'Waktu tidak tercatat'}
-                            </div>
-                        </div>
-                    `;
-                }
+                // Remove attendance status indicator - no longer showing existing attendance info
 
                 const row = document.createElement('tr');
-                row.className = hasExistingRecord ? 'bg-blue-50 border-l-4 border-blue-400' : '';
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index + 1}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <div>
-                            <div class="font-medium">${item.nama}</div>
-                            ${hasExistingRecord ? '<div class="text-xs text-blue-600 font-medium">✓ Sudah diabsen</div>' : '<div class="text-xs text-gray-500">Belum diabsen</div>'}
-                        </div>
+                        <div class="font-medium">${item.nama}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         ${item.nis || item.nip}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        ${attendanceStatusInfo}
                         <div class="flex flex-wrap gap-2">
                             <label class="flex items-center ${disabledClass}">
                                 <input type="radio" name="status_${index}" value="Hadir" class="status-radio hidden" data-index="${index}" ${item.status === 'Hadir' ? 'checked' : ''} ${disabledAttr}>
@@ -2788,23 +2837,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 tbody.appendChild(row);
             });
 
-            // Show informational message if data exists (will be overwritten)
-            if (existingTodayAbsensi.length > 0) {
-                const messageRow = document.createElement('tr');
-                messageRow.innerHTML = `
-                    <td colspan="5" class="px-6 py-4 text-center">
-                        <div class="bg-blue-50 border border-blue-200 rounded-md p-3">
-                            <div class="flex items-center justify-center">
-                                <svg class="w-5 h-5 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="text-blue-800 font-medium">📝 Absensi sudah ada untuk hari ini. Data baru akan menimpa data lama saat disimpan.</span>
-                            </div>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(messageRow);
-            }
+            // Remove informational message - no longer showing attendance status info
 
             // Add event listeners for status and keterangan changes (always enabled)
             document.querySelectorAll('.status-radio').forEach(radio => {
@@ -2864,7 +2897,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
 
             // Enhanced validation: Check if data has been loaded first
             if (!currentAbsensiData || currentAbsensiData.length === 0) {
-                showToast('❌ Belum ada data absensi yang dimuat. Silakan klik "Muat Data" terlebih dahulu.', 'error');
+                showToast('❌ Belum ada data absensi yang dimuat. Silakan klik "Tarik Data" terlebih dahulu.', 'error');
                 return;
             }
 
@@ -2885,29 +2918,8 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             const existingTodayAbsensi = allData.absensi.filter(a => {
                 let absensiDateStr = a.tanggal;
                 
-                // Normalize date format
-                if (absensiDateStr && absensiDateStr.includes('/')) {
-                    const parts = absensiDateStr.split('/');
-                    if (parts.length === 3) {
-                        if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
-                            absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                        } else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
-                            absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-                        }
-                    }
-                }
-                
-                if (absensiDateStr && !absensiDateStr.includes('-') && !absensiDateStr.includes('/')) {
-                    const dateNum = parseFloat(absensiDateStr);
-                    if (!isNaN(dateNum) && dateNum > 40000) {
-                        const excelDate = new Date((dateNum - 25569) * 86400 * 1000);
-                        absensiDateStr = excelDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
-                    }
-                }
-                
-                if (absensiDateStr && absensiDateStr.includes('T')) {
-                    absensiDateStr = absensiDateStr.split('T')[0];
-                }
+                // Use enhanced Google Sheets date conversion
+                absensiDateStr = convertFromGoogleSheetsDateFormat(absensiDateStr);
                 
                 return absensiDateStr === today && 
                        a.jenis === jenis &&
@@ -2953,7 +2965,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             try {
                 const appsScript = new AppsScriptAPI(appsScriptConfig.webAppUrl);
                 
-                // Enhanced: Use consistent date format (YYYY-MM-DD) and local timestamp
+                // Enhanced: Use consistent date format (DD/MM/YYYY) and local timestamp
                 const currentTime = new Date();
                 const timestamp = currentTime.toLocaleString('id-ID', {
                     year: 'numeric',
@@ -2965,6 +2977,14 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                     timeZone: 'Asia/Jakarta'
                 });
                 
+                // CRITICAL: Ensure consistent DD/MM/YYYY format for Google Sheets
+                const formattedDate = convertToIndonesianDateFormat(tanggal);
+                console.log('📅 Date formatting for Google Sheets:', {
+                    original: tanggal,
+                    formatted: formattedDate,
+                    format: 'DD/MM/YYYY'
+                });
+                
                 // CRITICAL FIX: Ensure kelas is ALWAYS properly included for siswa records
                 const absensiData = currentAbsensiData.map(item => {
                     const kelasValue = jenis === 'siswa' ? (kelas || '') : '';
@@ -2974,11 +2994,12 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                         jenis: jenis,
                         kelas: kelasValue,
                         originalKelas: kelas,
-                        itemKelas: item.kelas
+                        itemKelas: item.kelas,
+                        tanggal: formattedDate
                     });
                     
                     return [
-                        tanggal, // Keep original date format (YYYY-MM-DD)
+                        formattedDate, // CONSISTENT: Always use DD/MM/YYYY format for Google Sheets
                         jenis,
                         kelasValue, // CRITICAL: Use kelasValue which is guaranteed to have kelas for siswa
                         item.nis || item.nip,
@@ -3038,6 +3059,9 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                     // FIXED: Preserve form state for siswa - keep kelas selected
                     if (jenis === 'siswa') {
                         preserveAbsensiFormStateAfterSave(jenis, kelas);
+                        // Ensure kelas remains selected after save
+                        document.getElementById('kelasAbsensi').value = kelas;
+                        console.log('📚 Kelas selection preserved after save:', kelas);
                     } else {
                         resetAbsensiForm();
                     }
@@ -3148,7 +3172,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
         function populateKelasOptions() {
             const kelasSelect = document.getElementById('kelasAbsensi');
             const kelasLaporanSelect = document.getElementById('kelasLaporan');
-            const kelasRekapSelect = document.getElementById('kelasRekap');
+            const kelasRekapAbsensiSelect = document.getElementById('kelasRekapAbsensi');
             
             // Get unique classes from siswa data
             const uniqueKelas = [...new Set(allData.siswa.map(s => s.kelas))].sort();
@@ -3156,33 +3180,40 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             // Clear existing options
             kelasSelect.innerHTML = '<option value="">Pilih Kelas</option>';
             kelasLaporanSelect.innerHTML = '<option value="">Semua Kelas</option>';
-            kelasRekapSelect.innerHTML = '<option value="">Semua Kelas</option>';
+            if (kelasRekapAbsensiSelect) {
+                kelasRekapAbsensiSelect.innerHTML = '<option value="">Semua Kelas</option>';
+            }
             
             uniqueKelas.forEach(kelas => {
                 kelasSelect.innerHTML += `<option value="${kelas}">${kelas}</option>`;
                 kelasLaporanSelect.innerHTML += `<option value="${kelas}">${kelas}</option>`;
-                kelasRekapSelect.innerHTML += `<option value="${kelas}">${kelas}</option>`;
+                if (kelasRekapAbsensiSelect) {
+                    kelasRekapAbsensiSelect.innerHTML += `<option value="${kelas}">${kelas}</option>`;
+                }
             });
         }
 
-        // Initialize rekap form
-        function initializeRekapForm() {
+        // Initialize rekap absensi form - FIXED: Use actual dates without H-1 logic
+        function initializeRekapAbsensiForm() {
             const today = getTodayDate();
             const oneWeekAgo = new Date();
             oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
             const oneWeekAgoStr = oneWeekAgo.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
             
-            document.getElementById('dariTanggalRekap').value = oneWeekAgoStr;
-            document.getElementById('sampaiTanggalRekap').value = today;
+            // Set default date range - use actual selected dates
+            document.getElementById('dariTanggalRekapAbsensi').value = oneWeekAgoStr;
+            document.getElementById('sampaiTanggalRekapAbsensi').value = today;
             
-            // Populate kelas options for rekap
-            populateKelasOptions();
+            // Populate kelas options for rekap absensi
+            populateKelasOptionsRekapAbsensi();
+            
+            console.log('📅 Rekap form initialized with date range:', { from: oneWeekAgoStr, to: today });
         }
 
-        // Handle jenis rekap change
-        function handleJenisRekapChange() {
-            const jenis = document.getElementById('jenisRekap').value;
-            const kelasContainer = document.getElementById('kelasRekapContainer');
+        // Handle jenis rekap absensi change
+        function handleJenisRekapAbsensiChange() {
+            const jenis = document.getElementById('jenisRekapAbsensi').value;
+            const kelasContainer = document.getElementById('kelasRekapAbsensiContainer');
             
             if (jenis === 'siswa') {
                 kelasContainer.classList.remove('hidden');
@@ -3191,21 +3222,38 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             }
         }
 
-        // Generate rekap kehadiran
-        async function generateRekapKehadiran() {
-            const jenis = document.getElementById('jenisRekap').value;
-            const kelas = document.getElementById('kelasRekap').value;
-            const dariTanggal = document.getElementById('dariTanggalRekap').value;
-            const sampaiTanggal = document.getElementById('sampaiTanggalRekap').value;
+        // Populate kelas options for rekap absensi
+        function populateKelasOptionsRekapAbsensi() {
+            const kelasRekapAbsensiSelect = document.getElementById('kelasRekapAbsensi');
+            
+            // Get unique classes from siswa data
+            const uniqueKelas = [...new Set(allData.siswa.map(s => s.kelas))].sort();
+            
+            // Clear existing options
+            kelasRekapAbsensiSelect.innerHTML = '<option value="">Semua Kelas</option>';
+            
+            uniqueKelas.forEach(kelas => {
+                kelasRekapAbsensiSelect.innerHTML += `<option value="${kelas}">${kelas}</option>`;
+            });
+        }
+
+        // Generate rekap kehadiran absensi - FIXED: Use actual selected dates from Google Sheets
+        async function generateRekapKehadiranAbsensi() {
+            const jenis = document.getElementById('jenisRekapAbsensi').value;
+            const kelas = document.getElementById('kelasRekapAbsensi').value;
+            const dariTanggal = document.getElementById('dariTanggalRekapAbsensi').value;
+            const sampaiTanggal = document.getElementById('sampaiTanggalRekapAbsensi').value;
+
+            console.log('📊 REKAP: Generate rekap kehadiran with exact params:', { dariTanggal, sampaiTanggal, jenis, kelas });
 
             if (!jenis || !dariTanggal || !sampaiTanggal) {
-                showToast('❌ Lengkapi semua field rekap', 'error');
+                showToast('❌ Lengkapi semua field rekap kehadiran', 'error');
                 return;
             }
 
-            const generateBtn = document.getElementById('generateRekapBtn');
-            const generateText = document.getElementById('generateRekapText');
-            const generateLoader = document.getElementById('generateRekapLoader');
+            const generateBtn = document.getElementById('generateRekapAbsensiBtn');
+            const generateText = document.getElementById('generateRekapAbsensiText');
+            const generateLoader = document.getElementById('generateRekapAbsensiLoader');
 
             // Show loading
             generateBtn.disabled = true;
@@ -3231,50 +3279,99 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                     });
                 }
 
-                // Filter absensi data by date range and type
+                // FIXED: Filter absensi data by date range and type - Use exact date matching
                 const filteredAbsensi = allData.absensi.filter(a => {
-                    // Normalize date format
+                    // CRITICAL FIX: Normalize date format from Google Sheets
                     let absensiDateStr = a.tanggal;
+                    let originalDateStr = absensiDateStr; // Keep original for debugging
                     
-                    if (absensiDateStr && absensiDateStr.includes('/')) {
-                        const parts = absensiDateStr.split('/');
-                        if (parts.length === 3) {
-                            if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
-                                absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                            } else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
-                                absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-                            }
-                        }
-                    }
+                    // Use enhanced Google Sheets date conversion
+                    absensiDateStr = convertFromGoogleSheetsDateFormat(absensiDateStr);
                     
-                    if (absensiDateStr && !absensiDateStr.includes('-') && !absensiDateStr.includes('/')) {
-                        const dateNum = parseFloat(absensiDateStr);
-                        if (!isNaN(dateNum) && dateNum > 40000) {
-                            const excelDate = new Date((dateNum - 25569) * 86400 * 1000);
-                            absensiDateStr = excelDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
-                        }
-                    }
-                    
-                    if (absensiDateStr && absensiDateStr.includes('T')) {
-                        absensiDateStr = absensiDateStr.split('T')[0];
-                    }
-                    
+                    // CRITICAL FIX: Use EXACT date range filtering based on user selection
                     const isDateInRange = absensiDateStr >= dariTanggal && absensiDateStr <= sampaiTanggal;
-                    const isJenisMatch = a.jenis === jenis;
                     
-                    let isKelasMatch = true;
-                    if (jenis === 'siswa' && kelas && kelas.trim() !== '') {
-                        isKelasMatch = a.kelas === kelas;
+                    // Debug logging for date conversion issues
+                    if (originalDateStr !== absensiDateStr) {
+                        console.log('📅 REKAP Date conversion:', {
+                            original: originalDateStr,
+                            converted: absensiDateStr,
+                            filterRange: `${dariTanggal} to ${sampaiTanggal}`,
+                            inRange: isDateInRange,
+                            nama: a.nama
+                        });
                     }
                     
-                    return isJenisMatch && isDateInRange && isKelasMatch;
+                    // ENHANCED DEBUG: Log all date comparisons for troubleshooting
+                    if (a.nama && a.nama.includes('Ahmad')) { // Sample debug for first record
+                        console.log('🔍 REKAP Date debug sample:', {
+                            nama: a.nama,
+                            originalDate: originalDateStr,
+                            convertedDate: absensiDateStr,
+                            filterFrom: dariTanggal,
+                            filterTo: sampaiTanggal,
+                            isInRange: isDateInRange,
+                            comparison: `${absensiDateStr} >= ${dariTanggal} && ${absensiDateStr} <= ${sampaiTanggal}`
+                        });
+                    }
+                    const isJenisMatch = a.jenis && a.jenis.toLowerCase() === jenis.toLowerCase();
+                    
+                    // Enhanced class filtering for siswa
+                    let isKelasMatch = true;
+                    if (jenis === 'siswa') {
+                        if (kelas && kelas.trim() !== '') {
+                            isKelasMatch = a.kelas && a.kelas.toString().trim() === kelas.toString().trim();
+                        }
+                        // If no kelas selected (empty), show all siswa records
+                    }
+                    // For guru: no class filtering needed
+                    
+                    const matchResult = isJenisMatch && isDateInRange && isKelasMatch;
+                    
+                    // Debug logging for troubleshooting
+                    if (isDateInRange && isJenisMatch) {
+                        console.log('🔍 Matching record for rekap kehadiran:', {
+                            nama: a.nama,
+                            jenis: a.jenis,
+                            kelas: a.kelas,
+                            tanggal: absensiDateStr,
+                            status: a.status,
+                            nis_nuptk: a.nis_nuptk,
+                            matchResult
+                        });
+                    }
+                    
+                    return matchResult;
                 });
 
-                // Generate rekap data
-                const rekapData = generateDetailedRekapData(filteredAbsensi, jenis, kelas);
+                console.log('📊 REKAP: Filtered absensi records for rekap kehadiran:', filteredAbsensi.length);
+                console.log('📋 REKAP: Sample filtered records:', filteredAbsensi.slice(0, 3));
+                
+                // CRITICAL DEBUG: Show all dates in the dataset for comparison
+                const allDatesInData = [...new Set(allData.absensi.map(a => a.tanggal))].sort();
+                console.log('📅 REKAP: All dates in dataset:', allDatesInData);
+                console.log('📅 REKAP: Filter range:', `${dariTanggal} to ${sampaiTanggal}`);
+                
+                // ENHANCED DEBUG: Show normalized dates for comparison
+                const normalizedDates = [...new Set(allData.absensi.map(a => {
+                    let dateStr = a.tanggal;
+                    if (dateStr && dateStr.includes('/')) {
+                        const parts = dateStr.split('/');
+                        if (parts.length === 3 && parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
+                            dateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                        }
+                    }
+                    return dateStr;
+                }))].sort();
+                console.log('📅 REKAP: Normalized dates in dataset:', normalizedDates);
+
+                // Generate rekap data using the same function as laporan rekap
+                const rekapData = generateRekapData(filteredAbsensi, jenis, kelas);
+                console.log('📊 Generated rekap kehadiran data:', rekapData.length, 'records');
+                console.log('📋 Sample rekap kehadiran data:', rekapData.slice(0, 3));
                 
                 // Store for export
-                window.currentRekapData = {
+                window.currentRekapAbsensiData = {
                     data: rekapData,
                     jenis: jenis,
                     kelas: kelas,
@@ -3284,11 +3381,14 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 };
 
                 // Render results
-                renderRekapKehadiranTable(rekapData, jenis);
-                updateRekapSummary(rekapData);
+                renderRekapKehadiranAbsensiTable(rekapData, jenis);
+                updateRekapAbsensiSummary(rekapData);
                 
-                document.getElementById('rekapResult').classList.remove('hidden');
+                document.getElementById('rekapAbsensiResult').classList.remove('hidden');
                 showToast(`✅ Rekap kehadiran berhasil dibuat! (${rekapData.length} record)`, 'success');
+
+                // FIXED: Keep selected dates - no automatic reset
+                console.log('✅ REKAP: Rekap kehadiran generated successfully with exact selected dates:', { dariTanggal, sampaiTanggal });
 
             } catch (error) {
                 console.error('❌ Error generating rekap:', error);
@@ -3301,78 +3401,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             }
         }
 
-        // Generate detailed rekap data
-        function generateDetailedRekapData(absensiData, jenis, kelas) {
-            const rekapMap = new Map();
-            
-            if (jenis === 'siswa') {
-                // Initialize for all siswa in selected class or all classes
-                const targetSiswa = kelas ? 
-                    allData.siswa.filter(s => s.kelas === kelas) : 
-                    allData.siswa;
-                
-                targetSiswa.forEach(siswa => {
-                    rekapMap.set(siswa.nis, {
-                        id: siswa.nis,
-                        nama: siswa.nama,
-                        kelas: siswa.kelas,
-                        hadir: 0,
-                        izin: 0,
-                        sakit: 0,
-                        alpha: 0,
-                        total: 0,
-                        persentaseHadir: 0
-                    });
-                });
-            } else {
-                // Initialize for all guru
-                allData.guru.forEach(guru => {
-                    rekapMap.set(guru.nip, {
-                        id: guru.nip,
-                        nama: guru.nama,
-                        mata_pelajaran: guru.mata_pelajaran,
-                        hadir: 0,
-                        izin: 0,
-                        sakit: 0,
-                        alpha: 0,
-                        total: 0,
-                        persentaseHadir: 0
-                    });
-                });
-            }
-            
-            // Count attendance
-            absensiData.forEach(record => {
-                const key = record.nis_nuptk;
-                if (rekapMap.has(key)) {
-                    const recap = rekapMap.get(key);
-                    recap.total++;
-                    
-                    switch (record.status) {
-                        case 'Hadir':
-                            recap.hadir++;
-                            break;
-                        case 'Izin':
-                            recap.izin++;
-                            break;
-                        case 'Sakit':
-                            recap.sakit++;
-                            break;
-                        case 'Alpha':
-                            recap.alpha++;
-                            break;
-                    }
-                    
-                    // Calculate percentage
-                    recap.persentaseHadir = recap.total > 0 ? 
-                        ((recap.hadir / recap.total) * 100).toFixed(1) : 0;
-                }
-            });
-            
-            return Array.from(rekapMap.values())
-                .filter(item => item.total > 0) // Only show those with attendance records
-                .sort((a, b) => parseFloat(b.persentaseHadir) - parseFloat(a.persentaseHadir));
-        }
+
 
         // Render rekap kehadiran table
         function renderRekapKehadiranTable(rekapData, jenis) {
@@ -3464,6 +3493,279 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             document.getElementById('rekapRataHadir').textContent = rataRataHadir + '%';
             document.getElementById('rekapRendah').textContent = kehadiranRendah;
             document.getElementById('rekapPerhatian').textContent = perluPerhatian;
+        }
+
+        // Render rekap kehadiran absensi table
+        function renderRekapKehadiranAbsensiTable(rekapData, jenis) {
+            const thead = document.getElementById('rekapAbsensiTableHeader');
+            const tbody = document.getElementById('rekapAbsensiTableBody');
+            
+            // Clear existing content
+            thead.innerHTML = '';
+            tbody.innerHTML = '';
+            
+            // Create headers
+            let headers = ['No', 'Nama', jenis === 'siswa' ? 'NIS' : 'NUPTK'];
+            if (jenis === 'siswa') {
+                headers.push('Kelas');
+            } else {
+                headers.push('Mata Pelajaran');
+            }
+            headers.push('Hadir', 'Izin', 'Sakit', 'Alpha', 'Total', 'Persentase', 'Status');
+            
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.className = 'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
+                th.textContent = header;
+                thead.appendChild(th);
+            });
+            
+            // Create rows
+            rekapData.forEach((item, index) => {
+                const persentase = parseFloat(item.persentaseHadir);
+                let statusClass, statusText;
+                
+                if (persentase >= 90) {
+                    statusClass = 'bg-green-100 text-green-800';
+                    statusText = 'Sangat Baik';
+                } else if (persentase >= 75) {
+                    statusClass = 'bg-blue-100 text-blue-800';
+                    statusText = 'Baik';
+                } else if (persentase >= 60) {
+                    statusClass = 'bg-yellow-100 text-yellow-800';
+                    statusText = 'Cukup';
+                } else {
+                    statusClass = 'bg-red-100 text-red-800';
+                    statusText = 'Perlu Perhatian';
+                }
+                
+                const row = document.createElement('tr');
+                let rowHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index + 1}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.nama}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.id}</td>
+                `;
+                
+                if (jenis === 'siswa') {
+                    rowHTML += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.kelas}</td>`;
+                } else {
+                    rowHTML += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.mata_pelajaran}</td>`;
+                }
+                
+                rowHTML += `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">${item.hadir}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-600 font-semibold">${item.izin}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-semibold">${item.sakit}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">${item.alpha}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">${item.total}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">${item.persentaseHadir}%</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+                `;
+                
+                row.innerHTML = rowHTML;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update rekap absensi summary
+        function updateRekapAbsensiSummary(rekapData) {
+            const total = rekapData.length;
+            const totalHadir = rekapData.reduce((sum, item) => sum + item.hadir, 0);
+            const totalKeseluruhan = rekapData.reduce((sum, item) => sum + item.total, 0);
+            const rataRataHadir = totalKeseluruhan > 0 ? ((totalHadir / totalKeseluruhan) * 100).toFixed(1) : 0;
+            
+            const kehadiranRendah = rekapData.filter(item => parseFloat(item.persentaseHadir) < 75).length;
+            const perluPerhatian = rekapData.filter(item => parseFloat(item.persentaseHadir) < 60).length;
+            
+            document.getElementById('rekapAbsensiTotal').textContent = total;
+            document.getElementById('rekapAbsensiRataHadir').textContent = rataRataHadir + '%';
+            document.getElementById('rekapAbsensiRendah').textContent = kehadiranRendah;
+            document.getElementById('rekapAbsensiPerhatian').textContent = perluPerhatian;
+        }
+
+        // Export rekap absensi to PDF
+        function exportRekapAbsensiPDF() {
+            if (!window.currentRekapAbsensiData || !window.currentRekapAbsensiData.data.length) {
+                showToast('Tidak ada data rekap untuk diexport. Silakan generate rekap terlebih dahulu.', 'error');
+                return;
+            }
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Header
+                doc.setFontSize(16);
+                doc.text('Rekap Kehadiran SMP Purnawarman', 20, 20);
+                
+                doc.setFontSize(12);
+                doc.text(`Jenis: ${window.currentRekapAbsensiData.jenis}`, 20, 35);
+                if (window.currentRekapAbsensiData.kelas) {
+                    doc.text(`Kelas: ${window.currentRekapAbsensiData.kelas}`, 20, 45);
+                }
+                doc.text(`Periode: ${window.currentRekapAbsensiData.dariTanggal} s/d ${window.currentRekapAbsensiData.sampaiTanggal}`, 20, 55);
+                doc.text(`Total: ${window.currentRekapAbsensiData.data.length}`, 20, 65);
+                
+                let yPos = 85;
+                
+                // Table headers
+                const headers = ['No', 'Nama', 'ID', 'H', 'I', 'S', 'A', 'Total', '%', 'Status'];
+                
+                doc.setFontSize(10);
+                headers.forEach((header, index) => {
+                    doc.text(header, 20 + (index * 18), yPos);
+                });
+                
+                yPos += 10;
+                
+                // Table data
+                window.currentRekapAbsensiData.data.forEach((item, index) => {
+                    if (yPos > 270) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+                    
+                    const persentase = parseFloat(item.persentaseHadir);
+                    const status = persentase >= 90 ? 'SB' : persentase >= 75 ? 'B' : persentase >= 60 ? 'C' : 'PP';
+                    
+                    const row = [
+                        (index + 1).toString(),
+                        item.nama.substring(0, 12),
+                        item.id.substring(0, 10),
+                        item.hadir.toString(),
+                        item.izin.toString(),
+                        item.sakit.toString(),
+                        item.alpha.toString(),
+                        item.total.toString(),
+                        item.persentaseHadir + '%',
+                        status
+                    ];
+                    
+                    row.forEach((cell, cellIndex) => {
+                        doc.text(cell, 20 + (cellIndex * 18), yPos);
+                    });
+                    
+                    yPos += 8;
+                });
+                
+                // Save PDF
+                const fileName = `Rekap_Kehadiran_${window.currentRekapAbsensiData.jenis}_${window.currentRekapAbsensiData.dariTanggal}_${window.currentRekapAbsensiData.sampaiTanggal}.pdf`;
+                doc.save(fileName);
+                
+                showToast('✅ PDF rekap berhasil diunduh!', 'success');
+                
+            } catch (error) {
+                console.error('Error exporting rekap PDF:', error);
+                showToast('❌ Gagal export PDF: ' + error.message, 'error');
+            }
+        }
+
+        // Export rekap absensi to Excel
+        function exportRekapAbsensiExcel() {
+            if (!window.currentRekapAbsensiData || !window.currentRekapAbsensiData.data.length) {
+                showToast('Tidak ada data rekap untuk diexport. Silakan generate rekap terlebih dahulu.', 'error');
+                return;
+            }
+
+            try {
+                const rekapData = window.currentRekapAbsensiData.data;
+                
+                // Prepare headers
+                let headers = ['No', 'Nama', window.currentRekapAbsensiData.jenis === 'siswa' ? 'NIS' : 'NUPTK'];
+                if (window.currentRekapAbsensiData.jenis === 'siswa') {
+                    headers.push('Kelas');
+                } else {
+                    headers.push('Mata Pelajaran');
+                }
+                headers.push('Hadir', 'Izin', 'Sakit', 'Alpha', 'Total', 'Persentase Hadir', 'Status Kehadiran');
+                
+                // Create worksheet data
+                const wsData = [headers];
+                
+                rekapData.forEach((item, index) => {
+                    const persentase = parseFloat(item.persentaseHadir);
+                    const status = persentase >= 90 ? 'Sangat Baik' : 
+                                  persentase >= 75 ? 'Baik' : 
+                                  persentase >= 60 ? 'Cukup' : 'Perlu Perhatian';
+                    
+                    let row = [
+                        index + 1,
+                        item.nama,
+                        item.id
+                    ];
+                    
+                    if (window.currentRekapAbsensiData.jenis === 'siswa') {
+                        row.push(item.kelas);
+                    } else {
+                        row.push(item.mata_pelajaran);
+                    }
+                    
+                    row.push(
+                        item.hadir,
+                        item.izin,
+                        item.sakit,
+                        item.alpha,
+                        item.total,
+                        item.persentaseHadir + '%',
+                        status
+                    );
+                    
+                    wsData.push(row);
+                });
+                
+                // Add summary info at the top
+                const summaryData = [
+                    ['REKAP KEHADIRAN SMP PURNAWARMAN'],
+                    [''],
+                    [`Jenis: ${window.currentRekapAbsensiData.jenis}`],
+                    [`Kelas: ${window.currentRekapAbsensiData.kelas || 'Semua Kelas'}`],
+                    [`Periode: ${window.currentRekapAbsensiData.dariTanggal} s/d ${window.currentRekapAbsensiData.sampaiTanggal}`],
+                    [`Total: ${rekapData.length}`],
+                    [`Tanggal Export: ${new Date().toLocaleDateString('id-ID')}`],
+                    [''],
+                    ...wsData
+                ];
+                
+                // Create workbook and worksheet
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(summaryData);
+                
+                // Set column widths
+                const colWidths = [
+                    { wch: 5 },  // No
+                    { wch: 25 }, // Nama
+                    { wch: 15 }, // ID
+                    { wch: 12 }, // Kelas/Mapel
+                    { wch: 8 },  // Hadir
+                    { wch: 8 },  // Izin
+                    { wch: 8 },  // Sakit
+                    { wch: 8 },  // Alpha
+                    { wch: 8 },  // Total
+                    { wch: 15 }, // Persentase
+                    { wch: 15 }  // Status
+                ];
+                
+                ws['!cols'] = colWidths;
+                
+                // Add worksheet to workbook
+                XLSX.utils.book_append_sheet(wb, ws, 'Rekap Kehadiran');
+                
+                // Generate filename
+                const fileName = `Rekap_Kehadiran_${window.currentRekapAbsensiData.jenis}_${window.currentRekapAbsensiData.dariTanggal}_${window.currentRekapAbsensiData.sampaiTanggal}.xlsx`;
+                
+                // Save file
+                XLSX.writeFile(wb, fileName);
+                
+                showToast(`✅ Excel rekap berhasil diexport! (${rekapData.length} record)`, 'success');
+                
+            } catch (error) {
+                console.error('Error exporting rekap Excel:', error);
+                showToast('❌ Gagal export Excel: ' + error.message, 'error');
+            }
         }
 
         // Export rekap to PDF
@@ -3689,34 +3991,8 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             const selectedDateAbsensi = allData.absensi.filter(a => {
                 let absensiDateStr = a.tanggal;
                 
-                // Handle different date formats from Google Sheets
-                if (absensiDateStr && absensiDateStr.includes('/')) {
-                    const parts = absensiDateStr.split('/');
-                    if (parts.length === 3) {
-                        // Check if it's DD/MM/YYYY format (day first)
-                        if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
-                            absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                        }
-                        // Check if it's MM/DD/YYYY format (month first)
-                        else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
-                            absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-                        }
-                    }
-                }
-                
-                // Handle Google Sheets date serial numbers
-                if (absensiDateStr && !absensiDateStr.includes('-') && !absensiDateStr.includes('/')) {
-                    const dateNum = parseFloat(absensiDateStr);
-                    if (!isNaN(dateNum) && dateNum > 40000) {
-                        const excelDate = new Date((dateNum - 25569) * 86400 * 1000);
-                        absensiDateStr = excelDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
-                    }
-                }
-                
-                // Handle ISO date strings that might have time component
-                if (absensiDateStr && absensiDateStr.includes('T')) {
-                    absensiDateStr = absensiDateStr.split('T')[0];
-                }
+                // Use enhanced Google Sheets date conversion
+                absensiDateStr = convertFromGoogleSheetsDateFormat(absensiDateStr);
                 
                 return absensiDateStr === targetDate;
             });
@@ -3830,19 +4106,9 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             const yesterdayAbsensi = allData.absensi.filter(a => {
                 let absensiDateStr = a.tanggal;
                 
-                // Handle different date formats from Google Sheets
+                // Handle DD/MM/YYYY format from Google Sheets (our standard format)
                 if (absensiDateStr && absensiDateStr.includes('/')) {
-                    const parts = absensiDateStr.split('/');
-                    if (parts.length === 3) {
-                        // Check if it's DD/MM/YYYY format (day first)
-                        if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
-                            absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                        }
-                        // Check if it's MM/DD/YYYY format (month first)
-                        else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
-                            absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-                        }
-                    }
+                    absensiDateStr = convertFromGoogleSheetsDateFormat(absensiDateStr);
                 }
                 
                 // Handle Google Sheets date serial numbers
@@ -4098,220 +4364,138 @@ function getOrCreateSheet(spreadsheet, sheetName) {
 
         // Load laporan data with enhanced real-time updates and maximum refresh
         async function loadLaporanData() {
-            // Auto change dates to yesterday when "Tarik Data" is clicked
-            const today = getTodayDate();
-            const yesterday = getYesterdayDate();
-            
-            // Check if dates are still set to today (default), then change to yesterday
-            const dariTanggalElement = document.getElementById('dariTanggal');
-            const sampaiTanggalElement = document.getElementById('sampaiTanggal');
-            
-            if (dariTanggalElement.value === today && sampaiTanggalElement.value === today) {
-                console.log('📅 Auto changing report dates from today to yesterday...');
-                dariTanggalElement.value = yesterday;
-                sampaiTanggalElement.value = yesterday;
-            }
-            
-            const tipeLaporan = document.querySelector('input[name="tipeLaporan"]:checked').value;
-            const jenis = document.getElementById('jenisLaporan').value;
-            const kelas = document.getElementById('kelasLaporan').value;
-            const dariTanggal = dariTanggalElement.value;
-            const sampaiTanggal = sampaiTanggalElement.value;
+			// Tampilkan loading dan nonaktifkan tombol
+			const tarikBtn = document.getElementById('tarikDataBtn');
+			const tarikText = document.getElementById('tarikDataText');
+			const tarikLoader = document.getElementById('tarikDataLoader');
+			tarikBtn.disabled = true;
+			tarikText.textContent = 'Memuat...';
+			tarikLoader.classList.remove('hidden');
 
-            // FIXED: Store selected kelas to preserve it after data retrieval
-            const selectedKelas = kelas;
+			try {
+				// Ambil nilai filter
+				const dariTanggalElement = document.getElementById('dariTanggal');
+				const sampaiTanggalElement = document.getElementById('sampaiTanggal');
+				const jenis = document.getElementById('jenisLaporan').value;
+				const selectedKelas = document.getElementById('kelasLaporan').value;
+				const tipeLaporan = document.querySelector('input[name="tipeLaporan"]:checked').value;
 
-            if (!jenis || !dariTanggal || !sampaiTanggal) {
-                showToast('❌ Lengkapi semua field laporan', 'error');
-                return;
-            }
+				const dariTanggal = dariTanggalElement.value; // Format: YYYY-MM-DD
+				const sampaiTanggal = sampaiTanggalElement.value; // Format: YYYY-MM-DD
 
-            const tarikBtn = document.getElementById('tarikDataBtn');
-            const tarikText = document.getElementById('tarikDataText');
-            const tarikLoader = document.getElementById('tarikDataLoader');
+				// Hapus laporan sebelumnya
+				document.getElementById('laporanDetailContainer').innerHTML = '';
+				document.getElementById('laporanRekapContainer').innerHTML = '';
+				document.getElementById('exportButtonsContainer').classList.add('hidden');
 
-            // Show loading
-            tarikBtn.disabled = true;
-            tarikText.textContent = '🔄 Menarik Data...';
-            tarikLoader.classList.remove('hidden');
+				if (!allData || !allData.absensi) {
+					await fetchDataFromGoogleSheets();
+				}
 
-            try {
-                // ENHANCED: Force complete refresh of absensi data for maximum accuracy
-                console.log('🔄 Force refreshing ALL absensi data for maximum report accuracy...');
-                console.log('📊 Filter parameters:', { jenis, kelas, dariTanggal, sampaiTanggal });
-                
-                showToast('🔄 Memuat data terbaru dari Google Sheets...', 'info');
-                
-                const appsScript = new AppsScriptAPI(appsScriptConfig.webAppUrl);
-                const absensiResult = await appsScript.getData('Absensi');
-                
-                if (absensiResult.success && absensiResult.data && absensiResult.data.length > 1) {
-                    const headers = absensiResult.data[0];
-                    allData.absensi = absensiResult.data.slice(1).filter(row => row.some(cell => cell && cell.toString().trim())).map(row => {
-                        const absensi = {};
-                        headers.forEach((header, index) => {
-                            const key = header.toLowerCase().replace('/', '_').replace(' ', '_');
-                            absensi[key] = row[index] || '';
-                        });
-                        return absensi;
-                    });
-                }
+				if (!allData || !allData.absensi || allData.absensi.length === 0) {
+					showToast('⚠️ Data Absensi Kosong. Tidak ada yang bisa ditarik.', 'warning');
+					return;
+				}
 
-                console.log('✅ Total absensi records loaded:', allData.absensi.length);
-                console.log('📋 Sample absensi records:', allData.absensi.slice(0, 3));
+				console.log('📋 Sample absensi records:', allData.absensi.slice(0, 3));
+				
+				// ULTIMATE FIX: Enhanced filtering dengan perbandingan string tanggal YYYY-MM-DD
+				let filteredAbsensi = allData.absensi.filter(a => {
+					// Pastikan Anda sudah memiliki fungsi convertFromGoogleSheetsDateFormat()
+					// (Fungsi ini harus ada di kode Anda, seperti yang terlihat di bagian lain)
+					let absensiDateStr = convertFromGoogleSheetsDateFormat(a.tanggal);
+					
+					// Perbandingan String YYYY-MM-DD: Ini adalah FIX untuk masalah zona waktu
+					// Memastikan data yang difilter HARI INI sesuai dengan tanggal input HARI INI.
+					const isDateInRange = absensiDateStr >= dariTanggal && absensiDateStr <= sampaiTanggal;
 
-                // Enhanced filtering with comprehensive date handling and class filtering
-                let filteredAbsensi = allData.absensi.filter(a => {
-                    // Normalize tanggal format - ensure it's YYYY-MM-DD
-                    let absensiDateStr = a.tanggal;
-                    
-                    // Handle different date formats that might come from Google Sheets
-                    if (absensiDateStr && absensiDateStr.includes('/')) {
-                        // Convert DD/MM/YYYY to YYYY-MM-DD (Indonesian format)
-                        const parts = absensiDateStr.split('/');
-                        if (parts.length === 3) {
-                            // Check if it's DD/MM/YYYY format (day first)
-                            if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
-                                absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                            }
-                            // Check if it's MM/DD/YYYY format (month first)
-                            else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
-                                absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-                            }
-                        }
-                    }
-                    
-                    // Handle Google Sheets date serial numbers
-                    if (absensiDateStr && !absensiDateStr.includes('-') && !absensiDateStr.includes('/')) {
-                        const dateNum = parseFloat(absensiDateStr);
-                        if (!isNaN(dateNum) && dateNum > 40000) { // Excel date serial number range
-                            const excelDate = new Date((dateNum - 25569) * 86400 * 1000);
-                            absensiDateStr = excelDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
-                        }
-                    }
-                    
-                    // Handle ISO date strings that might have time component
-                    if (absensiDateStr && absensiDateStr.includes('T')) {
-                        absensiDateStr = absensiDateStr.split('T')[0];
-                    }
-                    
-                    // Enhanced date range filtering
-                    const isDateInRange = absensiDateStr >= dariTanggal && absensiDateStr <= sampaiTanggal;
-                    
-                    // FIXED: Proper jenis filtering - ensure exact match
-                    const isJenisMatch = a.jenis && a.jenis.toLowerCase() === jenis.toLowerCase();
-                    
-                    // Enhanced class filtering logic for siswa
-                    let isKelasMatch = true;
-                    if (jenis === 'siswa') {
-                        // For siswa: if kelas is selected (not empty), filter by that class
-                        // If kelas is empty ("Semua Kelas"), show all siswa records
-                        if (kelas && kelas.trim() !== '') {
-                            isKelasMatch = a.kelas && a.kelas.toString().trim() === kelas.toString().trim();
-                        }
-                        // If no kelas selected (empty), show all siswa records (isKelasMatch remains true)
-                    }
-                    // For guru: no class filtering needed
-                    
-                    const matchResult = isJenisMatch && isDateInRange && isKelasMatch;
-                    
-                    // Debug logging for troubleshooting
-                    if (jenis === 'siswa' && isDateInRange) {
-                        console.log('🔍 Filtering siswa record:', {
-                            nama: a.nama,
-                            jenis: a.jenis,
-                            kelas: a.kelas,
-                            tanggal: absensiDateStr,
-                            isJenisMatch,
-                            isDateInRange,
-                            isKelasMatch,
-                            matchResult,
-                            filterKelas: kelas
-                        });
-                    }
-                    
-                    return matchResult;
-                });
+					// Filter berdasarkan Jenis (Siswa/Guru)
+					const isCorrectType = a.jenis.toLowerCase() === jenis.toLowerCase();
 
-                console.log('📊 Filtered absensi records:', filteredAbsensi.length);
+					// Filter berdasarkan Kelas (Hanya untuk Jenis: Siswa dan jika kelas dipilih)
+					const isCorrectKelas = (jenis.toLowerCase() === 'siswa' && selectedKelas) 
+										 ? (a.kelas.toLowerCase() === selectedKelas.toLowerCase()) 
+										 : true;
+					
+					// Kembalikan hanya data yang sesuai dengan filter
+					return isDateInRange && isCorrectType && isCorrectKelas;
+				});
 
-                // Store current report data for export
-                window.currentReportData = {
-                    data: filteredAbsensi,
-                    jenis: jenis,
-                    kelas: kelas,
-                    dariTanggal: dariTanggal,
-                    sampaiTanggal: sampaiTanggal,
-                    tipeLaporan: tipeLaporan
-                };
+				console.log(`✅ Total records filtered: ${filteredAbsensi.length}`);
+				
+				// Tampilkan tombol ekspor
+				document.getElementById('exportButtonsContainer').classList.remove('hidden');
 
-                if (tipeLaporan === 'rekap') {
-                    const rekapData = generateRekapData(filteredAbsensi, jenis, kelas);
-                    renderRekapTable(rekapData, jenis);
-                    showToast(`✅ Rekapitulasi berhasil dimuat! (${rekapData.length} record)`, 'success');
-                } else {
-                    renderLaporanTable(filteredAbsensi, jenis);
-                    showToast(`✅ Laporan berhasil dimuat! (${filteredAbsensi.length} record)`, 'success');
-                }
-                
-                document.getElementById('laporanResult').classList.remove('hidden');
-                
-                // ENHANCED: Reset dates back to today after successful data retrieval
-                setTimeout(() => {
-                    const todayReset = getTodayDate();
-                    document.getElementById('dariTanggal').value = todayReset;
-                    document.getElementById('sampaiTanggal').value = todayReset;
-                    
-                    // FIXED: Preserve selected kelas after data retrieval
-                    if (selectedKelas && selectedKelas.trim() !== '') {
-                        document.getElementById('kelasLaporan').value = selectedKelas;
-                        console.log('📚 Kelas selection preserved:', selectedKelas);
-                    }
-                    
-                    console.log('📅 Report dates reset back to today:', todayReset);
-                }, 2000); // Reset after 2 seconds
+				// Simpan data laporan saat ini ke window object untuk fungsi export (PDF/Excel)
+				window.currentReportData = {
+					data: filteredAbsensi,
+					tipeLaporan,
+					jenis,
+					kelas: selectedKelas,
+					dariTanggal,
+					sampaiTanggal
+				};
 
-            } catch (error) {
-                console.error('❌ Error loading laporan:', error);
-                showToast('❌ Gagal memuat laporan: ' + error.message, 'error');
-            } finally {
-                // Hide loading
-                tarikBtn.disabled = false;
-                tarikText.textContent = 'Tarik Data';
-                tarikLoader.classList.add('hidden');
-            }
-        }
+				// Lanjutkan ke logika display/rekap
+				if (tipeLaporan === 'detail') {
+					displayDetailLaporan(filteredAbsensi, jenis, selectedKelas);
+				} else if (tipeLaporan === 'rekap') {
+					const rekapData = processRekap(filteredAbsensi, jenis, selectedKelas);
+					displayRekapLaporan(rekapData, jenis, selectedKelas);
+				}
+
+			} catch (error) {
+				console.error('❌ Error loading laporan data:', error);
+				showToast('❌ Gagal memuat data laporan: ' + error.message, 'error');
+			} finally {
+				// Sembunyikan loading
+				const tarikBtn = document.getElementById('tarikDataBtn');
+				const tarikText = document.getElementById('tarikDataText');
+				const tarikLoader = document.getElementById('tarikDataLoader');
+				tarikBtn.disabled = false;
+				tarikText.textContent = 'Tarik Data';
+				tarikLoader.classList.add('hidden');
+			}
+		}
 
         // Generate recap data
         function generateRekapData(absensiData, jenis, kelas) {
+            console.log('📊 Generating rekap data for:', { jenis, kelas, recordCount: absensiData.length });
+            
             if (jenis === 'siswa') {
-                // For siswa: generate per-class summary
-                const kelasMap = new Map();
+                // For siswa: generate per-individual summary (not per-class)
+                const rekapMap = new Map();
                 
-                // Get unique classes from siswa data
-                const uniqueKelas = [...new Set(allData.siswa.map(s => s.kelas))].sort();
+                // Get siswa data for the selected class or all classes
+                let targetSiswa = allData.siswa;
+                if (kelas && kelas.trim() !== '') {
+                    targetSiswa = allData.siswa.filter(s => s.kelas === kelas);
+                    console.log('📚 Filtering siswa for kelas:', kelas, 'found:', targetSiswa.length);
+                }
                 
-                // Initialize recap data for each class
-                uniqueKelas.forEach(kelasName => {
-                    if (!kelas || kelasName === kelas) {
-                        const siswaInKelas = allData.siswa.filter(s => s.kelas === kelasName);
-                        kelasMap.set(kelasName, {
-                            kelas: kelasName,
-                            totalSiswa: siswaInKelas.length,
-                            hadir: 0,
-                            izin: 0,
-                            sakit: 0,
-                            alpha: 0,
-                            totalAbsensi: 0
-                        });
-                    }
+                // Initialize recap data for each siswa
+                targetSiswa.forEach(siswa => {
+                    rekapMap.set(siswa.nis, {
+                        nama: siswa.nama,
+                        id: siswa.nis,
+                        kelas: siswa.kelas,
+                        hadir: 0,
+                        izin: 0,
+                        sakit: 0,
+                        alpha: 0,
+                        total: 0,
+                        persentaseHadir: 0
+                    });
                 });
                 
-                // Count attendance for each class
+                console.log('👨‍🎓 Initialized siswa rekap map with', rekapMap.size, 'students');
+                
+                // Count attendance for each siswa
                 absensiData.forEach(record => {
-                    if (record.kelas && kelasMap.has(record.kelas)) {
-                        const recap = kelasMap.get(record.kelas);
-                        recap.totalAbsensi++;
+                    const key = record.nis_nuptk;
+                    if (rekapMap.has(key)) {
+                        const recap = rekapMap.get(key);
+                        recap.total++;
                         
                         switch (record.status) {
                             case 'Hadir':
@@ -4327,12 +4511,23 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                                 recap.alpha++;
                                 break;
                         }
+                        
+                        // Calculate percentage
+                        recap.persentaseHadir = recap.total > 0 ? 
+                            ((recap.hadir / recap.total) * 100).toFixed(1) : '0.0';
                     }
                 });
                 
-                return Array.from(kelasMap.values()).sort((a, b) => a.kelas.localeCompare(b.kelas));
+                // Return only students with attendance records, sorted by percentage
+                const result = Array.from(rekapMap.values())
+                    .filter(item => item.total > 0)
+                    .sort((a, b) => parseFloat(b.persentaseHadir) - parseFloat(a.persentaseHadir));
+                
+                console.log('📊 Generated siswa rekap result:', result.length, 'records with attendance');
+                return result;
+                
             } else {
-                // For guru: generate per-individual summary (existing logic)
+                // For guru: generate per-individual summary
                 const rekapMap = new Map();
                 
                 // Initialize recap data for all guru
@@ -4340,13 +4535,17 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                     rekapMap.set(guru.nip, {
                         nama: guru.nama,
                         id: guru.nip,
+                        mata_pelajaran: guru.mata_pelajaran,
                         hadir: 0,
                         izin: 0,
                         sakit: 0,
                         alpha: 0,
-                        total: 0
+                        total: 0,
+                        persentaseHadir: 0
                     });
                 });
+                
+                console.log('👨‍🏫 Initialized guru rekap map with', rekapMap.size, 'teachers');
                 
                 // Count attendance for each guru
                 absensiData.forEach(record => {
@@ -4369,14 +4568,24 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                                 recap.alpha++;
                                 break;
                         }
+                        
+                        // Calculate percentage
+                        recap.persentaseHadir = recap.total > 0 ? 
+                            ((recap.hadir / recap.total) * 100).toFixed(1) : '0.0';
                     }
                 });
                 
-                return Array.from(rekapMap.values()).sort((a, b) => a.nama.localeCompare(b.nama));
+                // Return only teachers with attendance records, sorted by percentage
+                const result = Array.from(rekapMap.values())
+                    .filter(item => item.total > 0)
+                    .sort((a, b) => parseFloat(b.persentaseHadir) - parseFloat(a.persentaseHadir));
+                
+                console.log('📊 Generated guru rekap result:', result.length, 'records with attendance');
+                return result;
             }
         }
 
-        // Render recap table
+        // Render recap table with enhanced UI and better data presentation
         function renderRekapTable(rekapData, jenis) {
             const thead = document.getElementById('laporanTableHeader');
             const tbody = document.getElementById('laporanTableBody');
@@ -4388,9 +4597,9 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             // Create headers for recap based on jenis
             let headers = [];
             if (jenis === 'siswa') {
-                headers = ['No', 'Kelas', 'Total Siswa', 'Hadir', 'Izin', 'Sakit', 'Alpha', 'Total Absensi', 'Persentase Kehadiran'];
+                headers = ['No', 'Nama Siswa', 'NIS', 'Kelas', 'Hadir', 'Izin', 'Sakit', 'Alpha', 'Total Hari', 'Persentase Kehadiran', 'Status'];
             } else {
-                headers = ['No', 'Nama', 'NUPTK', 'Hadir', 'Izin', 'Sakit', 'Alpha', 'Total', 'Persentase Kehadiran'];
+                headers = ['No', 'Nama Guru', 'NUPTK', 'Mata Pelajaran', 'Hadir', 'Izin', 'Sakit', 'Alpha', 'Total Hari', 'Persentase Kehadiran', 'Status'];
             }
             
             headers.forEach(header => {
@@ -4402,33 +4611,56 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             
             // Create rows for recap
             rekapData.forEach((item, index) => {
-                let persentaseKehadiran, totalCount;
+                const persentaseKehadiran = parseFloat(item.persentaseHadir);
                 
-                if (jenis === 'siswa') {
-                    totalCount = item.totalAbsensi;
-                    persentaseKehadiran = totalCount > 0 ? ((item.hadir / totalCount) * 100).toFixed(1) : '0.0';
+                // Determine status and color based on attendance percentage
+                let statusClass, statusText;
+                if (persentaseKehadiran >= 95) {
+                    statusClass = 'bg-green-100 text-green-800';
+                    statusText = 'Sangat Baik';
+                } else if (persentaseKehadiran >= 85) {
+                    statusClass = 'bg-blue-100 text-blue-800';
+                    statusText = 'Baik';
+                } else if (persentaseKehadiran >= 75) {
+                    statusClass = 'bg-yellow-100 text-yellow-800';
+                    statusText = 'Cukup';
+                } else if (persentaseKehadiran >= 60) {
+                    statusClass = 'bg-orange-100 text-orange-800';
+                    statusText = 'Kurang';
                 } else {
-                    totalCount = item.total;
-                    persentaseKehadiran = totalCount > 0 ? ((item.hadir / totalCount) * 100).toFixed(1) : '0.0';
+                    statusClass = 'bg-red-100 text-red-800';
+                    statusText = 'Perlu Perhatian';
                 }
                 
                 const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors duration-200';
+                
                 let rowHTML = `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index + 1}</td>`;
                 
                 if (jenis === 'siswa') {
                     rowHTML += `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">${item.kelas}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.totalSiswa}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${item.nama}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">${item.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                Kelas ${item.kelas}
+                            </span>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">${item.hadir}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-600 font-semibold">${item.izin}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-semibold">${item.sakit}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold">${item.alpha}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">${item.totalAbsensi}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">${item.total}</td>
                     `;
                 } else {
                     rowHTML += `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.nama}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${item.nama}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">${item.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                ${item.mata_pelajaran}
+                            </span>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">${item.hadir}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-600 font-semibold">${item.izin}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-semibold">${item.sakit}</td>
@@ -4439,12 +4671,20 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 
                 rowHTML += `
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            parseFloat(persentaseKehadiran) >= 90 ? 'bg-green-100 text-green-800' :
-                            parseFloat(persentaseKehadiran) >= 75 ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-red-100 text-red-800'
-                        }">
-                            ${persentaseKehadiran}%
+                        <div class="flex items-center">
+                            <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                <div class="h-2 rounded-full ${
+                                    persentaseKehadiran >= 90 ? 'bg-green-500' :
+                                    persentaseKehadiran >= 75 ? 'bg-yellow-500' :
+                                    'bg-red-500'
+                                }" style="width: ${persentaseKehadiran}%"></div>
+                            </div>
+                            <span class="text-sm font-semibold text-gray-900">${item.persentaseHadir}%</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">
+                            ${statusText}
                         </span>
                     </td>
                 `;
@@ -4452,6 +4692,55 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 row.innerHTML = rowHTML;
                 tbody.appendChild(row);
             });
+            
+            // Add summary row at the bottom
+            if (rekapData.length > 0) {
+                const totalHadir = rekapData.reduce((sum, item) => sum + item.hadir, 0);
+                const totalIzin = rekapData.reduce((sum, item) => sum + item.izin, 0);
+                const totalSakit = rekapData.reduce((sum, item) => sum + item.sakit, 0);
+                const totalAlpha = rekapData.reduce((sum, item) => sum + item.alpha, 0);
+                const totalKeseluruhan = rekapData.reduce((sum, item) => sum + item.total, 0);
+                const rataRataKehadiran = totalKeseluruhan > 0 ? ((totalHadir / totalKeseluruhan) * 100).toFixed(1) : '0.0';
+                
+                const summaryRow = document.createElement('tr');
+                summaryRow.className = 'bg-gray-100 font-semibold border-t-2 border-gray-300';
+                
+                let summaryHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">TOTAL</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">${rekapData.length} ${jenis}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">-</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">-</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-bold">${totalHadir}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-600 font-bold">${totalIzin}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-bold">${totalSakit}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-bold">${totalAlpha}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">${totalKeseluruhan}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                <div class="h-2 rounded-full ${
+                                    parseFloat(rataRataKehadiran) >= 90 ? 'bg-green-500' :
+                                    parseFloat(rataRataKehadiran) >= 75 ? 'bg-yellow-500' :
+                                    'bg-red-500'
+                                }" style="width: ${rataRataKehadiran}%"></div>
+                            </div>
+                            <span class="text-sm font-bold text-gray-900">${rataRataKehadiran}%</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            parseFloat(rataRataKehadiran) >= 90 ? 'bg-green-100 text-green-800' :
+                            parseFloat(rataRataKehadiran) >= 75 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                        }">
+                            Rata-rata
+                        </span>
+                    </td>
+                `;
+                
+                summaryRow.innerHTML = summaryHTML;
+                tbody.appendChild(summaryRow);
+            }
         }
 
         // Render laporan table
@@ -4475,12 +4764,19 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             // Create rows
             data.forEach((item, index) => {
                 const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors duration-200';
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index + 1}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.tanggal}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.nama}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.nis_nuptk}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.kelas || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">
+                        <span class="px-2 py-1 bg-gray-100 rounded text-xs">
+                            ${formatDateForDisplay(item.tanggal)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${item.nama}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">${item.nis_nuptk}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${item.kelas ? `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Kelas ${item.kelas}</span>` : '-'}
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                             item.status === 'Hadir' ? 'bg-green-100 text-green-800' :
@@ -4491,7 +4787,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                             ${item.status}
                         </span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.keterangan || '-'}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate" title="${item.keterangan || ''}">${item.keterangan || '-'}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -4597,7 +4893,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                         
                         const row = [
                             (index + 1).toString(),
-                            item.tanggal || '-',
+                            formatDateForDisplay(item.tanggal) || '-',
                             item.nama || '-',
                             item.nis_nuptk || '-',
                             item.kelas || '-',
@@ -4739,7 +5035,7 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                     reportData.forEach((item, index) => {
                         wsData.push([
                             index + 1,
-                            item.tanggal || '-',
+                            formatDateForDisplay(item.tanggal) || '-',
                             item.nama || '-',
                             item.nis_nuptk || '-',
                             item.kelas || '-',
@@ -5883,29 +6179,8 @@ function getOrCreateSheet(spreadsheet, sheetName) {
                 const todayAbsensi = allData.absensi.filter(a => {
                     let absensiDateStr = a.tanggal;
                     
-                    // Normalize date format
-                    if (absensiDateStr && absensiDateStr.includes('/')) {
-                        const parts = absensiDateStr.split('/');
-                        if (parts.length === 3) {
-                            if (parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
-                                absensiDateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                            } else if (parts[1].length <= 2 && parts[0].length <= 2 && parts[2].length === 4) {
-                                absensiDateStr = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
-                            }
-                        }
-                    }
-                    
-                    if (absensiDateStr && !absensiDateStr.includes('-') && !absensiDateStr.includes('/')) {
-                        const dateNum = parseFloat(absensiDateStr);
-                        if (!isNaN(dateNum) && dateNum > 40000) {
-                            const excelDate = new Date((dateNum - 25569) * 86400 * 1000);
-                            absensiDateStr = excelDate.toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
-                        }
-                    }
-                    
-                    if (absensiDateStr && absensiDateStr.includes('T')) {
-                        absensiDateStr = absensiDateStr.split('T')[0];
-                    }
+                    // Use enhanced Google Sheets date conversion
+                    absensiDateStr = convertFromGoogleSheetsDateFormat(absensiDateStr);
                     
                     return absensiDateStr === today;
                 });
@@ -5952,10 +6227,13 @@ function getOrCreateSheet(spreadsheet, sheetName) {
             }
         }
 
+
+
         // View today's attendance details
         function viewTodayAttendance() {
-            // Switch to laporan tab and set today's date
-            switchTab('tabLaporan');
+            // Switch to absensi tab and then to laporan sub-tab
+            switchTab('tabAbsensi');
+            switchAbsensiTab('tabLaporanAbsensi');
             
             // Set today's date in both fields
             const today = getTodayDate();
@@ -5969,5 +6247,5 @@ function getOrCreateSheet(spreadsheet, sheetName) {
         // Initialize app when page loads
         document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9969c8f9f02ca5e3',t:'MTc2MTgxNTQ4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'996c6ecb70614b6d',t:'MTc2MTg0MzI0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
