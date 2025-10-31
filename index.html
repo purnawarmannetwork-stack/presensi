@@ -64,8 +64,12 @@
       border-radius: 8px;
       color: white;
       font-weight: 500;
-      z-index: 1000;
+      z-index: 9999;
       animation: slideIn 0.3s ease-out;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      max-width: 400px;
+      word-wrap: break-word;
     }
     
     @keyframes slideIn {
@@ -244,9 +248,22 @@
       </div>
      </div><!-- Form Absensi -->
      <div id="form-section" class="bg-white rounded-lg shadow-lg p-6 mb-8">
-      <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">📝 Form Absensi</h2><!-- Filter Kelas untuk Form -->
+      <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">📝 Input Absensi Per Kelas</h2><!-- Info Panel -->
       <div class="mb-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-       <h3 class="text-lg font-bold text-blue-800 mb-3">🎯 Pilih Kelas untuk Absensi</h3>
+       <div class="flex items-start gap-3"><span class="text-blue-600 text-xl">ℹ️</span>
+        <div>
+         <h3 class="text-lg font-bold text-blue-800 mb-2">Input Absensi Melalui Data Google Sheets</h3>
+         <p class="text-blue-700 text-sm mb-2">Sistem ini menggunakan data siswa dari Google Sheets untuk memastikan konsistensi dan akurasi data.</p>
+         <ul class="text-blue-700 text-sm space-y-1 list-disc list-inside">
+          <li><strong>Pilih kelas</strong> dari dropdown di bawah untuk memuat daftar siswa</li>
+          <li><strong>Data siswa</strong> diambil langsung dari Google Sheets "Data Siswa"</li>
+          <li><strong>Untuk menambah siswa baru:</strong> Edit Google Sheets → Klik "Muat Data Siswa" di Pengaturan</li>
+         </ul>
+        </div>
+       </div>
+      </div><!-- Filter Kelas untuk Form -->
+      <div class="mb-6 p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
+       <h3 class="text-lg font-bold text-green-800 mb-3">🎯 Pilih Kelas untuk Absensi</h3>
        <div class="flex flex-col md:flex-row gap-4">
         <div class="flex-1"><label for="form-filter-kelas" class="block text-sm font-medium text-gray-700 mb-2">Kelas</label> <select id="form-filter-kelas" onchange="loadStudentsByClass()" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"> <option value="">Pilih Kelas</option> <option value="VII A">VII A</option> <option value="VII B">VII B</option> <option value="VII C">VII C</option> <option value="VIII A">VIII A</option> <option value="VIII B">VIII B</option> <option value="VIII C">VIII C</option> <option value="IX A">IX A</option> <option value="IX B">IX B</option> <option value="IX C">IX C</option> </select>
         </div>
@@ -258,21 +275,14 @@
        </div>
        <div class="mt-4 flex gap-3"><button type="button" onclick="markAllPresent()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium text-sm"> ✅ Tandai Semua Hadir </button> <button type="button" onclick="saveAllAttendance()" class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all font-medium"> 💾 Simpan Semua Absensi </button>
        </div>
-      </div><!-- Individual Form (Hidden when class mode active) -->
-      <form id="absensi-form" class="space-y-4">
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div><label for="nama-siswa" class="block text-sm font-medium text-gray-700 mb-2">Nama Siswa</label> <input type="text" id="nama-siswa" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Masukkan nama siswa">
-        </div>
-        <div><label for="kelas" class="block text-sm font-medium text-gray-700 mb-2">Kelas</label> <input type="text" id="kelas" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Contoh: VII A">
-        </div>
+      </div><!-- No Manual Input Message -->
+      <div id="no-manual-input" class="text-center py-8 text-gray-400">
+       <div class="text-6xl mb-4">
+        📋
        </div>
-       <div><label class="block text-sm font-medium text-gray-700 mb-2">Status Kehadiran</label>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3"><label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-green-500 transition-all"> <input type="radio" name="status" value="Hadir" required class="mr-3"> <span class="text-lg">✅ Hadir</span> </label> <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-yellow-500 transition-all"> <input type="radio" name="status" value="Izin" required class="mr-3"> <span class="text-lg">📝 Izin</span> </label> <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-red-500 transition-all"> <input type="radio" name="status" value="Sakit" required class="mr-3"> <span class="text-lg">🏥 Sakit</span> </label> <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-purple-500 transition-all"> <input type="radio" name="status" value="Alpha" required class="mr-3"> <span class="text-lg">❌ Alpha</span> </label>
-        </div>
-       </div>
-       <div><label for="keterangan" class="block text-sm font-medium text-gray-700 mb-2">Keterangan (Opsional)</label> <textarea id="keterangan" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Tambahkan keterangan jika diperlukan"></textarea>
-       </div><button type="submit" id="submit-btn" class="w-full btn-primary text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-xl" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"> <span id="submit-text">Simpan Absensi</span> </button>
-      </form>
+       <p class="text-lg mb-2">Pilih kelas di atas untuk memulai input absensi</p>
+       <p class="text-sm">Data siswa akan dimuat otomatis dari Google Sheets</p>
+      </div>
      </div><!-- Filter Section -->
      <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
       <h2 class="text-2xl font-bold mb-4" style="color: #667eea;">🔍 Filter Data</h2>
@@ -304,7 +314,7 @@
          📝
         </div>
         <p class="text-lg">Belum ada data absensi</p>
-        <p class="text-sm mt-2">Mulai dengan mengisi form absensi di atas</p>
+        <p class="text-sm mt-2">Mulai dengan memilih kelas dan input absensi di atas</p>
        </div>
       </div>
      </div>
@@ -312,41 +322,12 @@
     <div id="panduan-page" class="hidden">
      <div class="space-y-8"><!-- Panduan Input Manual -->
       <div class="bg-white rounded-lg shadow-lg p-6">
-       <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">📝 Panduan Input Data Siswa</h2><!-- Input Manual Section -->
-       <div class="mb-8 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-        <h3 class="text-xl font-bold text-blue-800 mb-4">1️⃣ Input Manual (Satu per Satu)</h3>
-        <div class="space-y-4">
-         <div class="bg-white p-4 rounded-lg border border-blue-200">
-          <h4 class="font-bold text-blue-700 mb-3">📋 Langkah-langkah:</h4>
-          <ol class="list-decimal list-inside space-y-2 text-gray-700">
-           <li>Buka halaman <strong>"📝 Absensi"</strong></li>
-           <li>Scroll ke bagian <strong>"Form Absensi"</strong></li>
-           <li>Isi <strong>Nama Siswa</strong> dan <strong>Kelas</strong></li>
-           <li>Pilih <strong>Status Kehadiran</strong> (Hadir/Izin/Sakit/Alpha)</li>
-           <li>Tambahkan <strong>Keterangan</strong> jika diperlukan</li>
-           <li>Klik tombol <strong>"Simpan Absensi"</strong></li>
-          </ol>
-         </div>
-         <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-          <div class="flex items-start gap-3"><span class="text-green-600 text-xl">💡</span>
-           <div>
-            <h4 class="font-bold text-green-700 mb-2">Tips Input Manual:</h4>
-            <ul class="list-disc list-inside space-y-1 text-green-700 text-sm">
-             <li>Pastikan nama siswa ditulis dengan benar dan konsisten</li>
-             <li>Format kelas: VII A, VII B, VIII A, dst.</li>
-             <li>Gunakan keterangan untuk informasi tambahan (misal: terlambat 10 menit)</li>
-             <li>Data akan otomatis tersimpan dengan timestamp saat ini</li>
-            </ul>
-           </div>
-          </div>
-         </div>
-        </div>
-       </div><!-- Input Per Kelas Section -->
+       <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">📝 Panduan Input Data Siswa</h2><!-- Input Per Kelas Section -->
        <div class="mb-8 p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
-        <h3 class="text-xl font-bold text-green-800 mb-4">2️⃣ Input Per Kelas (Batch/Massal)</h3>
+        <h3 class="text-xl font-bold text-green-800 mb-4">🎯 Input Absensi Per Kelas</h3>
         <div class="space-y-4">
          <div class="bg-white p-4 rounded-lg border border-green-200">
-          <h4 class="font-bold text-green-700 mb-3">🎯 Langkah-langkah:</h4>
+          <h4 class="font-bold text-green-700 mb-3">📋 Langkah-langkah:</h4>
           <ol class="list-decimal list-inside space-y-2 text-gray-700">
            <li>Buka halaman <strong>"📝 Absensi"</strong></li>
            <li>Di bagian <strong>"Pilih Kelas untuk Absensi"</strong>, pilih kelas yang diinginkan</li>
@@ -371,9 +352,44 @@
           </div>
          </div>
         </div>
+       </div><!-- Menambah Siswa Baru -->
+       <div class="mb-8 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+        <h3 class="text-xl font-bold text-blue-800 mb-4">➕ Menambah Siswa Baru</h3>
+        <div class="space-y-4">
+         <div class="bg-white p-4 rounded-lg border border-blue-200">
+          <h4 class="font-bold text-blue-700 mb-3">📊 Langkah-langkah:</h4>
+          <ol class="list-decimal list-inside space-y-2 text-gray-700">
+           <li>Buka <strong>Google Sheets "Data Siswa"</strong></li>
+           <li>Tambahkan <strong>baris baru</strong> dengan data siswa:</li>
+           <ul class="list-disc list-inside ml-6 mt-1 text-sm text-gray-600">
+            <li>Kolom A: Nama Siswa</li>
+            <li>Kolom B: Kelas (VII A, VII B, dst.)</li>
+            <li>Kolom C: NIS (opsional)</li>
+            <li>Kolom D: Jenis Kelamin (L/P)</li>
+           </ul>
+           <li>Simpan perubahan di Google Sheets</li>
+           <li>Kembali ke <strong>menu "⚙️ Pengaturan"</strong></li>
+           <li>Klik tombol <strong>"🔄 Muat Data Siswa"</strong></li>
+           <li>Data siswa baru akan muncul di dropdown kelas</li>
+          </ol>
+         </div>
+         <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+          <div class="flex items-start gap-3"><span class="text-green-600 text-xl">💡</span>
+           <div>
+            <h4 class="font-bold text-green-700 mb-2">Keuntungan Sistem Ini:</h4>
+            <ul class="list-disc list-inside space-y-1 text-green-700 text-sm">
+             <li><strong>Konsistensi data:</strong> Tidak ada typo atau duplikasi nama</li>
+             <li><strong>Satu sumber data:</strong> Semua perubahan di Google Sheets</li>
+             <li><strong>Mudah maintenance:</strong> Edit data siswa di satu tempat</li>
+             <li><strong>Backup otomatis:</strong> Data tersimpan di Google Drive</li>
+            </ul>
+           </div>
+          </div>
+         </div>
+        </div>
        </div><!-- Data Siswa Available -->
        <div class="mb-8 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-400">
-        <h3 class="text-xl font-bold text-purple-800 mb-4">3️⃣ Data Siswa yang Tersedia</h3>
+        <h3 class="text-xl font-bold text-purple-800 mb-4">📊 Data Siswa yang Tersedia</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
          <div class="bg-white p-4 rounded-lg border border-purple-200">
           <h4 class="font-bold text-purple-700 mb-3">🎓 Kelas VII</h4>
@@ -417,7 +433,7 @@
         </div>
        </div><!-- Status Kehadiran Guide -->
        <div class="mb-8 p-4 bg-gray-50 rounded-lg border-l-4 border-gray-400">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">4️⃣ Panduan Status Kehadiran</h3>
+        <h3 class="text-xl font-bold text-gray-800 mb-4">📋 Panduan Status Kehadiran</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
          <div class="space-y-3">
           <div class="flex items-center gap-3 p-3 bg-green-100 rounded-lg border border-green-200"><span class="text-2xl">✅</span>
@@ -450,7 +466,7 @@
         </div>
        </div><!-- Best Practices -->
        <div class="p-4 bg-indigo-50 rounded-lg border-l-4 border-indigo-400">
-        <h3 class="text-xl font-bold text-indigo-800 mb-4">5️⃣ Tips &amp; Best Practices</h3>
+        <h3 class="text-xl font-bold text-indigo-800 mb-4">💡 Tips &amp; Best Practices</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
          <div>
           <h4 class="font-bold text-indigo-700 mb-3">⏰ Waktu Input:</h4>
@@ -473,7 +489,7 @@
          <div>
           <h4 class="font-bold text-indigo-700 mb-3">🔄 Konsistensi:</h4>
           <ul class="list-disc list-inside space-y-1 text-indigo-700 text-sm">
-           <li>Gunakan format nama yang sama setiap hari</li>
+           <li>Data siswa dikelola melalui Google Sheets</li>
            <li>Pastikan format kelas konsisten (VII A, bukan 7A)</li>
            <li>Input data setiap hari tanpa terlewat</li>
            <li>Backup data secara berkala</li>
@@ -576,42 +592,44 @@
          <form id="student-data-form" class="space-y-4">
           <div><label for="student-data-url" class="block text-sm font-medium text-gray-700 mb-2">URL Google Apps Script (Data Siswa)</label> <input type="url" id="student-data-url" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec">
           </div>
-          <div class="flex gap-3"><button type="submit" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium"> 🔄 Muat Data Siswa </button> <button type="button" onclick="loadSampleStudentData()" class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all font-medium"> 📋 Gunakan Data Sample </button>
+          <div class="flex gap-3"><button type="submit" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium"> 🔄 Muat Data Siswa </button> <button type="button" onclick="saveStudentDataUrl()" class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium"> 💾 Simpan URL </button> <button type="button" onclick="loadSampleStudentData()" class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all font-medium"> 📋 Gunakan Data Sample </button>
           </div>
          </form>
          <div class="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
           <div class="flex items-start gap-2"><span class="text-yellow-600 text-lg">💡</span>
-           <div class="text-yellow-800 text-sm"><strong>Tips:</strong> Buat Google Sheets terpisah untuk data siswa dan data absensi. Data siswa hanya perlu dibuat sekali di awal tahun ajaran.
+           <div class="text-yellow-800 text-sm"><strong>Tips:</strong> Buat Google Sheets terpisah untuk data siswa dan data absensi. Data siswa hanya perlu dibuat sekali di awal tahun ajaran. URL akan tersimpan otomatis setelah disimpan.
            </div>
           </div>
          </div>
         </div>
        </div>
-      </div><!-- Attendance Sheets Status -->
+      </div><!-- Attendance Sheets Configuration -->
       <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-       <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">📊 Status Google Sheets Absensi</h2>
-       <div class="space-y-4"><!-- Attendance Sheets Status -->
+       <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">📊 Konfigurasi Google Sheets Absensi</h2>
+       <div class="space-y-4"><!-- Current Attendance Sheets Status -->
         <div id="attendance-sheets-status" class="p-4 rounded-lg border-l-4 border-l-green-400 bg-green-50">
          <div class="flex items-center gap-3"><span class="text-2xl">✅</span>
           <div>
            <h3 class="font-bold text-green-800">Google Sheets Absensi Terhubung</h3>
            <p class="text-green-600 text-sm">Setiap data absensi otomatis tersimpan ke Google Sheets</p>
-           <p class="text-green-500 text-xs mt-1 break-all">https://script.google.com/macros/s/AKfycbwTFf2vKfXdQz3CWLnj1Cm2Qo53iz_8aB0rdkZ7403og5pLcUe6l8xft1LBbPj1BNBi/exec</p>
+           <p class="text-green-500 text-xs mt-1 break-all" id="current-attendance-url">https://script.google.com/macros/s/AKfycbwTFf2vKfXdQz3CWLnj1Cm2Qo53iz_8aB0rdkZ7403og5pLcUe6l8xft1LBbPj1BNBi/exec</p>
           </div>
          </div>
-        </div><!-- Test Connection -->
-        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-         <h3 class="text-lg font-bold text-blue-800 mb-3">🧪 Test Koneksi Google Sheets</h3>
-         <p class="text-blue-700 text-sm mb-4">Klik tombol di bawah untuk mengirim data test ke Google Sheets Anda</p><button onclick="testGoogleSheetsConnection()" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium"> 🚀 Test Koneksi Sekarang </button>
-        </div><!-- Instructions -->
-        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-         <h3 class="text-lg font-bold text-gray-800 mb-3">📋 Cara Kerja Integrasi</h3>
-         <ul class="space-y-2 text-sm text-gray-700">
-          <li>• <strong>Otomatis:</strong> Setiap input absensi langsung dikirim ke Google Sheets</li>
-          <li>• <strong>Real-time:</strong> Data tersimpan secara bersamaan di sistem dan Google Sheets</li>
-          <li>• <strong>Backup:</strong> Jika Google Sheets error, data tetap tersimpan di sistem</li>
-          <li>• <strong>Format:</strong> Data dikirim sesuai struktur yang sudah Anda buat</li>
-         </ul>
+        </div><!-- URL Configuration Form -->
+        <div class="bg-purple-50 p-6 rounded-lg border border-purple-200">
+         <h3 class="text-lg font-bold text-purple-800 mb-4">🔧 Update URL Google Apps Script Absensi</h3>
+         <form id="attendance-url-form" class="space-y-4">
+          <div><label for="attendance-data-url" class="block text-sm font-medium text-gray-700 mb-2">URL Google Apps Script (Data Absensi)</label> <input type="url" id="attendance-data-url" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec">
+          </div>
+          <div class="flex gap-3"><button type="button" onclick="saveAttendanceUrl()" class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all font-medium"> 💾 Simpan URL Absensi </button> <button type="button" onclick="testGoogleSheetsConnection()" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium"> 🧪 Test Koneksi </button>
+          </div>
+         </form>
+         <div class="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
+          <div class="flex items-start gap-2"><span class="text-yellow-600 text-lg">💡</span>
+           <div class="text-yellow-800 text-sm"><strong>Catatan:</strong> URL Apps Script untuk absensi berbeda dengan URL untuk data siswa. Pastikan menggunakan URL yang benar untuk setiap fungsi. URL akan tersimpan otomatis.
+           </div>
+          </div>
+         </div>
         </div>
        </div>
       </div><!-- Google Sheets Integration Guide -->
@@ -962,103 +980,9 @@ function doGet(e) {
              </div>
             </div>
            </div>
-          </div><!-- Step 3B: Test Connection -->
-          <div class="border-l-4 border-green-400 pl-4">
-           <h4 class="text-lg font-bold text-green-800 mb-3">🧪 Langkah B: Test Koneksi Apps Script</h4>
-           <div class="space-y-4"><!-- Test Data Siswa -->
-            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-             <h5 class="font-bold text-blue-800 mb-2">1️⃣ Test Apps Script Data Siswa (GET Request)</h5>
-             <ol class="list-decimal list-inside text-gray-700 space-y-2 text-sm">
-              <li>Buka browser baru (tab baru)</li>
-              <li>Paste URL Apps Script Data Siswa di address bar</li>
-              <li>Tekan Enter</li>
-              <li><strong>Hasil yang diharapkan:</strong> JSON array dengan data siswa</li>
-             </ol>
-             <div class="mt-3 p-3 bg-white border border-blue-300 rounded">
-              <p class="text-xs text-gray-600 mb-1">Contoh hasil yang benar:</p><code class="text-xs text-green-600"> [{"nama_siswa":"Ahmad Rizki","kelas":"VII A","nis":"001","jenis_kelamin":"L"}] </code>
-             </div>
-            </div><!-- Test Data Absensi -->
-            <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-             <h5 class="font-bold text-green-800 mb-2">2️⃣ Test Apps Script Data Absensi (POST Request)</h5>
-             <ol class="list-decimal list-inside text-gray-700 space-y-2 text-sm">
-              <li>Buka <strong>Developer Console</strong> di browser (tekan F12)</li>
-              <li>Pilih tab <strong>"Console"</strong></li>
-              <li>Copy kode test di bawah ini</li>
-              <li>Ganti <code class="bg-gray-200 px-1 rounded">YOUR_ATTENDANCE_APPS_SCRIPT_URL</code> dengan URL Apps Script Data Absensi</li>
-              <li>Paste di console dan tekan Enter</li>
-              <li>Cek Google Sheets Data Absensi - harus ada baris baru dengan data test</li>
-             </ol>
-            </div>
-           </div>
-           <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto mt-4">
-            <div class="flex justify-between items-center mb-2"><span class="text-gray-400">🔧 Kode Test Data Absensi - Jalankan di Console Browser</span> <button onclick="copyTestCode()" class="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"> 📋 Copy Code </button>
-            </div>
-            <pre id="test-code">// GANTI dengan URL Apps Script Data Absensi Anda
-const ATTENDANCE_APPS_SCRIPT_URL = 'YOUR_ATTENDANCE_APPS_SCRIPT_URL';
-
-// Data test untuk absensi
-const testAttendanceData = {
-  nama_siswa: "Test Student",
-  kelas: "VII A", 
-  status: "Hadir",
-  tanggal: "2024-01-15",
-  waktu: "08:00",
-  keterangan: "Test koneksi Google Sheets",
-  input_by: "admin",
-  user_role: "Admin"
-};
-
-console.log('🚀 Mengirim data test ke Google Sheets...');
-console.log('📊 Data yang dikirim:', testAttendanceData);
-
-// Kirim data ke Google Sheets
-fetch(ATTENDANCE_APPS_SCRIPT_URL, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(testAttendanceData)
-})
-.then(response =&gt; {
-  console.log('📡 Response status:', response.status);
-  return response.json();
-})
-.then(data =&gt; {
-  console.log('✅ Berhasil! Response dari server:', data);
-  console.log('🎉 Cek Google Sheets Anda - data test harus sudah muncul!');
-  
-  // Success notification
-  const successMsg = '✅ KONEKSI BERHASIL!\\n\\n' +
-    '📊 Data test berhasil dikirim ke Google Sheets\\n' +
-    '🔍 Silakan cek spreadsheet Anda\\n\\n' +
-    'Langkah selanjutnya:\\n' +
-    '1. Cek Google Sheets Data Absensi\\n' +
-    '2. Pastikan ada baris baru dengan data "Test Student"\\n' +
-    '3. Jika ada, koneksi sudah siap digunakan!';
-  
-  alert(successMsg);
-})
-.catch(error =&gt; {
-  console.error('❌ Error detail:', error);
-  console.log('🔧 Troubleshooting:');
-  console.log('1. Pastikan URL Apps Script benar');
-  console.log('2. Pastikan deployment setting "Who has access: Anyone"');
-  console.log('3. Pastikan Apps Script sudah di-authorize');
-  
-  const errorMsg = '❌ KONEKSI GAGAL!\\n\\n' +
-    'Error: ' + error.message + '\\n\\n' +
-    'Solusi:\\n' +
-    '1. Cek URL Apps Script sudah benar\\n' +
-    '2. Pastikan setting "Who has access: Anyone"\\n' +
-    '3. Coba deploy ulang Apps Script\\n' +
-    '4. Lihat console untuk detail error';
-  
-  alert(errorMsg);
-});</pre>
-           </div>
           </div><!-- Step 3C: Integration with System -->
           <div class="border-l-4 border-purple-400 pl-4">
-           <h4 class="text-lg font-bold text-purple-800 mb-3">🔗 Langkah C: Integrasi dengan Sistem Absensi</h4>
+           <h4 class="text-lg font-bold text-purple-800 mb-3">🔗 Langkah B: Integrasi dengan Sistem Absensi</h4>
            <div class="space-y-4">
             <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
              <h5 class="font-bold text-purple-800 mb-2">📝 Konfigurasi Data Siswa</h5>
@@ -1066,88 +990,20 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
               <li>Buka halaman <strong>"⚙️ Pengaturan"</strong> di sistem absensi</li>
               <li>Scroll ke bagian <strong>"Konfigurasi Data Siswa"</strong></li>
               <li>Paste <strong>URL Apps Script Data Siswa</strong> di field "URL Google Apps Script"</li>
+              <li>Klik tombol <strong>"💾 Simpan URL"</strong> untuk menyimpan permanen</li>
               <li>Klik tombol <strong>"🔄 Muat Data Siswa"</strong></li>
-              <li>Tunggu hingga muncul notifikasi berhasil</li>
               <li>Sistem akan otomatis memuat daftar siswa per kelas</li>
              </ol>
             </div>
             <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
-             <h5 class="font-bold text-indigo-800 mb-2">💾 Otomatis Sync Data Absensi</h5>
-             <div class="text-sm text-gray-700 space-y-2">
-              <p><strong>Sistem akan otomatis:</strong></p>
-              <ul class="list-disc list-inside ml-4 space-y-1">
-               <li>Mengirim setiap data absensi ke Google Sheets</li>
-               <li>Menggunakan URL Apps Script Data Absensi</li>
-               <li>Tidak perlu konfigurasi manual</li>
-               <li>Real-time sync setiap kali input absensi</li>
-              </ul>
-             </div>
-            </div>
-           </div>
-          </div><!-- Step 3D: Verification -->
-          <div class="border-l-4 border-orange-400 pl-4">
-           <h4 class="text-lg font-bold text-orange-800 mb-3">✅ Langkah D: Verifikasi Integrasi Lengkap</h4>
-           <div class="space-y-3">
-            <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
-             <h5 class="font-bold text-orange-800 mb-2">🧪 Test End-to-End</h5>
+             <h5 class="font-bold text-indigo-800 mb-2">📊 Konfigurasi Data Absensi</h5>
              <ol class="list-decimal list-inside text-gray-700 space-y-2 text-sm">
-              <li><strong>Test Load Data Siswa:</strong>
-               <ul class="list-disc list-inside ml-6 mt-1 text-xs text-gray-600">
-                <li>Buka halaman "📝 Absensi"</li>
-                <li>Pilih kelas di dropdown "Pilih Kelas untuk Absensi"</li>
-                <li>Pastikan daftar siswa muncul otomatis</li>
-               </ul></li>
-              <li><strong>Test Input Absensi:</strong>
-               <ul class="list-disc list-inside ml-6 mt-1 text-xs text-gray-600">
-                <li>Pilih status kehadiran untuk beberapa siswa</li>
-                <li>Klik "💾 Simpan Semua Absensi"</li>
-                <li>Tunggu notifikasi berhasil</li>
-               </ul></li>
-              <li><strong>Verifikasi di Google Sheets:</strong>
-               <ul class="list-disc list-inside ml-6 mt-1 text-xs text-gray-600">
-                <li>Buka Google Sheets Data Absensi</li>
-                <li>Pastikan data baru sudah muncul</li>
-                <li>Cek semua kolom terisi dengan benar</li>
-               </ul></li>
-              <li><strong>Test Rekap Data:</strong>
-               <ul class="list-disc list-inside ml-6 mt-1 text-xs text-gray-600">
-                <li>Buka halaman "📊 Rekap Absensi"</li>
-                <li>Generate rekap harian</li>
-                <li>Pastikan statistik sesuai dengan data yang diinput</li>
-               </ul></li>
+              <li>Di bagian <strong>"Konfigurasi Google Sheets Absensi"</strong></li>
+              <li>Paste <strong>URL Apps Script Data Absensi</strong> di field URL</li>
+              <li>Klik tombol <strong>"💾 Simpan URL Absensi"</strong></li>
+              <li>Klik tombol <strong>"🧪 Test Koneksi"</strong> untuk memastikan</li>
+              <li>Sistem akan otomatis mengirim data absensi ke Google Sheets</li>
              </ol>
-            </div>
-           </div>
-          </div><!-- Advanced Configuration -->
-          <div class="border-l-4 border-gray-400 pl-4">
-           <h4 class="text-lg font-bold text-gray-800 mb-3">⚙️ Konfigurasi Lanjutan (Opsional)</h4>
-           <div class="space-y-3">
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-             <h5 class="font-bold text-gray-800 mb-2">🔄 Auto-Refresh Data Siswa</h5>
-             <p class="text-sm text-gray-700 mb-2">Untuk memperbarui data siswa secara berkala:</p>
-             <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-              <li>Klik "🔄 Muat Data Siswa" setiap ada siswa baru/pindah</li>
-              <li>Sistem akan otomatis update dropdown kelas</li>
-              <li>Data lama tidak akan hilang, hanya ditambahkan</li>
-             </ul>
-            </div>
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-             <h5 class="font-bold text-gray-800 mb-2">📊 Multiple Sheets Support</h5>
-             <p class="text-sm text-gray-700 mb-2">Untuk sekolah dengan banyak data:</p>
-             <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-              <li>Buat spreadsheet terpisah per semester/tahun ajaran</li>
-              <li>Ganti URL Apps Script sesuai periode aktif</li>
-              <li>Backup data lama sebelum ganti periode</li>
-             </ul>
-            </div>
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-             <h5 class="font-bold text-gray-800 mb-2">🔐 Security Best Practices</h5>
-             <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-              <li>Jangan share URL Apps Script ke pihak lain</li>
-              <li>Backup Google Sheets secara berkala</li>
-              <li>Monitor akses Google Sheets dari dashboard Google</li>
-              <li>Gunakan akun Google khusus sekolah jika memungkinkan</li>
-             </ul>
             </div>
            </div>
           </div>
@@ -1158,50 +1014,21 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
          <div class="space-y-3">
           <div class="flex items-start gap-3"><span class="text-green-600 text-xl">✅</span>
            <div>
-            <h4 class="font-bold text-gray-700">Data Test Muncul di Sheets</h4>
-            <p class="text-gray-600 text-sm">Baris baru dengan data "Test Student" muncul di Google Sheets</p>
+            <h4 class="font-bold text-gray-700">URL Tersimpan Otomatis</h4>
+            <p class="text-gray-600 text-sm">URL Apps Script tersimpan dan tidak perlu input berulang</p>
            </div>
           </div>
           <div class="flex items-start gap-3"><span class="text-green-600 text-xl">✅</span>
            <div>
-            <h4 class="font-bold text-gray-700">Console Menampilkan "Berhasil"</h4>
-            <p class="text-gray-600 text-sm">Browser console menampilkan pesan sukses tanpa error</p>
+            <h4 class="font-bold text-gray-700">Data Siswa Termuat</h4>
+            <p class="text-gray-600 text-sm">Dropdown kelas menampilkan siswa dari Google Sheets</p>
            </div>
           </div>
           <div class="flex items-start gap-3"><span class="text-green-600 text-xl">✅</span>
            <div>
-            <h4 class="font-bold text-gray-700">Sistem Absensi Otomatis Tersinkron</h4>
-            <p class="text-gray-600 text-sm">Setiap data absensi yang diinput akan langsung masuk ke Google Sheets</p>
+            <h4 class="font-bold text-gray-700">Absensi Tersinkron Otomatis</h4>
+            <p class="text-gray-600 text-sm">Setiap data absensi langsung masuk ke Google Sheets</p>
            </div>
-          </div>
-         </div>
-        </div><!-- Troubleshooting -->
-        <div class="bg-red-50 p-6 rounded-lg border border-red-200">
-         <h3 class="text-xl font-bold text-red-800 mb-4">🔧 Troubleshooting</h3>
-         <div class="space-y-4">
-          <div>
-           <h4 class="font-bold text-gray-700">❓ Error "Script function not found"?</h4>
-           <ul class="list-disc list-inside text-gray-600 text-sm space-y-1 ml-4">
-            <li>Pastikan kode Apps Script sudah di-save dengan benar</li>
-            <li>Cek nama function adalah <code>doPost</code> dan <code>doGet</code></li>
-            <li>Deploy ulang Apps Script sebagai Web app</li>
-           </ul>
-          </div>
-          <div>
-           <h4 class="font-bold text-gray-700">❓ Error "Permission denied"?</h4>
-           <ul class="list-disc list-inside text-gray-600 text-sm space-y-1 ml-4">
-            <li>Set "Execute as: Me" saat deployment</li>
-            <li>Set "Who has access: Anyone" saat deployment</li>
-            <li>Authorize semua permission yang diminta Google</li>
-           </ul>
-          </div>
-          <div>
-           <h4 class="font-bold text-gray-700">❓ Data tidak masuk ke Sheets?</h4>
-           <ul class="list-disc list-inside text-gray-600 text-sm space-y-1 ml-4">
-            <li>Cek header spreadsheet sesuai dengan struktur tabel</li>
-            <li>Pastikan URL Apps Script sudah benar</li>
-            <li>Lihat log error di Apps Script editor (View → Logs)</li>
-           </ul>
           </div>
          </div>
         </div>
@@ -1242,13 +1069,29 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       guru: { password: "guru123", role: "Guru Piket", permissions: ["create", "read", "update"] }
     };
 
+    // Initialize with config values if available
+    function initializeUsers() {
+      // Always ensure default users exist
+      users = {
+        admin: { password: "admin123", role: "Admin", permissions: ["create", "read", "update", "delete", "export", "manage_users"] },
+        kepsek: { password: "kepsek123", role: "Kepala Sekolah", permissions: ["read", "export", "view_reports"] },
+        guru: { password: "guru123", role: "Guru Piket", permissions: ["create", "read", "update"] }
+      };
+      
+      console.log('🔐 Users initialized with defaults:', Object.keys(users));
+      console.log('🔑 User details:', users);
+    }
+    
+    // Initialize users on page load
+    initializeUsers();
+
     const dataHandler = {
       onDataChanged(data) {
         allRecords = data;
         recordCount = data.length;
         updateStats(data);
         updateFilterOptions(data);
-        updateClassDropdowns(); // Update class dropdown when data changes
+        updateClassDropdowns();
         applyFilters();
       }
     };
@@ -1322,26 +1165,26 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         el.style.fontSize = `${config.font_size || defaultConfig.font_size}px`;
       });
       
-      // Update user credentials
+      // Update users with config values if they exist
       if (config.admin_username && config.admin_password) {
-        // Remove old admin user if username changed
         if (config.admin_username !== defaultConfig.admin_username) {
           delete users[defaultConfig.admin_username];
         }
         
-        // Update users object
         users[config.admin_username] = { 
           password: config.admin_password, 
           role: "Admin", 
           permissions: ["create", "read", "update", "delete", "export", "manage_users"] 
         };
+        
+        console.log('🔄 Users updated from config:', Object.keys(users));
       }
     }
 
     function getWIBTime() {
       const now = new Date();
       const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-      const wib = new Date(utc + (7 * 3600000)); // UTC+7
+      const wib = new Date(utc + (7 * 3600000));
       return wib;
     }
 
@@ -1366,60 +1209,107 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
     }
 
     function login(username, password) {
-      const user = users[username];
-      if (user && user.password === password) {
-        currentUser = { username, ...user };
-        showMainApp();
-        updateUserInterface();
+      // Always ensure default users exist with exact credentials
+      const defaultUsers = {
+        admin: { password: "admin123", role: "Admin", permissions: ["create", "read", "update", "delete", "export", "manage_users"] },
+        kepsek: { password: "kepsek123", role: "Kepala Sekolah", permissions: ["read", "export", "view_reports"] },
+        guru: { password: "guru123", role: "Guru Piket", permissions: ["create", "read", "update"] }
+      };
+      
+      // Merge with existing users, but always keep defaults
+      users = { ...users, ...defaultUsers };
+      
+      // Clean inputs
+      const cleanUsername = (username || '').toString().trim().toLowerCase();
+      const cleanPassword = (password || '').toString().trim();
+      
+      console.log('🔐 LOGIN DEBUG:');
+      console.log('Input username:', `"${username}" -> cleaned: "${cleanUsername}"`);
+      console.log('Input password:', `"${password}" -> cleaned: "${cleanPassword}"`);
+      console.log('Available users:', Object.keys(users));
+      
+      // Check each user manually
+      for (const [userKey, userData] of Object.entries(users)) {
+        console.log(`Checking user "${userKey}":`, userData);
+        console.log(`Username match: "${cleanUsername}" === "${userKey.toLowerCase()}" = ${cleanUsername === userKey.toLowerCase()}`);
+        console.log(`Password match: "${cleanPassword}" === "${userData.password}" = ${cleanPassword === userData.password}`);
         
-        // Custom alert for successful login
-        const alertDiv = document.createElement('div');
-        alertDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-        alertDiv.innerHTML = `
-          <div class="bg-white rounded-lg p-6 max-w-sm mx-4 text-center shadow-2xl">
-            <div class="text-6xl mb-4">✅</div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">Login Berhasil!</h3>
-            <p class="text-gray-600 mb-4">Selamat datang, ${user.role}</p>
-            <button onclick="this.parentElement.parentElement.remove()" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium">
-              OK
-            </button>
-          </div>
-        `;
-        document.body.appendChild(alertDiv);
-        
-        // Auto close after 3 seconds
-        setTimeout(() => {
-          if (alertDiv.parentElement) {
-            alertDiv.remove();
-          }
-        }, 3000);
-        
-        return true;
-      } else {
-        // Custom alert for failed login
-        const alertDiv = document.createElement('div');
-        alertDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-        alertDiv.innerHTML = `
-          <div class="bg-white rounded-lg p-6 max-w-sm mx-4 text-center shadow-2xl">
-            <div class="text-6xl mb-4">❌</div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">Login Gagal!</h3>
-            <p class="text-gray-600 mb-4">Username atau password salah</p>
-            <button onclick="this.parentElement.parentElement.remove()" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all font-medium">
-              Coba Lagi
-            </button>
-          </div>
-        `;
-        document.body.appendChild(alertDiv);
-        
-        // Auto close after 3 seconds
-        setTimeout(() => {
-          if (alertDiv.parentElement) {
-            alertDiv.remove();
-          }
-        }, 3000);
-        
-        return false;
+        if (cleanUsername === userKey.toLowerCase() && cleanPassword === userData.password) {
+          console.log('✅ LOGIN SUCCESS!');
+          
+          currentUser = { username: userKey, ...userData };
+          showMainApp();
+          updateUserInterface();
+          
+          // Show success message
+          const successDiv = document.createElement('div');
+          successDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+          successDiv.innerHTML = `
+            <div class="bg-white rounded-lg p-6 max-w-sm mx-4 text-center shadow-2xl">
+              <div class="text-6xl mb-4">✅</div>
+              <h3 class="text-xl font-bold text-green-800 mb-2">Login Berhasil!</h3>
+              <p class="text-gray-600 mb-4">Selamat datang, ${userData.role}!</p>
+              <button onclick="this.parentElement.parentElement.remove()" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium">
+                Lanjutkan
+              </button>
+            </div>
+          `;
+          document.body.appendChild(successDiv);
+          
+          setTimeout(() => {
+            if (successDiv.parentElement) {
+              successDiv.remove();
+            }
+          }, 3000);
+          
+          return true;
+        }
       }
+      
+      // Login failed
+      console.log('❌ LOGIN FAILED');
+      
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+      errorDiv.innerHTML = `
+        <div class="bg-white rounded-lg p-6 max-w-lg mx-4 text-center shadow-2xl">
+          <div class="text-6xl mb-4">❌</div>
+          <h3 class="text-xl font-bold text-red-800 mb-2">Login Gagal!</h3>
+          <p class="text-gray-600 mb-4">Username atau password tidak sesuai</p>
+          
+          <div class="bg-blue-50 p-4 rounded-lg mb-4 text-left">
+            <h4 class="font-bold text-blue-800 mb-2">🔍 Debug Info:</h4>
+            <p class="text-sm text-blue-700">Username yang dimasukkan: "${cleanUsername}"</p>
+            <p class="text-sm text-blue-700">Password yang dimasukkan: "${cleanPassword}"</p>
+            <p class="text-sm text-blue-700">User tersedia: ${Object.keys(users).join(', ')}</p>
+          </div>
+          
+          <div class="bg-green-50 p-4 rounded-lg mb-4 text-left">
+            <h4 class="font-bold text-green-800 mb-2">✅ Akun yang Tersedia:</h4>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="font-medium">Admin:</span>
+                <span class="text-gray-600">admin / admin123</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-medium">Kepsek:</span>
+                <span class="text-gray-600">kepsek / kepsek123</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-medium">Guru:</span>
+                <span class="text-gray-600">guru / guru123</span>
+              </div>
+            </div>
+          </div>
+          
+          <button onclick="this.parentElement.parentElement.remove()" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all font-medium">
+            Coba Lagi
+          </button>
+        </div>
+      `;
+      document.body.appendChild(errorDiv);
+      
+      return false;
     }
 
     function logout() {
@@ -1444,7 +1334,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       const formSection = document.getElementById('form-section');
       const exportSection = document.getElementById('export-section');
       
-      // Update role badge
       const roleIcons = {
         'Admin': '👑',
         'Kepala Sekolah': '🎓',
@@ -1462,7 +1351,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         userRoleBadge.className = `role-badge ${roleClasses[currentUser.role]}`;
       }
       
-      // Show/hide form based on permissions
       if (formSection) {
         if (currentUser.permissions.includes('create')) {
           formSection.classList.remove('hidden');
@@ -1471,7 +1359,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         }
       }
       
-      // Show/hide export button
       if (exportSection) {
         if (currentUser.permissions.includes('export')) {
           exportSection.classList.remove('hidden');
@@ -1480,7 +1367,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         }
       }
       
-      // Add permission notice for read-only users
       if (!currentUser.permissions.includes('create')) {
         const notice = document.createElement('div');
         notice.className = 'permission-denied';
@@ -1625,7 +1511,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
           'Alpha': '❌'
         };
         
-        const canEdit = hasPermission('update');
         const canDelete = hasPermission('delete');
         
         return `
@@ -1651,9 +1536,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
                     🗑️ Hapus
                   </button>
                 ` : ''}
-                <div class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg text-sm font-medium cursor-not-allowed" title="Edit dinonaktifkan untuk mencegah duplikasi di Google Sheets">
-                  ✏️ Edit (Nonaktif)
-                </div>
               </div>
             </div>
           </div>
@@ -1662,15 +1544,42 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
     }
 
     function showToast(message, type = 'success') {
+      // Remove any existing toasts first
+      const existingToasts = document.querySelectorAll('.toast');
+      existingToasts.forEach(toast => toast.remove());
+      
       const toast = document.createElement('div');
       toast.className = `toast ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
       toast.textContent = message;
+      toast.style.zIndex = '9999'; // Ensure toast is on top
+      toast.style.pointerEvents = 'none'; // Don't block clicks
+      
       document.body.appendChild(toast);
       
-      setTimeout(() => {
-        toast.style.animation = 'slideIn 0.3s ease-out reverse';
-        setTimeout(() => toast.remove(), 300);
+      // Auto remove after 3 seconds
+      const timeoutId = setTimeout(() => {
+        if (toast && toast.parentElement) {
+          toast.style.animation = 'slideIn 0.3s ease-out reverse';
+          setTimeout(() => {
+            if (toast && toast.parentElement) {
+              toast.remove();
+            }
+          }, 300);
+        }
       }, 3000);
+      
+      // Allow manual click to dismiss
+      toast.addEventListener('click', () => {
+        clearTimeout(timeoutId);
+        if (toast && toast.parentElement) {
+          toast.style.animation = 'slideIn 0.3s ease-out reverse';
+          setTimeout(() => {
+            if (toast && toast.parentElement) {
+              toast.remove();
+            }
+          }, 300);
+        }
+      });
     }
 
     function setLoading(isLoading, buttonId = 'submit-btn', textId = 'submit-text') {
@@ -1705,7 +1614,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       
-      // Simulate loading delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       const loginSuccess = login(username, password);
@@ -1717,11 +1625,10 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       setLoading(false, 'login-btn', 'login-text');
     }
 
-    // Function to send data to Google Sheets
     async function sendToGoogleSheets(attendanceData) {
       if (!isAttendanceSheetConnected || !attendanceSheetUrl) {
         console.log('Google Sheets not connected, skipping...');
-        return { success: true }; // Skip if not connected
+        return { success: true };
       }
       
       try {
@@ -1730,7 +1637,7 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         
         const response = await fetch(attendanceSheetUrl, {
           method: 'POST',
-          mode: 'no-cors', // Important for Google Apps Script
+          mode: 'no-cors',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -1738,9 +1645,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         });
         
         console.log('📡 Response status:', response.status);
-        
-        // With no-cors mode, we can't read the response
-        // But if no error is thrown, we assume success
         console.log('✅ Data sent successfully to Google Sheets');
         return { success: true };
         
@@ -1749,101 +1653,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         return { success: false, error: error.message };
       }
     }
-
-    async function handleSubmit(e) {
-      e.preventDefault();
-      
-      if (!hasPermission('create')) {
-        showToast('❌ Anda tidak memiliki izin untuk menambah data!', 'error');
-        return;
-      }
-      
-      if (recordCount >= 999) {
-        showToast('Batas maksimal 999 data tercapai. Hapus beberapa data terlebih dahulu.', 'error');
-        return;
-      }
-      
-      setLoading(true);
-      
-      const namaSiswa = document.getElementById('nama-siswa').value;
-      const kelas = document.getElementById('kelas').value;
-      const status = document.querySelector('input[name="status"]:checked').value;
-      const keterangan = document.getElementById('keterangan').value;
-      
-      const wibTime = getWIBTime();
-      const tanggal = wibTime.toISOString().split('T')[0];
-      const waktu = wibTime.toTimeString().split(' ')[0].substring(0, 5);
-      
-      const newRecord = {
-        id: Date.now().toString(),
-        nama_siswa: namaSiswa,
-        kelas: kelas,
-        status: status,
-        tanggal: tanggal,
-        waktu: waktu,
-        keterangan: keterangan,
-        input_by: currentUser.username,
-        user_role: currentUser.role,
-        timestamp: wibTime.toISOString()
-      };
-      
-      // Send to Google Sheets first
-      const sheetsResult = await sendToGoogleSheets(newRecord);
-      
-      // Then save to local Data SDK
-      const result = await window.dataSdk.create(newRecord);
-      
-      setLoading(false);
-      
-      if (result.isOk) {
-        if (sheetsResult.success) {
-          showToast('✅ Absensi berhasil disimpan ke sistem dan Google Sheets!', 'success');
-        } else {
-          showToast('✅ Absensi disimpan ke sistem. ⚠️ Gagal kirim ke Google Sheets.', 'success');
-        }
-        document.getElementById('absensi-form').reset();
-      } else {
-        showToast('❌ Gagal menyimpan absensi. Silakan coba lagi.', 'error');
-      }
-    }
-
-    window.editRecord = async function(backendId) {
-      if (!hasPermission('update')) {
-        showToast('❌ Anda tidak memiliki izin untuk mengedit data!', 'error');
-        return;
-      }
-      
-      // Show notification that edit is temporarily disabled
-      const notificationDiv = document.createElement('div');
-      notificationDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-      notificationDiv.innerHTML = `
-        <div class="bg-white rounded-lg p-6 max-w-md mx-4 text-center shadow-2xl">
-          <div class="text-6xl mb-4">⚠️</div>
-          <h3 class="text-xl font-bold text-orange-800 mb-2">Fitur Edit Sementara Dinonaktifkan</h3>
-          <p class="text-gray-600 mb-4">Fitur edit data absensi sementara dinonaktifkan untuk mencegah duplikasi data di Google Sheets.</p>
-          <div class="bg-yellow-50 p-3 rounded-lg mb-4 text-left">
-            <p class="text-sm text-yellow-800"><strong>💡 Alasan:</strong></p>
-            <ul class="text-xs text-yellow-700 mt-1 space-y-1 list-disc list-inside">
-              <li>Edit data akan menyebabkan duplikasi di Google Sheets</li>
-              <li>Google Sheets tidak mendukung update data yang sudah ada</li>
-              <li>Setiap edit akan menambah baris baru di Google Sheets</li>
-            </ul>
-          </div>
-          <div class="bg-blue-50 p-3 rounded-lg mb-4 text-left">
-            <p class="text-sm text-blue-800"><strong>🔧 Alternatif:</strong></p>
-            <ul class="text-xs text-blue-700 mt-1 space-y-1 list-disc list-inside">
-              <li>Hapus data yang salah, lalu input ulang dengan data yang benar</li>
-              <li>Edit manual di Google Sheets jika diperlukan</li>
-              <li>Pastikan data sudah benar sebelum menyimpan</li>
-            </ul>
-          </div>
-          <button onclick="this.parentElement.parentElement.remove()" class="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all font-medium">
-            Mengerti
-          </button>
-        </div>
-      `;
-      document.body.appendChild(notificationDiv);
-    };
 
     window.deleteRecord = async function(backendId) {
       if (!hasPermission('delete')) {
@@ -1921,19 +1730,16 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       showToast('✅ Data berhasil di-export!', 'success');
     };
 
-    // Student data will be loaded from Google Sheets
     let studentsByClass = {};
     let isStudentDataLoaded = false;
-    let studentDataUrl = ''; // Will be set from config or manual input
+    let studentDataUrl = '';
 
-    // Attendance Google Sheets integration
     let attendanceSheetUrl = 'https://script.google.com/macros/s/AKfycbwTFf2vKfXdQz3CWLnj1Cm2Qo53iz_8aB0rdkZ7403og5pLcUe6l8xft1LBbPj1BNBi/exec';
     let isAttendanceSheetConnected = true;
 
     let currentClassStudents = [];
     let attendanceData = {};
 
-    // Function to load student data from Google Sheets
     async function loadStudentDataFromSheets(url) {
       try {
         showToast('📥 Memuat data siswa dari Google Sheets...', 'success');
@@ -1941,24 +1747,20 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         const response = await fetch(url);
         const data = await response.json();
         
-        // Reset studentsByClass
         studentsByClass = {};
         
-        // Group students by class
         data.forEach(student => {
           if (student.nama_siswa && student.kelas) {
             if (!studentsByClass[student.kelas]) {
               studentsByClass[student.kelas] = [];
             }
             
-            // Avoid duplicates
             if (!studentsByClass[student.kelas].includes(student.nama_siswa)) {
               studentsByClass[student.kelas].push(student.nama_siswa);
             }
           }
         });
         
-        // Sort students in each class
         Object.keys(studentsByClass).forEach(kelas => {
           studentsByClass[kelas].sort();
         });
@@ -1976,14 +1778,14 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         console.error('Error loading student data:', error);
         showToast('❌ Gagal memuat data siswa. Periksa URL Google Sheets.', 'error');
         
-        // Fallback to sample data
         loadSampleStudentData();
         return false;
       }
     }
 
-    // Fallback sample data
     function loadSampleStudentData() {
+      console.log('📋 Loading sample student data...');
+      
       studentsByClass = {
         'VII A': ['Ahmad Rizki', 'Siti Nurhaliza', 'Budi Santoso', 'Dewi Sartika', 'Eko Prasetyo', 'Fitri Handayani', 'Gilang Ramadhan', 'Hana Pertiwi', 'Indra Gunawan', 'Jihan Aulia', 'Krisna Wijaya', 'Lestari Putri', 'Muhammad Fadil', 'Nadia Safira', 'Oki Setiawan'],
         'VII B': ['Putri Maharani', 'Qori Syahputra', 'Rina Melati', 'Surya Pratama', 'Tania Sari', 'Umar Faruq', 'Vina Amelia', 'Wahyu Hidayat', 'Xenia Putri', 'Yoga Pratama', 'Zahra Aulia', 'Arif Rahman', 'Bella Safitri', 'Candra Kirana', 'Dimas Aditya'],
@@ -1998,10 +1800,11 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       
       isStudentDataLoaded = true;
       updateClassDropdowns();
+      
+      console.log('✅ Sample student data loaded successfully');
       showToast('📋 Menggunakan data siswa sample. Hubungkan ke Google Sheets untuk data real.', 'success');
     }
 
-    // Update class dropdowns when student data is loaded
     function updateClassDropdowns() {
       const formFilterKelas = document.getElementById('form-filter-kelas');
       const filterKelas = document.getElementById('filter-kelas');
@@ -2010,10 +1813,8 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         const currentValue = formFilterKelas.value;
         formFilterKelas.innerHTML = '<option value="">Pilih Kelas</option>';
         
-        // Get today's date for filtering
         const today = new Date().toISOString().split('T')[0];
         
-        // Get classes that already have attendance today
         const classesWithAttendanceToday = new Set(
           allRecords
             .filter(record => record.tanggal === today)
@@ -2039,13 +1840,11 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         formFilterKelas.value = currentValue;
       }
       
-      // Update filter dropdown as well
       if (filterKelas && allRecords.length > 0) {
         updateFilterOptions(allRecords);
       }
     }
 
-    // Copy functions for Apps Script code
     window.copyStudentDataScript = function() {
       const code = document.getElementById('student-data-script').textContent;
       navigator.clipboard.writeText(code).then(() => {
@@ -2064,16 +1863,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       });
     };
 
-    window.copyTestCode = function() {
-      const code = document.getElementById('test-code').textContent;
-      navigator.clipboard.writeText(code).then(() => {
-        showToast('✅ Kode test berhasil di-copy!', 'success');
-      }).catch(() => {
-        showToast('❌ Gagal copy kode. Silakan copy manual.', 'error');
-      });
-    };
-
-    // Load students by class
     window.loadStudentsByClass = function() {
       const selectedClass = document.getElementById('form-filter-kelas').value;
       
@@ -2095,9 +1884,8 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         return;
       }
       
-      // Show student list and hide individual form
       document.getElementById('student-attendance-list').classList.remove('hidden');
-      document.getElementById('absensi-form').classList.add('hidden');
+      document.getElementById('no-manual-input').classList.add('hidden');
       
       renderStudentList(selectedClass);
       showToast(`✅ Berhasil memuat ${currentClassStudents.length} siswa kelas ${selectedClass}`, 'success');
@@ -2188,7 +1976,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         return;
       }
       
-      // Show confirmation
       const confirmDiv = document.createElement('div');
       confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
       confirmDiv.innerHTML = `
@@ -2219,7 +2006,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       let errorCount = 0;
       let sheetsSuccessCount = 0;
       
-      // Show loading
       const loadingDiv = document.createElement('div');
       loadingDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
       loadingDiv.innerHTML = `
@@ -2247,13 +2033,11 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
             timestamp: wibTime.toISOString()
           };
           
-          // Send to Google Sheets first
           const sheetsResult = await sendToGoogleSheets(newRecord);
           if (sheetsResult.success) {
             sheetsSuccessCount++;
           }
           
-          // Then save to local Data SDK
           const result = await window.dataSdk.create(newRecord);
           
           if (result.isOk) {
@@ -2262,7 +2046,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
             errorCount++;
           }
           
-          // Small delay to prevent overwhelming the system
           await new Promise(resolve => setTimeout(resolve, 200));
         }
       }
@@ -2278,14 +2061,12 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
           showToast(`✅ Berhasil menyimpan ${successCount} absensi ke sistem. ⚠️ Gagal kirim ke Google Sheets.`, 'success');
         }
         
-        // Reset form
         document.getElementById('student-attendance-list').classList.add('hidden');
-        document.getElementById('absensi-form').classList.remove('hidden');
+        document.getElementById('no-manual-input').classList.remove('hidden');
         document.getElementById('form-filter-kelas').value = '';
         attendanceData = {};
         currentClassStudents = [];
         
-        // Update class dropdown to reflect completed attendance
         updateClassDropdowns();
       }
       
@@ -2301,7 +2082,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       document.getElementById('panduan-page').classList.add('hidden');
       document.getElementById('pengaturan-page').classList.add('hidden');
       
-      // Update navigation buttons
       document.getElementById('nav-absensi').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-blue-500 text-white';
       document.getElementById('nav-rekap').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
       document.getElementById('nav-panduan').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
@@ -2314,7 +2094,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       document.getElementById('panduan-page').classList.add('hidden');
       document.getElementById('pengaturan-page').classList.add('hidden');
       
-      // Update navigation buttons
       document.getElementById('nav-absensi').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
       document.getElementById('nav-rekap').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-blue-500 text-white';
       document.getElementById('nav-panduan').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
@@ -2327,7 +2106,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       document.getElementById('panduan-page').classList.remove('hidden');
       document.getElementById('pengaturan-page').classList.add('hidden');
       
-      // Update navigation buttons
       document.getElementById('nav-absensi').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
       document.getElementById('nav-rekap').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
       document.getElementById('nav-panduan').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-blue-500 text-white';
@@ -2340,18 +2118,16 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       document.getElementById('panduan-page').classList.add('hidden');
       document.getElementById('pengaturan-page').classList.remove('hidden');
       
-      // Update navigation buttons
       document.getElementById('nav-absensi').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
       document.getElementById('nav-rekap').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
       document.getElementById('nav-panduan').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
       document.getElementById('nav-pengaturan').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-blue-500 text-white';
       
-      // Update user management interface
       updateUserManagementInterface();
       renderUserList();
+      loadSavedUrls();
     };
 
-    // User management functions
     function updateUserManagementInterface() {
       const addUserSection = document.getElementById('add-user-section');
       
@@ -2436,28 +2212,24 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       const password = document.getElementById('new-password').value;
       const role = document.getElementById('new-role').value;
       
-      // Check if username already exists
       if (users[username]) {
         showToast('❌ Username sudah digunakan!', 'error');
         setLoading(false, 'add-user-btn', 'add-user-text');
         return;
       }
       
-      // Define permissions based on role
       const rolePermissions = {
         'Admin': ['create', 'read', 'update', 'delete', 'export', 'manage_users'],
         'Kepala Sekolah': ['read', 'export', 'view_reports'],
         'Guru Piket': ['create', 'read', 'update']
       };
       
-      // Add new user
       users[username] = {
         password: password,
         role: role,
         permissions: rolePermissions[role]
       };
       
-      // Simulate loading delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       showToast(`✅ User ${username} berhasil ditambahkan!`, 'success');
@@ -2478,7 +2250,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
         return;
       }
       
-      // Custom confirmation dialog
       const confirmDiv = document.createElement('div');
       confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
       confirmDiv.innerHTML = `
@@ -2505,7 +2276,79 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       renderUserList();
     };
 
-    // Handle student data form submission
+    // Save URL functions
+    window.saveStudentDataUrl = function() {
+      const url = document.getElementById('student-data-url').value;
+      
+      if (!url) {
+        showToast('❌ Masukkan URL terlebih dahulu!', 'error');
+        return;
+      }
+      
+      localStorage.setItem('studentDataUrl', url);
+      studentDataUrl = url;
+      
+      showToast('✅ URL Data Siswa berhasil disimpan!', 'success');
+      updateStudentDataStatus(true, url);
+    };
+
+    window.saveAttendanceUrl = function() {
+      const url = document.getElementById('attendance-data-url').value;
+      
+      if (!url) {
+        showToast('❌ Masukkan URL terlebih dahulu!', 'error');
+        return;
+      }
+      
+      try {
+        localStorage.setItem('attendanceSheetUrl', url);
+        attendanceSheetUrl = url;
+        isAttendanceSheetConnected = true;
+        
+        // Update display immediately
+        updateAttendanceUrlDisplay();
+        
+        // Show success message
+        showToast('✅ URL Data Absensi berhasil disimpan!', 'success');
+        
+        console.log('✅ Attendance URL saved successfully:', url);
+        
+      } catch (error) {
+        console.error('❌ Error saving attendance URL:', error);
+        showToast('❌ Gagal menyimpan URL. Silakan coba lagi.', 'error');
+      }
+    };
+
+    function loadSavedUrls() {
+      // Load student data URL
+      const savedStudentUrl = localStorage.getItem('studentDataUrl');
+      if (savedStudentUrl) {
+        studentDataUrl = savedStudentUrl;
+        document.getElementById('student-data-url').value = savedStudentUrl;
+        updateStudentDataStatus(true, savedStudentUrl);
+        
+        // Auto-load student data if URL is saved
+        loadStudentDataFromSheets(savedStudentUrl);
+      }
+      
+      // Load attendance URL
+      const savedAttendanceUrl = localStorage.getItem('attendanceSheetUrl');
+      if (savedAttendanceUrl) {
+        attendanceSheetUrl = savedAttendanceUrl;
+        document.getElementById('attendance-data-url').value = savedAttendanceUrl;
+        isAttendanceSheetConnected = true;
+      }
+      
+      updateAttendanceUrlDisplay();
+    }
+
+    function updateAttendanceUrlDisplay() {
+      const currentUrlElement = document.getElementById('current-attendance-url');
+      if (currentUrlElement) {
+        currentUrlElement.textContent = attendanceSheetUrl;
+      }
+    }
+
     async function handleStudentDataForm(e) {
       e.preventDefault();
       
@@ -2524,7 +2367,6 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       }
     }
 
-    // Update student data status display
     function updateStudentDataStatus(isConnected, url = '') {
       const statusDiv = document.getElementById('student-data-status');
       
@@ -2554,879 +2396,487 @@ fetch(ATTENDANCE_APPS_SCRIPT_URL, {
       }
     }
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      if (window.elementSdk) {
-        await window.elementSdk.init({
-          defaultConfig,
-          onConfigChange,
-          mapToCapabilities: (config) => ({
-            recolorables: [
-              {
-                get: () => config.background_color || defaultConfig.background_color,
-                set: (value) => {
-                  config.background_color = value;
-                  window.elementSdk.setConfig({ background_color: value });
-                }
-              },
-              {
-                get: () => config.surface_color || defaultConfig.surface_color,
-                set: (value) => {
-                  config.surface_color = value;
-                  window.elementSdk.setConfig({ surface_color: value });
-                }
-              },
-              {
-                get: () => config.text_color || defaultConfig.text_color,
-                set: (value) => {
-                  config.text_color = value;
-                  window.elementSdk.setConfig({ text_color: value });
-                }
-              },
-              {
-                get: () => config.primary_action_color || defaultConfig.primary_action_color,
-                set: (value) => {
-                  config.primary_action_color = value;
-                  window.elementSdk.setConfig({ primary_action_color: value });
-                }
-              },
-              {
-                get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
-                set: (value) => {
-                  config.secondary_action_color = value;
-                  window.elementSdk.setConfig({ secondary_action_color: value });
-                }
-              }
-            ],
-            borderables: [],
-            fontEditable: {
-              get: () => config.font_family || defaultConfig.font_family,
-              set: (value) => {
-                config.font_family = value;
-                window.elementSdk.setConfig({ font_family: value });
-              }
-            },
-            fontSizeable: {
-              get: () => config.font_size || defaultConfig.font_size,
-              set: (value) => {
-                config.font_size = value;
-                window.elementSdk.setConfig({ font_size: value });
-              }
-            }
-          }),
-          mapToEditPanelValues: (config) => new Map([
-            ["judul_aplikasi", config.judul_aplikasi || defaultConfig.judul_aplikasi],
-            ["nama_sekolah", config.nama_sekolah || defaultConfig.nama_sekolah],
-            ["admin_username", config.admin_username || defaultConfig.admin_username],
-            ["admin_password", config.admin_password || defaultConfig.admin_password],
-            ["footer_text", config.footer_text || defaultConfig.footer_text]
-          ])
-        });
-      }
-      
-      if (window.dataSdk) {
-        const initResult = await window.dataSdk.init(dataHandler);
-        if (!initResult.isOk) {
-          showToast('❌ Gagal menginisialisasi sistem. Refresh halaman.', 'error');
-        }
-      }
-      
-      const loginForm = document.getElementById('login-form');
-      if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-      }
-      
-      const form = document.getElementById('absensi-form');
-      if (form) {
-        form.addEventListener('submit', handleSubmit);
-      }
-      
-      const addUserForm = document.getElementById('add-user-form');
-      if (addUserForm) {
-        addUserForm.addEventListener('submit', handleAddUser);
-      }
-      
-      const studentDataForm = document.getElementById('student-data-form');
-      if (studentDataForm) {
-        studentDataForm.addEventListener('submit', handleStudentDataForm);
-      }
-      
-      const filterKelas = document.getElementById('filter-kelas');
-      const filterStatus = document.getElementById('filter-status');
-      const filterTanggal = document.getElementById('filter-tanggal');
-      const filterUser = document.getElementById('filter-user');
-      
-      if (filterKelas) filterKelas.addEventListener('change', applyFilters);
-      if (filterStatus) filterStatus.addEventListener('change', applyFilters);
-      if (filterTanggal) filterTanggal.addEventListener('change', applyFilters);
-      if (filterUser) filterUser.addEventListener('change', applyFilters);
-      
-      // Set today's date as default for rekap
-      const today = new Date().toISOString().split('T')[0];
-      const rekapTanggal = document.getElementById('rekap-tanggal');
-      if (rekapTanggal) {
-        rekapTanggal.value = today;
-      }
-      
-      // Auto-generate rekap for today when data is available
-      setTimeout(() => {
-        if (allRecords.length > 0) {
-          generateRekapForDate(today);
-        }
-      }, 1000);
-      
-      // Rekap navigation functions
-      window.showRekapHarian = function() {
-        document.getElementById('rekap-harian-section').classList.remove('hidden');
-        document.getElementById('rekap-bulanan-section').classList.add('hidden');
-        
-        // Update navigation buttons
-        document.getElementById('rekap-nav-harian').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-blue-500 text-white';
-        document.getElementById('rekap-nav-bulanan').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
+    // Test Google Sheets connection function
+    window.testGoogleSheetsConnection = async function() {
+      const testData = {
+        nama_siswa: "Test Student - " + new Date().toLocaleTimeString(),
+        kelas: "TEST",
+        status: "Hadir",
+        tanggal: new Date().toISOString().split('T')[0],
+        waktu: new Date().toTimeString().split(' ')[0].substring(0, 5),
+        keterangan: "Test koneksi Google Sheets - " + new Date().toLocaleString(),
+        input_by: currentUser ? currentUser.username : "test_user",
+        user_role: currentUser ? currentUser.role : "Test"
       };
-
-      window.showRekapBulanan = function() {
-        document.getElementById('rekap-harian-section').classList.add('hidden');
-        document.getElementById('rekap-bulanan-section').classList.remove('hidden');
-        
-        // Update navigation buttons
-        document.getElementById('rekap-nav-harian').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
-        document.getElementById('rekap-nav-bulanan').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-green-500 text-white';
-        
-        // Set current month and year as default
-        const now = new Date();
-        const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
-        const currentYear = now.getFullYear();
-        
-        document.getElementById('rekap-bulan').value = currentMonth;
-        document.getElementById('rekap-tahun').value = currentYear;
-      };
-
-      // Generate rekap functions
-      window.generateRekapByDate = function() {
-        const selectedDate = document.getElementById('rekap-tanggal').value;
-        
-        if (!selectedDate) {
-          showToast('❌ Pilih tanggal terlebih dahulu!', 'error');
-          return;
-        }
-        
-        generateRekapForDate(selectedDate);
-      };
-
-      window.generateRekapBulanan = function() {
-        const selectedMonth = document.getElementById('rekap-bulan').value;
-        const selectedYear = document.getElementById('rekap-tahun').value;
-        
-        if (!selectedMonth || !selectedYear) {
-          showToast('❌ Pilih bulan dan tahun terlebih dahulu!', 'error');
-          return;
-        }
-        
-        generateRekapForMonth(selectedYear, selectedMonth);
-      };
-
-      function generateRekapForDate(date) {
-        const filteredData = allRecords.filter(record => record.tanggal === date);
-        
-        if (filteredData.length === 0) {
-          document.getElementById('rekap-results').innerHTML = `
-            <div class="text-center py-12 text-gray-400">
-              <div class="text-6xl mb-4">📅</div>
-              <p class="text-lg">Tidak ada data absensi untuk tanggal ${date}</p>
-              <p class="text-sm mt-2">Pilih tanggal lain atau tambahkan data absensi</p>
-            </div>
-          `;
-          return;
-        }
-        
-        // Group data by class
-        const dataByClass = {};
-        // Get classes from loaded student data, fallback to default if not loaded
-        const allClasses = Object.keys(studentsByClass).length > 0 ? 
-          Object.keys(studentsByClass).sort() : 
-          ['VII A', 'VII B', 'VII C', 'VIII A', 'VIII B', 'VIII C', 'IX A', 'IX B', 'IX C'];
-        
-        // Initialize all classes
-        allClasses.forEach(kelas => {
-          const totalSiswa = studentsByClass[kelas] ? studentsByClass[kelas].length : 15;
-          dataByClass[kelas] = {
-            hadir: 0,
-            izin: 0,
-            sakit: 0,
-            alpha: 0,
-            total_siswa: totalSiswa,
-            belum_absen: totalSiswa
-          };
-        });
-        
-        // Count attendance by class
-        filteredData.forEach(record => {
-          if (dataByClass[record.kelas]) {
-            dataByClass[record.kelas][record.status.toLowerCase()]++;
-            dataByClass[record.kelas].belum_absen--;
-          }
-        });
-        
-        // Calculate overall statistics
-        let totalSiswa = 0;
-        let totalHadir = 0;
-        let totalIzin = 0;
-        let totalSakit = 0;
-        let totalAlpha = 0;
-        let totalBelumAbsen = 0;
-        
-        Object.values(dataByClass).forEach(classData => {
-          totalSiswa += classData.total_siswa;
-          totalHadir += classData.hadir;
-          totalIzin += classData.izin;
-          totalSakit += classData.sakit;
-          totalAlpha += classData.alpha;
-          totalBelumAbsen += classData.belum_absen;
-        });
-        
-        const overallPercentage = totalSiswa > 0 ? Math.round((totalHadir / totalSiswa) * 100) : 0;
-        
-        // Render rekap
-        const rekapHtml = `
-          <!-- Overall Summary -->
-          <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-6 mb-6">
-            <h3 class="text-2xl font-bold mb-4">📊 Ringkasan Keseluruhan - ${date}</h3>
-            <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
-              <div class="text-center">
-                <div class="text-3xl font-bold">${totalSiswa}</div>
-                <div class="text-sm opacity-90">Total Siswa</div>
-              </div>
-              <div class="text-center">
-                <div class="text-3xl font-bold text-green-300">${totalHadir}</div>
-                <div class="text-sm opacity-90">Hadir</div>
-              </div>
-              <div class="text-center">
-                <div class="text-3xl font-bold text-yellow-300">${totalIzin}</div>
-                <div class="text-sm opacity-90">Izin</div>
-              </div>
-              <div class="text-center">
-                <div class="text-3xl font-bold text-red-300">${totalSakit}</div>
-                <div class="text-sm opacity-90">Sakit</div>
-              </div>
-              <div class="text-center">
-                <div class="text-3xl font-bold text-purple-300">${totalAlpha}</div>
-                <div class="text-sm opacity-90">Alpha</div>
-              </div>
-              <div class="text-center">
-                <div class="text-3xl font-bold text-gray-300">${totalBelumAbsen}</div>
-                <div class="text-sm opacity-90">Belum Absen</div>
-              </div>
-            </div>
-            <div class="mt-4 text-center">
-              <div class="text-4xl font-bold">${overallPercentage}%</div>
-              <div class="text-lg opacity-90">Persentase Kehadiran Keseluruhan</div>
-            </div>
-          </div>
-          
-          <!-- Per Class Breakdown -->
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            ${allClasses.map(kelas => {
-              const classData = dataByClass[kelas];
-              const attendancePercentage = classData.total_siswa > 0 ? 
-                Math.round((classData.hadir / classData.total_siswa) * 100) : 0;
-              
-              let statusColor = 'bg-red-500';
-              if (attendancePercentage >= 90) statusColor = 'bg-green-500';
-              else if (attendancePercentage >= 75) statusColor = 'bg-yellow-500';
-              
-              return `
-                <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all">
-                  <div class="flex items-center justify-between mb-4">
-                    <h4 class="text-xl font-bold text-gray-800">🎓 ${kelas}</h4>
-                    <div class="text-right">
-                      <div class="text-2xl font-bold ${attendancePercentage >= 90 ? 'text-green-600' : attendancePercentage >= 75 ? 'text-yellow-600' : 'text-red-600'}">${attendancePercentage}%</div>
-                      <div class="text-sm text-gray-500">Kehadiran</div>
-                    </div>
-                  </div>
-                  
-                  <div class="space-y-3">
-                    <div class="flex justify-between items-center">
-                      <span class="text-gray-600">👥 Total Siswa:</span>
-                      <span class="font-bold">${classData.total_siswa}</span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center">
-                      <span class="text-green-600">✅ Hadir:</span>
-                      <span class="font-bold text-green-600">${classData.hadir}</span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center">
-                      <span class="text-yellow-600">📝 Izin:</span>
-                      <span class="font-bold text-yellow-600">${classData.izin}</span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center">
-                      <span class="text-red-600">🏥 Sakit:</span>
-                      <span class="font-bold text-red-600">${classData.sakit}</span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center">
-                      <span class="text-purple-600">❌ Alpha:</span>
-                      <span class="font-bold text-purple-600">${classData.alpha}</span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center">
-                      <span class="text-gray-500">⏳ Belum Absen:</span>
-                      <span class="font-bold text-gray-500">${classData.belum_absen}</span>
-                    </div>
-                  </div>
-                  
-                  <!-- Progress Bar -->
-                  <div class="mt-4">
-                    <div class="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>Progress Kehadiran</span>
-                      <span>${attendancePercentage}%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-3">
-                      <div class="${statusColor} h-3 rounded-full transition-all duration-500" style="width: ${attendancePercentage}%"></div>
-                    </div>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        `;
-        
-        document.getElementById('rekap-results').innerHTML = rekapHtml;
-        showToast(`✅ Rekap berhasil di-generate untuk ${date}!`, 'success');
-      }
-
-      function generateRekapForMonth(year, month) {
-        // Filter data for the selected month
-        const filteredData = allRecords.filter(record => {
-          const recordDate = new Date(record.tanggal);
-          return recordDate.getFullYear() == year && String(recordDate.getMonth() + 1).padStart(2, '0') === month;
-        });
-        
-        const monthNames = {
-          '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April',
-          '05': 'Mei', '06': 'Juni', '07': 'Juli', '08': 'Agustus',
-          '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember'
-        };
-        
-        if (filteredData.length === 0) {
-          document.getElementById('rekap-results').innerHTML = `
-            <div class="text-center py-12 text-gray-400">
-              <div class="text-6xl mb-4">📅</div>
-              <p class="text-lg">Tidak ada data absensi untuk ${monthNames[month]} ${year}</p>
-              <p class="text-sm mt-2">Pilih bulan lain atau tambahkan data absensi</p>
-            </div>
-          `;
-          return;
-        }
-        
-        // Group data by class and calculate monthly statistics
-        const dataByClass = {};
-        // Get classes from loaded student data, fallback to default if not loaded
-        const allClasses = Object.keys(studentsByClass).length > 0 ? 
-          Object.keys(studentsByClass).sort() : 
-          ['VII A', 'VII B', 'VII C', 'VIII A', 'VIII B', 'VIII C', 'IX A', 'IX B', 'IX C'];
-        
-        // Get number of school days in the month (excluding weekends)
-        const daysInMonth = new Date(year, month, 0).getDate();
-        const schoolDays = getSchoolDaysInMonth(year, month);
-        
-        // Initialize all classes
-        allClasses.forEach(kelas => {
-          const totalSiswa = studentsByClass[kelas] ? studentsByClass[kelas].length : 15;
-          dataByClass[kelas] = {
-            hadir: 0,
-            izin: 0,
-            sakit: 0,
-            alpha: 0,
-            total_siswa: totalSiswa,
-            total_possible_attendance: totalSiswa * schoolDays, // actual students × school days
-            attendance_days: new Set(), // Track unique attendance days
-            student_attendance: {} // Track individual student attendance
-          };
-          
-          // Initialize student attendance tracking
-          const students = studentsByClass[kelas] || [];
-          students.forEach(student => {
-            dataByClass[kelas].student_attendance[student] = {
-              hadir: 0,
-              izin: 0,
-              sakit: 0,
-              alpha: 0,
-              total_days: 0
-            };
-          });
-        });
-        
-        // Count attendance by class and track individual students
-        filteredData.forEach(record => {
-          if (dataByClass[record.kelas]) {
-            dataByClass[record.kelas][record.status.toLowerCase()]++;
-            dataByClass[record.kelas].attendance_days.add(record.tanggal);
-            
-            // Track individual student attendance
-            if (dataByClass[record.kelas].student_attendance[record.nama_siswa]) {
-              dataByClass[record.kelas].student_attendance[record.nama_siswa][record.status.toLowerCase()]++;
-              dataByClass[record.kelas].student_attendance[record.nama_siswa].total_days++;
-            }
-          }
-        });
-        
-        // Calculate overall statistics
-        let totalPossibleAttendance = 0;
-        let totalHadir = 0;
-        let totalIzin = 0;
-        let totalSakit = 0;
-        let totalAlpha = 0;
-        let totalRecorded = 0;
-        
-        Object.values(dataByClass).forEach(classData => {
-          totalPossibleAttendance += classData.total_possible_attendance;
-          totalHadir += classData.hadir;
-          totalIzin += classData.izin;
-          totalSakit += classData.sakit;
-          totalAlpha += classData.alpha;
-          totalRecorded += (classData.hadir + classData.izin + classData.sakit + classData.alpha);
-        });
-        
-        const overallPercentage = totalPossibleAttendance > 0 ? Math.round((totalHadir / totalPossibleAttendance) * 100) : 0;
-        const recordedPercentage = totalPossibleAttendance > 0 ? Math.round((totalRecorded / totalPossibleAttendance) * 100) : 0;
-        
-        // Generate monthly summary
-        const rekapHtml = `
-          <!-- Monthly Summary Header -->
-          <div class="bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg p-6 mb-6">
-            <h3 class="text-3xl font-bold mb-4">📊 Rekap Bulanan - ${monthNames[month]} ${year}</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-              <div class="text-center">
-                <div class="text-2xl font-bold">${schoolDays}</div>
-                <div class="text-sm opacity-90">Hari Sekolah</div>
-              </div>
-              <div class="text-center">
-                <div class="text-2xl font-bold">${totalPossibleAttendance}</div>
-                <div class="text-sm opacity-90">Total Kemungkinan Kehadiran</div>
-              </div>
-              <div class="text-center">
-                <div class="text-2xl font-bold">${totalRecorded}</div>
-                <div class="text-sm opacity-90">Data Tercatat</div>
-              </div>
-              <div class="text-center">
-                <div class="text-2xl font-bold">${recordedPercentage}%</div>
-                <div class="text-sm opacity-90">Kelengkapan Data</div>
-              </div>
-            </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-              <div class="text-center">
-                <div class="text-3xl font-bold text-green-300">${totalHadir}</div>
-                <div class="text-sm opacity-90">Total Hadir</div>
-              </div>
-              <div class="text-center">
-                <div class="text-3xl font-bold text-yellow-300">${totalIzin}</div>
-                <div class="text-sm opacity-90">Total Izin</div>
-              </div>
-              <div class="text-center">
-                <div class="text-3xl font-bold text-red-300">${totalSakit}</div>
-                <div class="text-sm opacity-90">Total Sakit</div>
-              </div>
-              <div class="text-center">
-                <div class="text-3xl font-bold text-purple-300">${totalAlpha}</div>
-                <div class="text-sm opacity-90">Total Alpha</div>
-              </div>
-            </div>
-            
-            <div class="text-center">
-              <div class="text-5xl font-bold">${overallPercentage}%</div>
-              <div class="text-xl opacity-90">Persentase Kehadiran Keseluruhan</div>
-            </div>
-          </div>
-          
-          <!-- Monthly Class Statistics -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
-            ${allClasses.map(kelas => {
-              const classData = dataByClass[kelas];
-              const classAttendancePercentage = classData.total_possible_attendance > 0 ? 
-                Math.round((classData.hadir / classData.total_possible_attendance) * 100) : 0;
-              const classRecordedPercentage = classData.total_possible_attendance > 0 ? 
-                Math.round(((classData.hadir + classData.izin + classData.sakit + classData.alpha) / classData.total_possible_attendance) * 100) : 0;
-              
-              let statusColor = 'bg-red-500';
-              if (classAttendancePercentage >= 90) statusColor = 'bg-green-500';
-              else if (classAttendancePercentage >= 75) statusColor = 'bg-yellow-500';
-              
-              return `
-                <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all">
-                  <div class="flex items-center justify-between mb-4">
-                    <h4 class="text-xl font-bold text-gray-800">🎓 ${kelas}</h4>
-                    <div class="text-right">
-                      <div class="text-2xl font-bold ${classAttendancePercentage >= 90 ? 'text-green-600' : classAttendancePercentage >= 75 ? 'text-yellow-600' : 'text-red-600'}">${classAttendancePercentage}%</div>
-                      <div class="text-sm text-gray-500">Kehadiran</div>
-                    </div>
-                  </div>
-                  
-                  <div class="space-y-2 mb-4">
-                    <div class="flex justify-between items-center text-sm">
-                      <span class="text-gray-600">📊 Kelengkapan Data:</span>
-                      <span class="font-bold ${classRecordedPercentage >= 80 ? 'text-green-600' : classRecordedPercentage >= 60 ? 'text-yellow-600' : 'text-red-600'}">${classRecordedPercentage}%</span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center text-sm">
-                      <span class="text-green-600">✅ Hadir:</span>
-                      <span class="font-bold text-green-600">${classData.hadir}</span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center text-sm">
-                      <span class="text-yellow-600">📝 Izin:</span>
-                      <span class="font-bold text-yellow-600">${classData.izin}</span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center text-sm">
-                      <span class="text-red-600">🏥 Sakit:</span>
-                      <span class="font-bold text-red-600">${classData.sakit}</span>
-                    </div>
-                    
-                    <div class="flex justify-between items-center text-sm">
-                      <span class="text-purple-600">❌ Alpha:</span>
-                      <span class="font-bold text-purple-600">${classData.alpha}</span>
-                    </div>
-                  </div>
-                  
-                  <!-- Progress Bar -->
-                  <div class="mb-3">
-                    <div class="flex justify-between text-xs text-gray-600 mb-1">
-                      <span>Kehadiran</span>
-                      <span>${classAttendancePercentage}%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                      <div class="${statusColor} h-2 rounded-full transition-all duration-500" style="width: ${classAttendancePercentage}%"></div>
-                    </div>
-                  </div>
-                  
-                  <!-- Data Completeness Bar -->
-                  <div>
-                    <div class="flex justify-between text-xs text-gray-600 mb-1">
-                      <span>Kelengkapan Data</span>
-                      <span>${classRecordedPercentage}%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                      <div class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: ${classRecordedPercentage}%"></div>
-                    </div>
-                  </div>
-                  
-                  <div class="mt-3 text-xs text-gray-500">
-                    Hari tercatat: ${classData.attendance_days.size} dari ${schoolDays} hari sekolah
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-          
-          <!-- Top Performers & Concerns -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <!-- Best Attendance Classes -->
-            <div class="bg-green-50 border border-green-200 rounded-lg p-6">
-              <h4 class="text-xl font-bold text-green-800 mb-4">🏆 Kelas Terbaik (Kehadiran)</h4>
-              ${(() => {
-                const sortedClasses = allClasses
-                  .map(kelas => ({
-                    kelas,
-                    percentage: dataByClass[kelas].total_possible_attendance > 0 ? 
-                      Math.round((dataByClass[kelas].hadir / dataByClass[kelas].total_possible_attendance) * 100) : 0
-                  }))
-                  .sort((a, b) => b.percentage - a.percentage)
-                  .slice(0, 3);
-                
-                return sortedClasses.map((item, index) => `
-                  <div class="flex items-center justify-between py-2 ${index < sortedClasses.length - 1 ? 'border-b border-green-200' : ''}">
-                    <div class="flex items-center gap-2">
-                      <span class="text-lg">${index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}</span>
-                      <span class="font-medium text-green-800">${item.kelas}</span>
-                    </div>
-                    <span class="font-bold text-green-600">${item.percentage}%</span>
-                  </div>
-                `).join('');
-              })()}
-            </div>
-            
-            <!-- Classes Needing Attention -->
-            <div class="bg-red-50 border border-red-200 rounded-lg p-6">
-              <h4 class="text-xl font-bold text-red-800 mb-4">⚠️ Perlu Perhatian (Kehadiran Rendah)</h4>
-              ${(() => {
-                const concernClasses = allClasses
-                  .map(kelas => ({
-                    kelas,
-                    percentage: dataByClass[kelas].total_possible_attendance > 0 ? 
-                      Math.round((dataByClass[kelas].hadir / dataByClass[kelas].total_possible_attendance) * 100) : 0
-                  }))
-                  .filter(item => item.percentage < 80)
-                  .sort((a, b) => a.percentage - b.percentage)
-                  .slice(0, 3);
-                
-                if (concernClasses.length === 0) {
-                  return '<div class="text-center py-4 text-gray-500">🎉 Semua kelas memiliki kehadiran baik!</div>';
-                }
-                
-                return concernClasses.map((item, index) => `
-                  <div class="flex items-center justify-between py-2 ${index < concernClasses.length - 1 ? 'border-b border-red-200' : ''}">
-                    <div class="flex items-center gap-2">
-                      <span class="text-lg">⚠️</span>
-                      <span class="font-medium text-red-800">${item.kelas}</span>
-                    </div>
-                    <span class="font-bold text-red-600">${item.percentage}%</span>
-                  </div>
-                `).join('');
-              })()}
-            </div>
-          </div>
-          
-          <!-- Monthly Trends -->
-          <div class="bg-white border border-gray-200 rounded-lg p-6">
-            <h4 class="text-xl font-bold text-gray-800 mb-4">📈 Ringkasan & Rekomendasi</h4>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h5 class="font-bold text-gray-700 mb-3">📊 Statistik Utama:</h5>
-                <ul class="space-y-2 text-sm text-gray-600">
-                  <li>• <strong>Rata-rata kehadiran:</strong> ${overallPercentage}%</li>
-                  <li>• <strong>Kelengkapan data:</strong> ${recordedPercentage}%</li>
-                  <li>• <strong>Total hari sekolah:</strong> ${schoolDays} hari</li>
-                  <li>• <strong>Kelas terbaik:</strong> ${(() => {
-                    const best = allClasses
-                      .map(kelas => ({
-                        kelas,
-                        percentage: dataByClass[kelas].total_possible_attendance > 0 ? 
-                          Math.round((dataByClass[kelas].hadir / dataByClass[kelas].total_possible_attendance) * 100) : 0
-                      }))
-                      .sort((a, b) => b.percentage - a.percentage)[0];
-                    return `${best.kelas} (${best.percentage}%)`;
-                  })()}</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h5 class="font-bold text-gray-700 mb-3">💡 Rekomendasi:</h5>
-                <ul class="space-y-2 text-sm text-gray-600">
-                  ${overallPercentage >= 90 ? 
-                    '<li>• ✅ <strong>Kehadiran sangat baik!</strong> Pertahankan konsistensi.</li>' : 
-                    overallPercentage >= 75 ? 
-                      '<li>• ⚠️ <strong>Kehadiran cukup baik</strong>, tingkatkan motivasi siswa.</li>' : 
-                      '<li>• 🚨 <strong>Kehadiran perlu ditingkatkan</strong>, evaluasi faktor penyebab.</li>'
-                  }
-                  ${recordedPercentage < 80 ? 
-                    '<li>• 📝 <strong>Tingkatkan konsistensi input data</strong> absensi harian.</li>' : 
-                    '<li>• ✅ <strong>Input data sudah konsisten</strong>, pertahankan.</li>'
-                  }
-                  <li>• 📞 <strong>Follow up</strong> siswa dengan tingkat alpha tinggi.</li>
-                  <li>• 📊 <strong>Monitor tren</strong> kehadiran secara berkala.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        `;
-        
-        document.getElementById('rekap-results').innerHTML = rekapHtml;
-        showToast(`✅ Rekap bulanan berhasil di-generate untuk ${monthNames[month]} ${year}!`, 'success');
-      }
-
-      // Helper function to calculate school days in a month (excluding weekends)
-      function getSchoolDaysInMonth(year, month) {
-        const daysInMonth = new Date(year, month, 0).getDate();
-        let schoolDays = 0;
-        
-        for (let day = 1; day <= daysInMonth; day++) {
-          const date = new Date(year, month - 1, day);
-          const dayOfWeek = date.getDay();
-          
-          // Count Monday (1) to Friday (5) as school days
-          if (dayOfWeek >= 1 && dayOfWeek <= 5) {
-            schoolDays++;
-          }
-        }
-        
-        return schoolDays;
-      }
       
-      // Update time every second
-      setInterval(updateCurrentTime, 1000);
-      updateCurrentTime();
+      const loadingDiv = document.createElement('div');
+      loadingDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center';
+      loadingDiv.style.zIndex = '10000';
+      loadingDiv.innerHTML = `
+        <div class="bg-white rounded-lg p-6 max-w-sm mx-4 text-center shadow-2xl">
+          <div class="loading-spinner mx-auto mb-4"></div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">Testing Connection...</h3>
+          <p class="text-gray-600">Mengirim data test ke Google Sheets</p>
+          <p class="text-xs text-gray-500 mt-2">Tunggu 3 detik untuk hasil...</p>
+        </div>
+      `;
+      document.body.appendChild(loadingDiv);
       
-      // Test Google Sheets connection function
-      window.testGoogleSheetsConnection = async function() {
-        const testData = {
-          nama_siswa: "Test Student - " + new Date().toLocaleTimeString(),
-          kelas: "TEST",
-          status: "Hadir",
-          tanggal: new Date().toISOString().split('T')[0],
-          waktu: new Date().toTimeString().split(' ')[0].substring(0, 5),
-          keterangan: "Test koneksi Google Sheets - " + new Date().toLocaleString(),
-          input_by: currentUser ? currentUser.username : "test_user",
-          user_role: currentUser ? currentUser.role : "Test"
-        };
+      console.log('🧪 Starting Google Sheets connection test...');
+      console.log('📊 Test data:', testData);
+      console.log('🔗 Apps Script URL:', attendanceSheetUrl);
+      
+      try {
+        console.log('📡 Sending POST request to Google Apps Script...');
         
-        // Show loading
-        const loadingDiv = document.createElement('div');
-        loadingDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-        loadingDiv.innerHTML = `
-          <div class="bg-white rounded-lg p-6 max-w-sm mx-4 text-center shadow-2xl">
-            <div class="loading-spinner mx-auto mb-4"></div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">Testing Connection...</h3>
-            <p class="text-gray-600">Mengirim data test ke Google Sheets</p>
-            <p class="text-xs text-gray-500 mt-2">Tunggu 3 detik untuk hasil...</p>
-          </div>
-        `;
-        document.body.appendChild(loadingDiv);
+        const response = await fetch(attendanceSheetUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(testData)
+        });
         
-        console.log('🧪 Starting Google Sheets connection test...');
-        console.log('📊 Test data:', testData);
-        console.log('🔗 Apps Script URL:', attendanceSheetUrl);
+        console.log('📡 Response received (no-cors mode):', response);
+        console.log('📡 Response status:', response.status);
+        console.log('📡 Response type:', response.type);
         
-        try {
-          // Test with no-cors mode (same as actual implementation)
-          console.log('📡 Sending POST request to Google Apps Script...');
-          
-          const response = await fetch(attendanceSheetUrl, {
-            method: 'POST',
-            mode: 'no-cors', // Same as production implementation
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(testData)
-          });
-          
-          console.log('📡 Response received (no-cors mode):', response);
-          console.log('📡 Response status:', response.status);
-          console.log('📡 Response type:', response.type);
-          
-          // Wait a bit to ensure data is processed
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Remove loading div safely
+        if (loadingDiv && loadingDiv.parentElement) {
           loadingDiv.remove();
-          
-          // With no-cors mode, we can't read response details, but no error means likely success
-          // Show success dialog since the request was sent without throwing an error
-          const successDiv = document.createElement('div');
-          successDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-          successDiv.innerHTML = `
-            <div class="bg-white rounded-lg p-6 max-w-lg mx-4 text-center shadow-2xl max-h-96 overflow-y-auto">
-              <div class="text-6xl mb-4">✅</div>
-              <h3 class="text-xl font-bold text-green-800 mb-2">Test Koneksi Berhasil!</h3>
-              <p class="text-gray-600 mb-4">Data test berhasil dikirim ke Google Apps Script</p>
-              
-              <div class="bg-blue-50 p-3 rounded-lg mb-4 text-left">
-                <p class="text-sm text-blue-800"><strong>📊 Data yang dikirim:</strong></p>
-                <p class="text-xs text-blue-700 mt-1">Nama: ${testData.nama_siswa}</p>
-                <p class="text-xs text-blue-700">Kelas: ${testData.kelas}</p>
-                <p class="text-xs text-blue-700">Status: ${testData.status}</p>
-                <p class="text-xs text-blue-700">Waktu: ${testData.tanggal} ${testData.waktu}</p>
-              </div>
-              
-              <div class="bg-green-50 p-3 rounded-lg mb-4 text-left">
-                <p class="text-sm text-green-800"><strong>📡 Status Koneksi:</strong></p>
-                <p class="text-xs text-green-700 mt-1">✅ Request berhasil dikirim tanpa error</p>
-                <p class="text-xs text-green-700">✅ Mode: no-cors (sesuai implementasi produksi)</p>
-                <p class="text-xs text-green-700">✅ Tidak ada exception yang terjadi</p>
-              </div>
-              
-              <div class="bg-yellow-50 p-3 rounded-lg mb-4 text-left">
-                <p class="text-sm text-yellow-800"><strong>✅ Verifikasi Manual:</strong></p>
-                <ol class="text-xs text-yellow-700 mt-1 space-y-1 list-decimal list-inside">
-                  <li><strong>Buka Google Sheets "Data Absensi Harian"</strong></li>
-                  <li><strong>Cek baris terbaru</strong> - harus ada data dengan kelas "TEST"</li>
-                  <li><strong>Jika ada data baru</strong> = Koneksi 100% berhasil! 🎉</li>
-                  <li><strong>Jika tidak ada</strong> = Cek deployment Apps Script</li>
-                </ol>
-              </div>
-              
-              <div class="bg-gray-50 p-3 rounded-lg mb-4 text-left">
-                <p class="text-sm text-gray-800"><strong>ℹ️ Catatan Teknis:</strong></p>
-                <p class="text-xs text-gray-700 mt-1">Sistem menggunakan mode "no-cors" untuk kompatibilitas dengan Google Apps Script. Response detail tidak dapat dibaca, tapi tidak ada error berarti kemungkinan besar berhasil.</p>
-              </div>
-              
-              <div class="flex gap-2">
-                <button onclick="this.parentElement.parentElement.remove()" class="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium text-sm">
-                  ✅ OK, Saya Cek Sheets
-                </button>
-                <button onclick="window.open('https://sheets.google.com', '_blank')" class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium text-sm">
-                  🔗 Buka Google Sheets
-                </button>
-              </div>
-            </div>
-          `;
-          document.body.appendChild(successDiv);
-          
-          console.log('✅ Test completed successfully. No errors thrown.');
-          console.log('📋 Please check your Google Sheets for the test data.');
-          showToast('✅ Test berhasil! Cek Google Sheets untuk memastikan data masuk.', 'success');
-          
-        } catch (error) {
-          console.error('❌ Test failed with error:', error);
-          loadingDiv.remove();
-          
-          // Error dialog with detailed troubleshooting
-          const errorDiv = document.createElement('div');
-          errorDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-          errorDiv.innerHTML = `
-            <div class="bg-white rounded-lg p-6 max-w-lg mx-4 text-center shadow-2xl max-h-96 overflow-y-auto">
-              <div class="text-6xl mb-4">❌</div>
-              <h3 class="text-xl font-bold text-red-800 mb-2">Test Koneksi Gagal</h3>
-              <p class="text-gray-600 mb-4">Terjadi error saat mengirim data ke Google Apps Script</p>
-              
-              <div class="bg-red-50 p-3 rounded-lg mb-4 text-left">
-                <p class="text-sm text-red-800"><strong>❌ Error Detail:</strong></p>
-                <p class="text-xs text-red-700 mt-1 break-all">${error.message}</p>
-                <p class="text-xs text-red-700 mt-1">Error Type: ${error.name}</p>
-              </div>
-              
-              <div class="bg-yellow-50 p-3 rounded-lg mb-4 text-left">
-                <p class="text-sm text-yellow-800"><strong>🔧 Kemungkinan Penyebab:</strong></p>
-                <ol class="text-xs text-yellow-700 mt-1 space-y-1 list-decimal list-inside">
-                  <li><strong>URL Apps Script salah</strong> atau tidak dapat diakses</li>
-                  <li><strong>Apps Script belum di-deploy</strong> sebagai "Web app"</li>
-                  <li><strong>Permission salah:</strong> Harus "Who has access: Anyone"</li>
-                  <li><strong>Apps Script belum di-authorize</strong> dengan benar</li>
-                  <li><strong>Network error:</strong> Koneksi internet bermasalah</li>
-                  <li><strong>CORS policy:</strong> Browser memblokir request</li>
-                </ol>
-              </div>
-              
-              <div class="bg-blue-50 p-3 rounded-lg mb-4 text-left">
-                <p class="text-sm text-blue-800"><strong>🔗 URL yang digunakan:</strong></p>
-                <p class="text-xs text-blue-700 mt-1 break-all">${attendanceSheetUrl}</p>
-              </div>
-              
-              <div class="bg-gray-50 p-3 rounded-lg mb-4 text-left">
-                <p class="text-sm text-gray-800"><strong>💡 Solusi Cepat:</strong></p>
-                <ol class="text-xs text-gray-700 mt-1 space-y-1 list-decimal list-inside">
-                  <li>Coba input absensi normal - jika berhasil, berarti koneksi OK</li>
-                  <li>Buka Apps Script editor dan cek deployment</li>
-                  <li>Re-deploy Apps Script dengan setting yang benar</li>
-                  <li>Pastikan authorize semua permission yang diminta</li>
-                </ol>
-              </div>
-              
-              <div class="flex gap-2">
-                <button onclick="this.parentElement.parentElement.remove()" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all font-medium text-sm">
-                  OK
-                </button>
-                <button onclick="showPanduanPage(); this.parentElement.parentElement.remove();" class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium text-sm">
-                  Lihat Panduan
-                </button>
-              </div>
-            </div>
-          `;
-          document.body.appendChild(errorDiv);
-          
-          showToast('❌ Test gagal. Coba input absensi normal untuk memastikan.', 'error');
         }
+        
+        const successDiv = document.createElement('div');
+        successDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center';
+        successDiv.style.zIndex = '10001';
+        successDiv.innerHTML = `
+          <div class="bg-white rounded-lg p-6 max-w-lg mx-4 text-center shadow-2xl max-h-96 overflow-y-auto">
+            <div class="text-6xl mb-4">✅</div>
+            <h3 class="text-xl font-bold text-green-800 mb-2">Test Koneksi Berhasil!</h3>
+            <p class="text-gray-600 mb-4">Data test berhasil dikirim ke Google Apps Script</p>
+            
+            <div class="bg-blue-50 p-3 rounded-lg mb-4 text-left">
+              <p class="text-sm text-blue-800"><strong>📊 Data yang dikirim:</strong></p>
+              <p class="text-xs text-blue-700 mt-1">Nama: ${testData.nama_siswa}</p>
+              <p class="text-xs text-blue-700">Kelas: ${testData.kelas}</p>
+              <p class="text-xs text-blue-700">Status: ${testData.status}</p>
+              <p class="text-xs text-blue-700">Waktu: ${testData.tanggal} ${testData.waktu}</p>
+            </div>
+            
+            <div class="bg-green-50 p-3 rounded-lg mb-4 text-left">
+              <p class="text-sm text-green-800"><strong>📡 Status Koneksi:</strong></p>
+              <p class="text-xs text-green-700 mt-1">✅ Request berhasil dikirim tanpa error</p>
+              <p class="text-xs text-green-700">✅ Mode: no-cors (sesuai implementasi produksi)</p>
+              <p class="text-xs text-green-700">✅ Tidak ada exception yang terjadi</p>
+            </div>
+            
+            <div class="bg-yellow-50 p-3 rounded-lg mb-4 text-left">
+              <p class="text-sm text-yellow-800"><strong>✅ Verifikasi Manual:</strong></p>
+              <ol class="text-xs text-yellow-700 mt-1 space-y-1 list-decimal list-inside">
+                <li><strong>Buka Google Sheets "Data Absensi Harian"</strong></li>
+                <li><strong>Cek baris terbaru</strong> - harus ada data dengan kelas "TEST"</li>
+                <li><strong>Jika ada data baru</strong> = Koneksi 100% berhasil! 🎉</li>
+                <li><strong>Jika tidak ada</strong> = Cek deployment Apps Script</li>
+              </ol>
+            </div>
+            
+            <div class="flex gap-2">
+              <button onclick="closeTestModal(this)" class="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium text-sm">
+                OK
+              </button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(successDiv);
+        
+        // Auto close after 10 seconds if user doesn't click
+        setTimeout(() => {
+          if (successDiv && successDiv.parentElement) {
+            successDiv.remove();
+          }
+        }, 10000);
+        
+      } catch (error) {
+        console.error('❌ Error during connection test:', error);
+        
+        // Remove loading div safely
+        if (loadingDiv && loadingDiv.parentElement) {
+          loadingDiv.remove();
+        }
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center';
+        errorDiv.style.zIndex = '10001';
+        errorDiv.innerHTML = `
+          <div class="bg-white rounded-lg p-6 max-w-md mx-4 text-center shadow-2xl">
+            <div class="text-6xl mb-4">❌</div>
+            <h3 class="text-xl font-bold text-red-800 mb-2">Test Koneksi Gagal</h3>
+            <p class="text-gray-600 mb-4">Terjadi error saat mengirim data ke Google Sheets</p>
+            
+            <div class="bg-red-50 p-3 rounded-lg mb-4 text-left">
+              <p class="text-sm text-red-800"><strong>Error:</strong></p>
+              <p class="text-xs text-red-700 mt-1">${error.message}</p>
+            </div>
+            
+            <button onclick="closeTestModal(this)" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all font-medium">
+              Tutup
+            </button>
+          </div>
+        `;
+        document.body.appendChild(errorDiv);
+        
+        // Auto close after 10 seconds if user doesn't click
+        setTimeout(() => {
+          if (errorDiv && errorDiv.parentElement) {
+            errorDiv.remove();
+          }
+        }, 10000);
+      }
+    };
+
+    // Helper function to close test modal safely
+    window.closeTestModal = function(button) {
+      try {
+        const modal = button.closest('.fixed');
+        if (modal && modal.parentElement) {
+          modal.remove();
+        }
+      } catch (error) {
+        console.error('Error closing modal:', error);
+        // Force remove all modals as fallback
+        const allModals = document.querySelectorAll('.fixed.inset-0.bg-black.bg-opacity-50');
+        allModals.forEach(modal => {
+          if (modal.parentElement) {
+            modal.remove();
+          }
+        });
+      }
+    };
+
+    window.loadSampleStudentData = function() {
+      console.log('🔄 Manual load sample student data triggered');
+      
+      studentsByClass = {
+        'VII A': ['Ahmad Rizki', 'Siti Nurhaliza', 'Budi Santoso', 'Dewi Sartika', 'Eko Prasetyo', 'Fitri Handayani', 'Gilang Ramadhan', 'Hana Pertiwi', 'Indra Gunawan', 'Jihan Aulia', 'Krisna Wijaya', 'Lestari Putri', 'Muhammad Fadil', 'Nadia Safira', 'Oki Setiawan'],
+        'VII B': ['Putri Maharani', 'Qori Syahputra', 'Rina Melati', 'Surya Pratama', 'Tania Sari', 'Umar Faruq', 'Vina Amelia', 'Wahyu Hidayat', 'Xenia Putri', 'Yoga Pratama', 'Zahra Aulia', 'Arif Rahman', 'Bella Safitri', 'Candra Kirana', 'Dimas Aditya'],
+        'VII C': ['Elsa Permata', 'Fajar Nugraha', 'Gita Savitri', 'Hendra Kusuma', 'Ika Rahmawati', 'Joko Susilo', 'Kartika Dewi', 'Lukman Hakim', 'Maya Sari', 'Noval Pratama', 'Olivia Putri', 'Pandu Winata', 'Qonita Zahara', 'Reza Mahendra', 'Sari Indah'],
+        'VIII A': ['Taufik Hidayat', 'Ulfa Khoiriyah', 'Vicky Pratama', 'Winda Sari', 'Xavier Putra', 'Yuni Astuti', 'Zaki Rahman', 'Aida Fitria', 'Bayu Setiawan', 'Citra Dewi', 'Doni Prasetya', 'Evi Susanti', 'Fandi Kurniawan', 'Gina Marlina', 'Hadi Wijaya'],
+        'VIII B': ['Ira Puspita', 'Jefri Nichol', 'Kania Dewi', 'Luki Hermawan', 'Mira Handayani', 'Nanda Pratama', 'Oki Setiani', 'Prita Maharani', 'Qomar Zaman', 'Rini Suryani', 'Sandi Permana', 'Tika Rahayu', 'Udin Sedunia', 'Vera Safitri', 'Wawan Kurniawan'],
+        'VIII C': ['Xara Putri', 'Yanto Basuki', 'Zara Amelia', 'Andi Pratama', 'Bela Purnama', 'Coki Pardede', 'Dina Mariana', 'Egi Maulana', 'Fira Azzahra', 'Galih Pratama', 'Hesti Purnamasari', 'Imam Santoso', 'Jesi Ramadhan', 'Kiki Amalia', 'Lina Marlina'],
+        'IX A': ['Manda Safitri', 'Niko Pratama', 'Ocha Maharani', 'Piko Aditama', 'Qila Ramadhani', 'Riko Setiawan', 'Sinta Dewi', 'Toni Kurniawan', 'Umi Kalsum', 'Vero Pratama', 'Wulan Dari', 'Xavi Maulana', 'Yesi Purnama', 'Zidan Akbar', 'Alya Putri'],
+        'IX B': ['Bagas Pratama', 'Cinta Laura', 'Dedi Setiawan', 'Eka Rahayu', 'Farel Prayoga', 'Gaby Spanic', 'Haris Pratama', 'Intan Permata', 'Jihan Mirdad', 'Kenzo Alvaro', 'Luna Maya', 'Maudy Ayunda', 'Nino Fernandez', 'Olla Ramlan', 'Prilly Latuconsina'],
+        'IX C': ['Quincy Jones', 'Raisa Andriana', 'Sheila Dara', 'Tulus Rusydi', 'Ussy Sulistiawaty', 'Vidi Aldiano', 'Wulan Guritno', 'Xabiru Oshe', 'Yura Yunita', 'Zaskia Gotik', 'Afgan Syahreza', 'Bunga Zainal', 'Chand Kelvin', 'Dian Sastro', 'Enzy Storia']
       };
       
-      // Initialize student data (fallback to sample data)
-      loadSampleStudentData();
+      isStudentDataLoaded = true;
+      updateClassDropdowns();
       updateStudentDataStatus(false);
       
-      // Show login screen initially
-      showLoginScreen();
-    });
+      showToast('📋 Data siswa sample berhasil dimuat ulang!', 'success');
+    };
+
+    // Rekap functions
+    window.showRekapHarian = function() {
+      document.getElementById('rekap-harian-section').classList.remove('hidden');
+      document.getElementById('rekap-bulanan-section').classList.add('hidden');
+      
+      document.getElementById('rekap-nav-harian').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-blue-500 text-white';
+      document.getElementById('rekap-nav-bulanan').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
+    };
+
+    window.showRekapBulanan = function() {
+      document.getElementById('rekap-harian-section').classList.add('hidden');
+      document.getElementById('rekap-bulanan-section').classList.remove('hidden');
+      
+      document.getElementById('rekap-nav-harian').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-gray-200 text-gray-700 hover:bg-gray-300';
+      document.getElementById('rekap-nav-bulanan').className = 'px-4 py-2 rounded-lg font-medium transition-all bg-blue-500 text-white';
+    };
+
+    window.generateRekapByDate = function() {
+      const selectedDate = document.getElementById('rekap-tanggal').value;
+      
+      if (!selectedDate) {
+        showToast('❌ Pilih tanggal terlebih dahulu!', 'error');
+        return;
+      }
+      
+      const filteredData = allRecords.filter(record => record.tanggal === selectedDate);
+      
+      if (filteredData.length === 0) {
+        document.getElementById('rekap-results').innerHTML = `
+          <div class="text-center py-12 text-gray-400">
+            <div class="text-6xl mb-4">📅</div>
+            <p class="text-lg">Tidak ada data absensi untuk tanggal ${selectedDate}</p>
+            <p class="text-sm mt-2">Pilih tanggal lain atau tambahkan data absensi</p>
+          </div>
+        `;
+        return;
+      }
+      
+      generateRekapDisplay(filteredData, `Rekap Harian - ${selectedDate}`);
+    };
+
+    window.generateRekapBulanan = function() {
+      const selectedMonth = document.getElementById('rekap-bulan').value;
+      const selectedYear = document.getElementById('rekap-tahun').value;
+      
+      const monthNames = {
+        '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April',
+        '05': 'Mei', '06': 'Juni', '07': 'Juli', '08': 'Agustus',
+        '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember'
+      };
+      
+      const filteredData = allRecords.filter(record => {
+        const recordDate = new Date(record.tanggal);
+        return recordDate.getFullYear() == selectedYear && 
+               (recordDate.getMonth() + 1).toString().padStart(2, '0') === selectedMonth;
+      });
+      
+      if (filteredData.length === 0) {
+        document.getElementById('rekap-results').innerHTML = `
+          <div class="text-center py-12 text-gray-400">
+            <div class="text-6xl mb-4">📊</div>
+            <p class="text-lg">Tidak ada data absensi untuk ${monthNames[selectedMonth]} ${selectedYear}</p>
+            <p class="text-sm mt-2">Pilih bulan lain atau tambahkan data absensi</p>
+          </div>
+        `;
+        return;
+      }
+      
+      generateRekapDisplay(filteredData, `Rekap Bulanan - ${monthNames[selectedMonth]} ${selectedYear}`);
+    };
+
+    function generateRekapDisplay(data, title) {
+      const classSummary = {};
+      
+      data.forEach(record => {
+        if (!classSummary[record.kelas]) {
+          classSummary[record.kelas] = {
+            hadir: 0,
+            izin: 0,
+            sakit: 0,
+            alpha: 0,
+            total: 0
+          };
+        }
+        
+        classSummary[record.kelas][record.status.toLowerCase()]++;
+        classSummary[record.kelas].total++;
+      });
+      
+      const totalStats = {
+        hadir: data.filter(r => r.status === 'Hadir').length,
+        izin: data.filter(r => r.status === 'Izin').length,
+        sakit: data.filter(r => r.status === 'Sakit').length,
+        alpha: data.filter(r => r.status === 'Alpha').length,
+        total: data.length
+      };
+      
+      document.getElementById('rekap-results').innerHTML = `
+        <div class="space-y-6">
+          <!-- Header -->
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-2xl font-bold text-purple-800 mb-4">${title}</h3>
+            
+            <!-- Total Summary -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+              <div class="bg-gray-50 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-gray-800">${totalStats.total}</div>
+                <div class="text-sm text-gray-600">Total</div>
+              </div>
+              <div class="bg-green-50 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-green-600">${totalStats.hadir}</div>
+                <div class="text-sm text-gray-600">Hadir</div>
+              </div>
+              <div class="bg-yellow-50 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-yellow-600">${totalStats.izin}</div>
+                <div class="text-sm text-gray-600">Izin</div>
+              </div>
+              <div class="bg-red-50 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-red-600">${totalStats.sakit}</div>
+                <div class="text-sm text-gray-600">Sakit</div>
+              </div>
+              <div class="bg-purple-50 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-purple-600">${totalStats.alpha}</div>
+                <div class="text-sm text-gray-600">Alpha</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Per Class Summary -->
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <h4 class="text-xl font-bold text-gray-800 mb-4">📊 Rekap Per Kelas</h4>
+            <div class="overflow-x-auto">
+              <table class="w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr class="bg-gray-100">
+                    <th class="border border-gray-300 px-4 py-2 text-left">Kelas</th>
+                    <th class="border border-gray-300 px-4 py-2 text-center">Total</th>
+                    <th class="border border-gray-300 px-4 py-2 text-center">Hadir</th>
+                    <th class="border border-gray-300 px-4 py-2 text-center">Izin</th>
+                    <th class="border border-gray-300 px-4 py-2 text-center">Sakit</th>
+                    <th class="border border-gray-300 px-4 py-2 text-center">Alpha</th>
+                    <th class="border border-gray-300 px-4 py-2 text-center">% Hadir</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${Object.entries(classSummary).sort().map(([kelas, stats]) => {
+                    const hadirPercentage = stats.total > 0 ? ((stats.hadir / stats.total) * 100).toFixed(1) : 0;
+                    return `
+                      <tr class="hover:bg-gray-50">
+                        <td class="border border-gray-300 px-4 py-2 font-medium">${kelas}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center">${stats.total}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center text-green-600 font-medium">${stats.hadir}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center text-yellow-600">${stats.izin}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center text-red-600">${stats.sakit}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center text-purple-600">${stats.alpha}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center font-medium ${hadirPercentage >= 80 ? 'text-green-600' : hadirPercentage >= 60 ? 'text-yellow-600' : 'text-red-600'}">${hadirPercentage}%</td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Initialize app
+    async function initializeApp() {
+      try {
+        console.log('🚀 Starting app initialization...');
+        
+        // Initialize users first (no SDK dependency)
+        initializeUsers();
+        
+        // Initialize Data SDK first
+        console.log('📊 Initializing Data SDK...');
+        const initResult = await window.dataSdk.init(dataHandler);
+        if (!initResult.isOk) {
+          console.error("Failed to initialize data SDK:", initResult.error);
+          showToast('⚠️ Gagal menginisialisasi sistem data', 'error');
+        } else {
+          console.log('✅ Data SDK initialized successfully');
+        }
+        
+        // Initialize Element SDK if available (after Data SDK)
+        if (window.elementSdk) {
+          console.log('🎨 Initializing Element SDK...');
+          await window.elementSdk.init({
+            defaultConfig,
+            onConfigChange,
+            mapToCapabilities: (config) => ({
+              recolorables: [
+                {
+                  get: () => config.background_color || defaultConfig.background_color,
+                  set: (value) => {
+                    config.background_color = value;
+                    if (window.elementSdk) window.elementSdk.setConfig({ background_color: value });
+                  }
+                },
+                {
+                  get: () => config.surface_color || defaultConfig.surface_color,
+                  set: (value) => {
+                    config.surface_color = value;
+                    if (window.elementSdk) window.elementSdk.setConfig({ surface_color: value });
+                  }
+                },
+                {
+                  get: () => config.text_color || defaultConfig.text_color,
+                  set: (value) => {
+                    config.text_color = value;
+                    if (window.elementSdk) window.elementSdk.setConfig({ text_color: value });
+                  }
+                },
+                {
+                  get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                  set: (value) => {
+                    config.primary_action_color = value;
+                    if (window.elementSdk) window.elementSdk.setConfig({ primary_action_color: value });
+                  }
+                },
+                {
+                  get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                  set: (value) => {
+                    config.secondary_action_color = value;
+                    if (window.elementSdk) window.elementSdk.setConfig({ secondary_action_color: value });
+                  }
+                }
+              ],
+              borderables: [],
+              fontEditable: {
+                get: () => config.font_family || defaultConfig.font_family,
+                set: (value) => {
+                  config.font_family = value;
+                  if (window.elementSdk) window.elementSdk.setConfig({ font_family: value });
+                }
+              },
+              fontSizeable: {
+                get: () => config.font_size || defaultConfig.font_size,
+                set: (value) => {
+                  config.font_size = value;
+                  if (window.elementSdk) window.elementSdk.setConfig({ font_size: value });
+                }
+              }
+            }),
+            mapToEditPanelValues: (config) => new Map([
+              ["judul_aplikasi", config.judul_aplikasi || defaultConfig.judul_aplikasi],
+              ["nama_sekolah", config.nama_sekolah || defaultConfig.nama_sekolah],
+              ["footer_text", config.footer_text || defaultConfig.footer_text],
+              ["admin_username", config.admin_username || defaultConfig.admin_username],
+              ["admin_password", config.admin_password || defaultConfig.admin_password]
+            ])
+          });
+          console.log('✅ Element SDK initialized successfully');
+        } else {
+          console.log('⚠️ Element SDK not available');
+        }
+        
+        // Load sample student data
+        loadSampleStudentData();
+        
+        // Set up event listeners
+        document.getElementById('login-form').addEventListener('submit', handleLogin);
+        document.getElementById('add-user-form').addEventListener('submit', handleAddUser);
+        document.getElementById('student-data-form').addEventListener('submit', handleStudentDataForm);
+        
+        // Set up filter listeners
+        document.getElementById('filter-kelas').addEventListener('change', applyFilters);
+        document.getElementById('filter-status').addEventListener('change', applyFilters);
+        document.getElementById('filter-tanggal').addEventListener('change', applyFilters);
+        document.getElementById('filter-user').addEventListener('change', applyFilters);
+        
+        // Set current date for filters
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('rekap-tanggal').value = today;
+        
+        // Set current month/year for monthly recap
+        const now = new Date();
+        document.getElementById('rekap-bulan').value = (now.getMonth() + 1).toString().padStart(2, '0');
+        document.getElementById('rekap-tahun').value = now.getFullYear().toString();
+        
+        // Start time updates
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 1000);
+        
+        console.log('✅ App initialized successfully');
+        
+      } catch (error) {
+        console.error('❌ Error initializing app:', error);
+        showToast('❌ Gagal menginisialisasi aplikasi', 'error');
+      }
+    }
+
+    // Start the app when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeApp);
+    } else {
+      initializeApp();
+    }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'997114bf60cd5cec',t:'MTc2MTg5MTk4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99718c3414225833',t:'MTc2MTg5Njg4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
