@@ -152,16 +152,9 @@
      <div><label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label> <input type="password" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Masukkan password">
      </div><button type="submit" id="login-btn" class="w-full btn-primary text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-xl" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"> <span id="login-text">Masuk</span> </button>
     </form>
-    <div class="mt-8 p-4 bg-gray-50 rounded-lg">
-     <h3 class="font-bold text-gray-700 mb-3">👥 Akun Demo:</h3>
-     <div class="space-y-2 text-sm">
-      <div class="flex justify-between"><span class="font-medium">Admin:</span> <span class="text-gray-600">admin / admin123</span>
-      </div>
-      <div class="flex justify-between"><span class="font-medium">Kepsek:</span> <span class="text-gray-600">kepsek / kepsek123</span>
-      </div>
-      <div class="flex justify-between"><span class="font-medium">Guru Piket:</span> <span class="text-gray-600">guru / guru123</span>
-      </div>
-     </div>
+    <div class="mt-8 p-4 bg-gray-50 rounded-lg text-center">
+     <p class="text-sm text-gray-600">© 2024 Copyright <span class="font-semibold text-gray-800">@irfanismailjamil</span></p>
+     <p class="text-xs text-gray-500 mt-1">Sistem Absensi Online - All Rights Reserved</p>
     </div>
    </div>
   </div><!-- Main App -->
@@ -190,11 +183,22 @@
    </header><!-- Main Content -->
    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8"><!-- Absensi Page -->
     <div id="absensi-page"><!-- Stats Cards -->
-     <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+     <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
       <div class="bg-white rounded-lg shadow-md p-6 card-hover">
        <div class="flex items-center justify-between">
         <div>
-         <p class="text-gray-500 text-sm">Total</p>
+         <p class="text-gray-500 text-sm">Total Siswa</p>
+         <p id="total-students-count" class="text-2xl md:text-3xl font-bold" style="color: #667eea;">0</p>
+        </div>
+        <div class="text-3xl md:text-4xl">
+         👥
+        </div>
+       </div>
+      </div>
+      <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+       <div class="flex items-center justify-between">
+        <div>
+         <p class="text-gray-500 text-sm">Total Absensi</p>
          <p id="total-count" class="text-2xl md:text-3xl font-bold" style="color: #667eea;">0</p>
         </div>
         <div class="text-3xl md:text-4xl">
@@ -320,193 +324,338 @@
      </div>
     </div><!-- Panduan Page -->
     <div id="panduan-page" class="hidden">
-     <div class="space-y-8"><!-- Panduan Input Manual -->
+     <div class="space-y-8"><!-- Panduan Lengkap Aplikasi -->
       <div class="bg-white rounded-lg shadow-lg p-6">
-       <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">📝 Panduan Input Data Siswa</h2><!-- Input Per Kelas Section -->
+       <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">📚 Panduan Lengkap Sistem Absensi Online</h2><!-- Login Section -->
+       <div class="mb-8 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+        <h3 class="text-xl font-bold text-blue-800 mb-4">🔐 1. Login ke Sistem</h3>
+        <div class="space-y-4">
+         <div class="bg-white p-4 rounded-lg border border-blue-200">
+          <h4 class="font-bold text-blue-700 mb-3">📋 Langkah Login:</h4>
+          <ol class="list-decimal list-inside space-y-2 text-gray-700">
+           <li>Buka aplikasi Sistem Absensi Online</li>
+           <li>Masukkan <strong>Username</strong> dan <strong>Password</strong> sesuai role Anda</li>
+           <li>Klik tombol <strong>"Masuk"</strong></li>
+           <li>Sistem akan mengarahkan ke halaman utama sesuai hak akses</li>
+          </ol>
+         </div>
+         <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+          <h4 class="font-bold text-green-700 mb-3">👥 Akun Demo yang Tersedia:</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+           <div class="bg-white p-3 rounded border">
+            <h5 class="font-bold text-red-700">👑 Admin</h5>
+            <p class="text-sm text-gray-600">Username: <code>admin</code></p>
+            <p class="text-sm text-gray-600">Password: <code>admin123</code></p>
+            <p class="text-xs text-red-600 mt-1">Akses: Semua fitur</p>
+           </div>
+           <div class="bg-white p-3 rounded border">
+            <h5 class="font-bold text-blue-700">👨‍🏫 Guru Piket</h5>
+            <p class="text-sm text-gray-600">Username: <code>guru</code></p>
+            <p class="text-sm text-gray-600">Password: <code>guru123</code></p>
+            <p class="text-xs text-blue-600 mt-1">Akses: Input &amp; Lihat Absensi</p>
+           </div>
+           <div class="bg-white p-3 rounded border">
+            <h5 class="font-bold text-purple-700">🎓 Kepala Sekolah</h5>
+            <p class="text-sm text-gray-600">Username: <code>kepsek</code></p>
+            <p class="text-sm text-gray-600">Password: <code>kepsek123</code></p>
+            <p class="text-xs text-purple-600 mt-1">Akses: Hanya Lihat Data</p>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div><!-- Role & Permissions -->
+       <div class="mb-8 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-400">
+        <h3 class="text-xl font-bold text-purple-800 mb-4">👥 2. Hak Akses Berdasarkan Role</h3>
+        <div class="space-y-4">
+         <div class="bg-white p-4 rounded-lg border border-purple-200">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+           <div class="border-l-4 border-red-400 pl-4">
+            <h4 class="font-bold text-red-700 mb-2">👑 Admin (Full Access)</h4>
+            <ul class="text-sm text-gray-700 space-y-1">
+             <li>✅ Input Absensi</li>
+             <li>✅ Lihat &amp; Edit Data Absensi</li>
+             <li>✅ Hapus Data Absensi</li>
+             <li>✅ Export Data (CSV/Excel)</li>
+             <li>✅ Rekap Harian &amp; Bulanan</li>
+             <li>✅ Kelola User (Tambah/Hapus)</li>
+             <li>✅ Pengaturan Sistem</li>
+             <li>✅ Konfigurasi Google Sheets</li>
+            </ul>
+           </div>
+           <div class="border-l-4 border-blue-400 pl-4">
+            <h4 class="font-bold text-blue-700 mb-2">👨‍🏫 Guru Piket</h4>
+            <ul class="text-sm text-gray-700 space-y-1">
+             <li>✅ Input Absensi</li>
+             <li>✅ Lihat Data Absensi</li>
+             <li>✅ Rekap Harian &amp; Bulanan</li>
+             <li>✅ Panduan Aplikasi</li>
+             <li>❌ Hapus Data</li>
+             <li>❌ Export Data</li>
+             <li>❌ Kelola User</li>
+             <li>❌ Pengaturan Sistem</li>
+            </ul>
+           </div>
+           <div class="border-l-4 border-purple-400 pl-4">
+            <h4 class="font-bold text-purple-700 mb-2">🎓 Kepala Sekolah</h4>
+            <ul class="text-sm text-gray-700 space-y-1">
+             <li>✅ Lihat Data Absensi</li>
+             <li>✅ Rekap Harian &amp; Bulanan</li>
+             <li>✅ Export Data (CSV/Excel)</li>
+             <li>✅ Panduan Aplikasi</li>
+             <li>❌ Input Absensi</li>
+             <li>❌ Edit/Hapus Data</li>
+             <li>❌ Kelola User</li>
+             <li>❌ Pengaturan Sistem</li>
+            </ul>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div><!-- Menu Navigation -->
        <div class="mb-8 p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
-        <h3 class="text-xl font-bold text-green-800 mb-4">🎯 Input Absensi Per Kelas</h3>
+        <h3 class="text-xl font-bold text-green-800 mb-4">🧭 3. Navigasi Menu Aplikasi</h3>
         <div class="space-y-4">
          <div class="bg-white p-4 rounded-lg border border-green-200">
-          <h4 class="font-bold text-green-700 mb-3">📋 Langkah-langkah:</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+           <div class="text-center p-3 bg-blue-50 rounded-lg">
+            <div class="text-3xl mb-2">
+             📝
+            </div>
+            <h4 class="font-bold text-blue-700">Absensi</h4>
+            <p class="text-xs text-gray-600 mt-1">Input absensi harian per kelas</p>
+           </div>
+           <div class="text-center p-3 bg-green-50 rounded-lg">
+            <div class="text-3xl mb-2">
+             📊
+            </div>
+            <h4 class="font-bold text-green-700">Rekap Absensi</h4>
+            <p class="text-xs text-gray-600 mt-1">Lihat rekap harian &amp; bulanan</p>
+           </div>
+           <div class="text-center p-3 bg-yellow-50 rounded-lg">
+            <div class="text-3xl mb-2">
+             📚
+            </div>
+            <h4 class="font-bold text-yellow-700">Panduan Input</h4>
+            <p class="text-xs text-gray-600 mt-1">Panduan lengkap aplikasi</p>
+           </div>
+           <div class="text-center p-3 bg-purple-50 rounded-lg">
+            <div class="text-3xl mb-2">
+             ⚙️
+            </div>
+            <h4 class="font-bold text-purple-700">Pengaturan</h4>
+            <p class="text-xs text-gray-600 mt-1">Kelola user &amp; konfigurasi</p>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div><!-- Input Absensi Guide -->
+       <div class="mb-8 p-4 bg-orange-50 rounded-lg border-l-4 border-orange-400">
+        <h3 class="text-xl font-bold text-orange-800 mb-4">📝 4. Cara Input Absensi (Admin &amp; Guru Piket)</h3>
+        <div class="space-y-4">
+         <div class="bg-white p-4 rounded-lg border border-orange-200">
+          <h4 class="font-bold text-orange-700 mb-3">📋 Langkah-langkah Input Absensi:</h4>
           <ol class="list-decimal list-inside space-y-2 text-gray-700">
-           <li>Buka halaman <strong>"📝 Absensi"</strong></li>
-           <li>Di bagian <strong>"Pilih Kelas untuk Absensi"</strong>, pilih kelas yang diinginkan</li>
+           <li>Klik menu <strong>"📝 Absensi"</strong> di navigasi atas</li>
+           <li>Lihat statistik kehadiran di bagian atas (Total Siswa, Hadir, Izin, Sakit, Alpha)</li>
+           <li>Di bagian <strong>"Pilih Kelas untuk Absensi"</strong>, pilih kelas dari dropdown</li>
            <li>Sistem akan menampilkan <strong>daftar semua siswa</strong> di kelas tersebut</li>
-           <li>Pilih status kehadiran untuk <strong>setiap siswa</strong></li>
-           <li>Tambahkan keterangan jika diperlukan</li>
+           <li>Untuk setiap siswa, pilih status kehadiran:</li>
+           <ul class="list-disc list-inside ml-6 mt-1 text-sm text-gray-600">
+            <li><strong>✅ Hadir:</strong> Siswa hadir tepat waktu atau terlambat</li>
+            <li><strong>📝 Izin:</strong> Siswa tidak hadir dengan surat izin</li>
+            <li><strong>🏥 Sakit:</strong> Siswa tidak hadir karena sakit</li>
+            <li><strong>❌ Alpha:</strong> Siswa tidak hadir tanpa keterangan</li>
+           </ul>
+           <li>Tambahkan <strong>keterangan</strong> jika diperlukan (misal: "Terlambat 15 menit")</li>
            <li>Gunakan tombol <strong>"✅ Tandai Semua Hadir"</strong> untuk efisiensi</li>
-           <li>Klik <strong>"💾 Simpan Semua Absensi"</strong> untuk menyimpan</li>
+           <li>Klik <strong>"💾 Simpan Semua Absensi"</strong> untuk menyimpan ke database</li>
+           <li>Data akan otomatis tersimpan ke Google Sheets (jika terhubung)</li>
           </ol>
          </div>
          <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
           <div class="flex items-start gap-3"><span class="text-yellow-600 text-xl">⚡</span>
            <div>
-            <h4 class="font-bold text-yellow-700 mb-2">Tips Input Per Kelas:</h4>
+            <h4 class="font-bold text-yellow-700 mb-2">Tips Input Cepat:</h4>
             <ul class="list-disc list-inside space-y-1 text-yellow-700 text-sm">
-             <li><strong>Lebih cepat</strong> untuk absensi harian rutin</li>
-             <li>Gunakan "Tandai Semua Hadir" lalu ubah yang tidak hadir</li>
+             <li>Klik <strong>"Tandai Semua Hadir"</strong> terlebih dahulu</li>
+             <li>Ubah status siswa yang tidak hadir saja</li>
              <li>Pastikan semua siswa sudah dipilih statusnya sebelum menyimpan</li>
-             <li>Data akan tersimpan dengan tanggal dan waktu yang sama untuk satu kelas</li>
+             <li>Sistem menggunakan <strong>batch processing</strong> untuk penyimpanan cepat</li>
+             <li>Data tersimpan dengan tanggal dan waktu yang sama untuk satu kelas</li>
             </ul>
            </div>
           </div>
          </div>
         </div>
-       </div><!-- Menambah Siswa Baru -->
-       <div class="mb-8 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-        <h3 class="text-xl font-bold text-blue-800 mb-4">➕ Menambah Siswa Baru</h3>
+       </div><!-- View Data Guide -->
+       <div class="mb-8 p-4 bg-indigo-50 rounded-lg border-l-4 border-indigo-400">
+        <h3 class="text-xl font-bold text-indigo-800 mb-4">👀 5. Cara Melihat Data Absensi (Semua Role)</h3>
         <div class="space-y-4">
-         <div class="bg-white p-4 rounded-lg border border-blue-200">
-          <h4 class="font-bold text-blue-700 mb-3">📊 Langkah-langkah:</h4>
+         <div class="bg-white p-4 rounded-lg border border-indigo-200">
+          <h4 class="font-bold text-indigo-700 mb-3">📊 Melihat Data di Halaman Absensi:</h4>
           <ol class="list-decimal list-inside space-y-2 text-gray-700">
-           <li>Buka <strong>Google Sheets "Data Siswa"</strong></li>
-           <li>Tambahkan <strong>baris baru</strong> dengan data siswa:</li>
+           <li>Di halaman <strong>"📝 Absensi"</strong>, scroll ke bawah ke bagian <strong>"Filter Data"</strong></li>
+           <li>Gunakan filter untuk menyaring data:</li>
            <ul class="list-disc list-inside ml-6 mt-1 text-sm text-gray-600">
-            <li>Kolom A: Nama Siswa</li>
-            <li>Kolom B: Kelas (VII A, VII B, dst.)</li>
-            <li>Kolom C: NIS (opsional)</li>
-            <li>Kolom D: Jenis Kelamin (L/P)</li>
+            <li><strong>Filter Kelas:</strong> Pilih kelas tertentu</li>
+            <li><strong>Filter Status:</strong> Pilih status kehadiran (Hadir/Izin/Sakit/Alpha)</li>
+            <li><strong>Filter Tanggal:</strong> Pilih tanggal tertentu</li>
+            <li><strong>Input Oleh:</strong> Filter berdasarkan user yang input</li>
+           </ul>
+           <li>Data akan ditampilkan di bagian <strong>"Data Absensi"</strong></li>
+           <li>Setiap data menampilkan: Nama siswa, kelas, status, tanggal, waktu, keterangan</li>
+          </ol>
+         </div>
+         <div class="bg-white p-4 rounded-lg border border-indigo-200">
+          <h4 class="font-bold text-indigo-700 mb-3">📈 Melihat Rekap di Menu Rekap Absensi:</h4>
+          <ol class="list-decimal list-inside space-y-2 text-gray-700">
+           <li>Klik menu <strong>"📊 Rekap Absensi"</strong></li>
+           <li>Pilih jenis rekap:</li>
+           <ul class="list-disc list-inside ml-6 mt-1 text-sm text-gray-600">
+            <li><strong>📅 Rekap Harian:</strong> Pilih tanggal → Klik "Generate Rekap"</li>
+            <li><strong>📊 Rekap Bulanan:</strong> Pilih bulan &amp; tahun → Klik "Generate Rekap"</li>
+           </ul>
+           <li>Sistem akan menampilkan:</li>
+           <ul class="list-disc list-inside ml-6 mt-1 text-sm text-gray-600">
+            <li>Ringkasan total (Total, Hadir, Izin, Sakit, Alpha)</li>
+            <li>Rekap per kelas dengan persentase kehadiran</li>
+            <li>Analisis kehadiran per kelas</li>
+           </ul>
+           <li>Gunakan tombol <strong>"📊 Export Excel"</strong> atau <strong>"🖨️ Print"</strong> untuk laporan</li>
+          </ol>
+         </div>
+        </div>
+       </div><!-- Admin Features -->
+       <div class="mb-8 p-4 bg-red-50 rounded-lg border-l-4 border-red-400">
+        <h3 class="text-xl font-bold text-red-800 mb-4">👑 6. Fitur Khusus Admin</h3>
+        <div class="space-y-4">
+         <div class="bg-white p-4 rounded-lg border border-red-200">
+          <h4 class="font-bold text-red-700 mb-3">👥 Kelola User:</h4>
+          <ol class="list-decimal list-inside space-y-2 text-gray-700">
+           <li>Buka menu <strong>"⚙️ Pengaturan"</strong></li>
+           <li>Di bagian <strong>"Manajemen User"</strong>:</li>
+           <ul class="list-disc list-inside ml-6 mt-1 text-sm text-gray-600">
+            <li>Isi form <strong>"Tambah User Baru"</strong> (Username, Password, Role)</li>
+            <li>Klik <strong>"Tambah User"</strong></li>
+            <li>User baru akan muncul di <strong>"Daftar User"</strong></li>
+            <li>Klik <strong>"🗑️ Hapus"</strong> untuk menghapus user (kecuali akun sendiri)</li>
+           </ul>
+          </ol>
+         </div>
+         <div class="bg-white p-4 rounded-lg border border-red-200">
+          <h4 class="font-bold text-red-700 mb-3">🗑️ Hapus Data Absensi:</h4>
+          <ol class="list-decimal list-inside space-y-2 text-gray-700">
+           <li>Di halaman <strong>"📝 Absensi"</strong>, cari data yang ingin dihapus</li>
+           <li>Klik tombol <strong>"🗑️ Hapus"</strong> pada data tersebut</li>
+           <li>Klik <strong>"✔️ Konfirmasi Hapus"</strong> untuk menghapus permanen</li>
+           <li>Data akan terhapus dari database dan Google Sheets</li>
+          </ol>
+         </div>
+         <div class="bg-white p-4 rounded-lg border border-red-200">
+          <h4 class="font-bold text-red-700 mb-3">📊 Konfigurasi Google Sheets:</h4>
+          <ol class="list-decimal list-inside space-y-2 text-gray-700">
+           <li>Di menu <strong>"⚙️ Pengaturan"</strong>, scroll ke <strong>"Konfigurasi Data Siswa"</strong></li>
+           <li>Masukkan URL Google Apps Script untuk data siswa</li>
+           <li>Klik <strong>"💾 Simpan URL"</strong> dan <strong>"🔄 Muat Data Siswa"</strong></li>
+           <li>Di bagian <strong>"Konfigurasi Google Sheets Absensi"</strong>:</li>
+           <ul class="list-disc list-inside ml-6 mt-1 text-sm text-gray-600">
+            <li>Masukkan URL Google Apps Script untuk data absensi</li>
+            <li>Klik <strong>"💾 Simpan URL Absensi"</strong></li>
+            <li>Klik <strong>"🧪 Test Koneksi"</strong> untuk memastikan koneksi berhasil</li>
+           </ul>
+          </ol>
+         </div>
+        </div>
+       </div><!-- Data Management -->
+       <div class="mb-8 p-4 bg-teal-50 rounded-lg border-l-4 border-teal-400">
+        <h3 class="text-xl font-bold text-teal-800 mb-4">📊 7. Pengelolaan Data Siswa</h3>
+        <div class="space-y-4">
+         <div class="bg-white p-4 rounded-lg border border-teal-200">
+          <h4 class="font-bold text-teal-700 mb-3">📋 Data Siswa Saat Ini:</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+           <div class="bg-teal-50 p-3 rounded border">
+            <h5 class="font-bold text-teal-700">🎓 Kelas VII</h5>
+            <p class="text-sm">VII A, VII B, VII C</p>
+            <p class="text-xs text-teal-600">15 siswa per kelas = 45 siswa</p>
+           </div>
+           <div class="bg-teal-50 p-3 rounded border">
+            <h5 class="font-bold text-teal-700">🎓 Kelas VIII</h5>
+            <p class="text-sm">VIII A, VIII B, VIII C</p>
+            <p class="text-xs text-teal-600">15 siswa per kelas = 45 siswa</p>
+           </div>
+           <div class="bg-teal-50 p-3 rounded border">
+            <h5 class="font-bold text-teal-700">🎓 Kelas IX</h5>
+            <p class="text-sm">IX A, IX B, IX C</p>
+            <p class="text-xs text-teal-600">15 siswa per kelas = 45 siswa</p>
+           </div>
+          </div>
+          <div class="mt-3 p-2 bg-teal-100 rounded text-center">
+           <p class="text-teal-800 font-medium">Total: 135 siswa dari 9 kelas</p>
+          </div>
+         </div>
+         <div class="bg-white p-4 rounded-lg border border-teal-200">
+          <h4 class="font-bold text-teal-700 mb-3">➕ Menambah Siswa Baru (Admin):</h4>
+          <ol class="list-decimal list-inside space-y-2 text-gray-700">
+           <li>Buka <strong>Google Sheets "Data Siswa"</strong> yang sudah dikonfigurasi</li>
+           <li>Tambahkan baris baru dengan format:</li>
+           <ul class="list-disc list-inside ml-6 mt-1 text-sm text-gray-600">
+            <li><strong>Kolom A:</strong> Nama Siswa (contoh: "Ahmad Rizki Pratama")</li>
+            <li><strong>Kolom B:</strong> Kelas (contoh: "VII A", "VIII B", "IX C")</li>
+            <li><strong>Kolom C:</strong> NIS - opsional (contoh: "2024001")</li>
+            <li><strong>Kolom D:</strong> Jenis Kelamin (L atau P)</li>
            </ul>
            <li>Simpan perubahan di Google Sheets</li>
-           <li>Kembali ke <strong>menu "⚙️ Pengaturan"</strong></li>
+           <li>Kembali ke aplikasi → Menu <strong>"⚙️ Pengaturan"</strong></li>
            <li>Klik tombol <strong>"🔄 Muat Data Siswa"</strong></li>
            <li>Data siswa baru akan muncul di dropdown kelas</li>
           </ol>
          </div>
-         <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-          <div class="flex items-start gap-3"><span class="text-green-600 text-xl">💡</span>
-           <div>
-            <h4 class="font-bold text-green-700 mb-2">Keuntungan Sistem Ini:</h4>
-            <ul class="list-disc list-inside space-y-1 text-green-700 text-sm">
-             <li><strong>Konsistensi data:</strong> Tidak ada typo atau duplikasi nama</li>
-             <li><strong>Satu sumber data:</strong> Semua perubahan di Google Sheets</li>
-             <li><strong>Mudah maintenance:</strong> Edit data siswa di satu tempat</li>
-             <li><strong>Backup otomatis:</strong> Data tersimpan di Google Drive</li>
-            </ul>
-           </div>
-          </div>
-         </div>
-        </div>
-       </div><!-- Data Siswa Available -->
-       <div class="mb-8 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-400">
-        <h3 class="text-xl font-bold text-purple-800 mb-4">📊 Data Siswa yang Tersedia</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-         <div class="bg-white p-4 rounded-lg border border-purple-200">
-          <h4 class="font-bold text-purple-700 mb-3">🎓 Kelas VII</h4>
-          <ul class="space-y-1 text-sm text-gray-700">
-           <li>• <strong>VII A</strong> - 15 siswa</li>
-           <li>• <strong>VII B</strong> - 15 siswa</li>
-           <li>• <strong>VII C</strong> - 15 siswa</li>
-          </ul>
-          <div class="mt-2 text-xs text-purple-600 font-medium">
-           Total: 45 siswa
-          </div>
-         </div>
-         <div class="bg-white p-4 rounded-lg border border-purple-200">
-          <h4 class="font-bold text-purple-700 mb-3">🎓 Kelas VIII</h4>
-          <ul class="space-y-1 text-sm text-gray-700">
-           <li>• <strong>VIII A</strong> - 15 siswa</li>
-           <li>• <strong>VIII B</strong> - 15 siswa</li>
-           <li>• <strong>VIII C</strong> - 15 siswa</li>
-          </ul>
-          <div class="mt-2 text-xs text-purple-600 font-medium">
-           Total: 45 siswa
-          </div>
-         </div>
-         <div class="bg-white p-4 rounded-lg border border-purple-200">
-          <h4 class="font-bold text-purple-700 mb-3">🎓 Kelas IX</h4>
-          <ul class="space-y-1 text-sm text-gray-700">
-           <li>• <strong>IX A</strong> - 15 siswa</li>
-           <li>• <strong>IX B</strong> - 15 siswa</li>
-           <li>• <strong>IX C</strong> - 15 siswa</li>
-          </ul>
-          <div class="mt-2 text-xs text-purple-600 font-medium">
-           Total: 45 siswa
-          </div>
-         </div>
-        </div>
-        <div class="mt-4 p-3 bg-purple-100 border border-purple-300 rounded-lg">
-         <div class="flex items-start gap-2"><span class="text-purple-600 text-lg">📊</span>
-          <div class="text-purple-800 text-sm"><strong>Total Keseluruhan:</strong> 135 siswa dari 9 kelas. Data siswa saat ini menggunakan data sample. Untuk data real, hubungkan ke Google Sheets di menu Pengaturan.
-          </div>
-         </div>
-        </div>
-       </div><!-- Status Kehadiran Guide -->
-       <div class="mb-8 p-4 bg-gray-50 rounded-lg border-l-4 border-gray-400">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">📋 Panduan Status Kehadiran</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-         <div class="space-y-3">
-          <div class="flex items-center gap-3 p-3 bg-green-100 rounded-lg border border-green-200"><span class="text-2xl">✅</span>
-           <div>
-            <h4 class="font-bold text-green-800">Hadir</h4>
-            <p class="text-sm text-green-700">Siswa hadir tepat waktu atau terlambat</p>
-           </div>
-          </div>
-          <div class="flex items-center gap-3 p-3 bg-yellow-100 rounded-lg border border-yellow-200"><span class="text-2xl">📝</span>
-           <div>
-            <h4 class="font-bold text-yellow-800">Izin</h4>
-            <p class="text-sm text-yellow-700">Siswa tidak hadir dengan keterangan/surat izin</p>
-           </div>
-          </div>
-         </div>
-         <div class="space-y-3">
-          <div class="flex items-center gap-3 p-3 bg-red-100 rounded-lg border border-red-200"><span class="text-2xl">🏥</span>
-           <div>
-            <h4 class="font-bold text-red-800">Sakit</h4>
-            <p class="text-sm text-red-700">Siswa tidak hadir karena sakit (ada surat dokter)</p>
-           </div>
-          </div>
-          <div class="flex items-center gap-3 p-3 bg-purple-100 rounded-lg border border-purple-200"><span class="text-2xl">❌</span>
-           <div>
-            <h4 class="font-bold text-purple-800">Alpha</h4>
-            <p class="text-sm text-purple-700">Siswa tidak hadir tanpa keterangan</p>
-           </div>
-          </div>
-         </div>
         </div>
        </div><!-- Best Practices -->
-       <div class="p-4 bg-indigo-50 rounded-lg border-l-4 border-indigo-400">
-        <h3 class="text-xl font-bold text-indigo-800 mb-4">💡 Tips &amp; Best Practices</h3>
+       <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-gray-400">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">💡 8. Tips &amp; Best Practices</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
          <div>
-          <h4 class="font-bold text-indigo-700 mb-3">⏰ Waktu Input:</h4>
-          <ul class="list-disc list-inside space-y-1 text-indigo-700 text-sm">
-           <li>Input absensi di awal jam pelajaran pertama</li>
+          <h4 class="font-bold text-gray-700 mb-3">⏰ Waktu Input Absensi:</h4>
+          <ul class="list-disc list-inside space-y-1 text-gray-700 text-sm">
+           <li>Input absensi di awal jam pelajaran pertama (07:30-08:00)</li>
            <li>Update jika ada siswa datang terlambat</li>
            <li>Pastikan semua kelas sudah terinput sebelum jam 10:00</li>
            <li>Lakukan pengecekan ulang di akhir hari</li>
           </ul>
          </div>
          <div>
-          <h4 class="font-bold text-indigo-700 mb-3">📝 Keterangan:</h4>
-          <ul class="list-disc list-inside space-y-1 text-indigo-700 text-sm">
-           <li>Tulis waktu keterlambatan (misal: "Terlambat 15 menit")</li>
-           <li>Catat alasan izin singkat (misal: "Keperluan keluarga")</li>
-           <li>Untuk sakit, catat gejala jika perlu (misal: "Demam")</li>
-           <li>Alpha: catat jika ada informasi tambahan</li>
+          <h4 class="font-bold text-gray-700 mb-3">📝 Penulisan Keterangan:</h4>
+          <ul class="list-disc list-inside space-y-1 text-gray-700 text-sm">
+           <li>Tulis waktu keterlambatan: "Terlambat 15 menit"</li>
+           <li>Catat alasan izin: "Keperluan keluarga", "Acara keluarga"</li>
+           <li>Untuk sakit: "Demam", "Flu", "Sakit perut"</li>
+           <li>Alpha: "Tidak ada kabar", "Bolos"</li>
           </ul>
          </div>
          <div>
-          <h4 class="font-bold text-indigo-700 mb-3">🔄 Konsistensi:</h4>
-          <ul class="list-disc list-inside space-y-1 text-indigo-700 text-sm">
-           <li>Data siswa dikelola melalui Google Sheets</li>
-           <li>Pastikan format kelas konsisten (VII A, bukan 7A)</li>
+          <h4 class="font-bold text-gray-700 mb-3">🔄 Konsistensi Data:</h4>
+          <ul class="list-disc list-inside space-y-1 text-gray-700 text-sm">
+           <li>Gunakan format kelas yang konsisten (VII A, bukan 7A)</li>
            <li>Input data setiap hari tanpa terlewat</li>
-           <li>Backup data secara berkala</li>
+           <li>Backup data secara berkala melalui export</li>
+           <li>Koordinasi antar guru piket untuk konsistensi</li>
           </ul>
          </div>
          <div>
-          <h4 class="font-bold text-indigo-700 mb-3">📊 Monitoring:</h4>
-          <ul class="list-disc list-inside space-y-1 text-indigo-700 text-sm">
-           <li>Cek rekap harian di menu "📊 Rekap Absensi"</li>
+          <h4 class="font-bold text-gray-700 mb-3">📊 Monitoring &amp; Laporan:</h4>
+          <ul class="list-disc list-inside space-y-1 text-gray-700 text-sm">
+           <li>Cek rekap harian setiap hari di menu "Rekap Absensi"</li>
+           <li>Buat rekap bulanan untuk laporan ke kepala sekolah</li>
            <li>Monitor siswa dengan tingkat alpha tinggi</li>
-           <li>Export data untuk laporan bulanan</li>
-           <li>Koordinasi dengan wali kelas untuk follow up</li>
+           <li>Export data untuk arsip dan backup</li>
           </ul>
          </div>
         </div>
        </div><!-- Quick Access Buttons -->
-       <div class="mt-8 flex flex-wrap gap-4 justify-center"><button onclick="showAbsensiPage()" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium shadow-lg"> 📝 Mulai Input Absensi </button> <button onclick="showRekapPage()" class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium shadow-lg"> 📊 Lihat Rekap Data </button> <button onclick="showPengaturanPage()" class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all font-medium shadow-lg"> ⚙️ Pengaturan Sistem </button>
+       <div class="mt-8 flex flex-wrap gap-4 justify-center"><button onclick="showAbsensiPage()" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium shadow-lg"> 📝 Mulai Input Absensi </button> <button onclick="showRekapPage()" class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium shadow-lg"> 📊 Lihat Rekap Data </button>
+        <div id="panduan-pengaturan-btn"><button onclick="showPengaturanPage()" class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all font-medium shadow-lg"> ⚙️ Pengaturan Sistem </button>
+        </div>
        </div>
       </div>
      </div>
@@ -560,8 +709,10 @@
        <div id="add-user-section" class="mb-8 p-4 bg-gray-50 rounded-lg">
         <h3 class="text-lg font-bold mb-4 text-gray-800">➕ Tambah User Baru</h3>
         <form id="add-user-form" class="space-y-4">
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div><label for="new-username" class="block text-sm font-medium text-gray-700 mb-2">Username</label> <input type="text" id="new-username" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Username baru">
+         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div><label for="new-nama-user" class="block text-sm font-medium text-gray-700 mb-2">Nama User</label> <input type="text" id="new-nama-user" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Nama lengkap user">
+          </div>
+          <div><label for="new-username" class="block text-sm font-medium text-gray-700 mb-2">Username</label> <input type="text" id="new-username" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Username login">
           </div>
           <div><label for="new-password" class="block text-sm font-medium text-gray-700 mb-2">Password</label> <input type="password" id="new-password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Password">
           </div>
@@ -858,32 +1009,66 @@ function doPost(e) {
             <li><strong>PENTING:</strong> URL ini akan otomatis digunakan sistem absensi</li>
            </ol><!-- Attendance Apps Script Code -->
            <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto mt-3">
-            <div class="flex justify-between items-center mb-2"><span class="text-gray-400">📄 Attendance Script - Copy ke Apps Script Data Absensi</span> <button onclick="copyAttendanceScript()" class="px-3 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700"> 📋 Copy Code </button>
+            <div class="flex justify-between items-center mb-2"><span class="text-gray-400">📄 Attendance Script - Copy ke Apps Script Data Absensi (Optimized)</span> <button onclick="copyAttendanceScript()" class="px-3 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700"> 📋 Copy Code </button>
             </div>
             <pre id="attendance-script">function doPost(e) {
   try {
     const sheet = SpreadsheetApp.getActiveSheet();
-    const data = JSON.parse(e.postData.contents);
+    const requestData = JSON.parse(e.postData.contents);
     
-    // Add attendance data to sheet
-    sheet.appendRow([
-      data.nama_siswa || '',
-      data.kelas || '',
-      data.status || '',
-      data.tanggal || '',
-      data.waktu || '',
-      data.keterangan || '',
-      data.input_by || '',
-      data.user_role || ''
-    ]);
-    
-    return ContentService
-      .createTextOutput(JSON.stringify({success: true}))
-      .setMimeType(ContentService.MimeType.JSON);
+    // Check if this is a batch request (multiple records)
+    if (requestData.batch &amp;&amp; Array.isArray(requestData.data)) {
+      // Batch processing for faster performance
+      const rows = requestData.data.map(data =&gt; [
+        data.nama_siswa || '',
+        data.kelas || '',
+        data.status || '',
+        data.tanggal || '',
+        data.waktu || '',
+        data.keterangan || '',
+        data.input_by || '',
+        data.user_role || ''
+      ]);
       
+      // Use batch append for much faster performance
+      if (rows.length &gt; 0) {
+        const range = sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, 8);
+        range.setValues(rows);
+      }
+      
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          success: true, 
+          processed: rows.length,
+          message: `Batch processed ${rows.length} records successfully`
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+        
+    } else {
+      // Single record processing (backward compatibility)
+      sheet.appendRow([
+        requestData.nama_siswa || '',
+        requestData.kelas || '',
+        requestData.status || '',
+        requestData.tanggal || '',
+        requestData.waktu || '',
+        requestData.keterangan || '',
+        requestData.input_by || '',
+        requestData.user_role || ''
+      ]);
+      
+      return ContentService
+        .createTextOutput(JSON.stringify({success: true}))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
   } catch (error) {
     return ContentService
-      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .createTextOutput(JSON.stringify({
+        success: false, 
+        error: error.toString(),
+        timestamp: new Date().toISOString()
+      }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
@@ -891,24 +1076,29 @@ function doPost(e) {
 function doGet(e) {
   try {
     const sheet = SpreadsheetApp.getActiveSheet();
-    const data = sheet.getDataRange().getValues();
     
-    if (data.length &lt;= 1) {
+    // Use more efficient data retrieval
+    const lastRow = sheet.getLastRow();
+    if (lastRow &lt;= 1) {
       return ContentService
         .createTextOutput(JSON.stringify([]))
         .setMimeType(ContentService.MimeType.JSON);
     }
     
+    // Get data in one operation for better performance
+    const range = sheet.getRange(1, 1, lastRow, sheet.getLastColumn());
+    const data = range.getValues();
+    
     const headers = data[0];
     const rows = data.slice(1);
     
+    // Optimize object creation
     const result = rows.map(row =&gt; {
       const obj = {};
-      headers.forEach((header, index) =&gt; {
-        // Convert header to lowercase with underscores
-        const key = header.toLowerCase().replace(/\s+/g, '_');
-        obj[key] = row[index] || '';
-      });
+      for (let i = 0; i &lt; headers.length; i++) {
+        const key = headers[i].toLowerCase().replace(/\s+/g, '_');
+        obj[key] = row[i] || '';
+      }
       return obj;
     });
     
@@ -918,7 +1108,54 @@ function doGet(e) {
       
   } catch (error) {
     return ContentService
-      .createTextOutput(JSON.stringify({error: error.toString()}))
+      .createTextOutput(JSON.stringify({
+        error: error.toString(),
+        timestamp: new Date().toISOString()
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// Optional: Function to get statistics (faster than downloading all data)
+function getStats(e) {
+  try {
+    const sheet = SpreadsheetApp.getActiveSheet();
+    const lastRow = sheet.getLastRow();
+    
+    if (lastRow &lt;= 1) {
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          total: 0,
+          hadir: 0,
+          izin: 0,
+          sakit: 0,
+          alpha: 0
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // Get only the status column for faster processing
+    const statusRange = sheet.getRange(2, 3, lastRow - 1, 1);
+    const statusValues = statusRange.getValues().flat();
+    
+    const stats = {
+      total: statusValues.length,
+      hadir: statusValues.filter(s =&gt; s === 'Hadir').length,
+      izin: statusValues.filter(s =&gt; s === 'Izin').length,
+      sakit: statusValues.filter(s =&gt; s === 'Sakit').length,
+      alpha: statusValues.filter(s =&gt; s === 'Alpha').length
+    };
+    
+    return ContentService
+      .createTextOutput(JSON.stringify(stats))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        error: error.toString(),
+        timestamp: new Date().toISOString()
+      }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }</pre>
@@ -1049,8 +1286,8 @@ function doGet(e) {
     let currentUser = null;
     
     const defaultConfig = {
-      judul_aplikasi: "Sistem Absensi Multi-User",
-      nama_sekolah: "Nama Sekolah Anda",
+      judul_aplikasi: "Sistem Absensi Online",
+      nama_sekolah: "SMP Purnawarman",
       footer_text: "© 2024 Sistem Absensi Multi-User",
       admin_username: "admin",
       admin_password: "admin123",
@@ -1064,18 +1301,18 @@ function doGet(e) {
     };
 
     let users = {
-      admin: { password: "admin123", role: "Admin", permissions: ["create", "read", "update", "delete", "export", "manage_users"] },
-      kepsek: { password: "kepsek123", role: "Kepala Sekolah", permissions: ["read", "export", "view_reports"] },
-      guru: { password: "guru123", role: "Guru Piket", permissions: ["create", "read", "update"] }
+      admin: { nama: "Administrator", password: "admin123", role: "Admin", permissions: ["create", "read", "update", "delete", "export", "manage_users"] },
+      kepsek: { nama: "Kepala Sekolah", password: "kepsek123", role: "Kepala Sekolah", permissions: ["read", "export", "view_reports"] },
+      guru: { nama: "Guru Piket", password: "guru123", role: "Guru Piket", permissions: ["create", "read", "update"] }
     };
 
     // Initialize with config values if available
     function initializeUsers() {
       // Always ensure default users exist
       users = {
-        admin: { password: "admin123", role: "Admin", permissions: ["create", "read", "update", "delete", "export", "manage_users"] },
-        kepsek: { password: "kepsek123", role: "Kepala Sekolah", permissions: ["read", "export", "view_reports"] },
-        guru: { password: "guru123", role: "Guru Piket", permissions: ["create", "read", "update"] }
+        admin: { nama: "Administrator", password: "admin123", role: "Admin", permissions: ["create", "read", "update", "delete", "export", "manage_users"] },
+        kepsek: { nama: "Kepala Sekolah", password: "kepsek123", role: "Kepala Sekolah", permissions: ["read", "export", "view_reports"] },
+        guru: { nama: "Guru Piket", password: "guru123", role: "Guru Piket", permissions: ["create", "read", "update"] }
       };
       
       console.log('🔐 Users initialized with defaults:', Object.keys(users));
@@ -1211,9 +1448,9 @@ function doGet(e) {
     function login(username, password) {
       // Always ensure default users exist with exact credentials
       const defaultUsers = {
-        admin: { password: "admin123", role: "Admin", permissions: ["create", "read", "update", "delete", "export", "manage_users"] },
-        kepsek: { password: "kepsek123", role: "Kepala Sekolah", permissions: ["read", "export", "view_reports"] },
-        guru: { password: "guru123", role: "Guru Piket", permissions: ["create", "read", "update"] }
+        admin: { nama: "Administrator", password: "admin123", role: "Admin", permissions: ["create", "read", "update", "delete", "export", "manage_users"] },
+        kepsek: { nama: "Kepala Sekolah", password: "kepsek123", role: "Kepala Sekolah", permissions: ["read", "export", "view_reports"] },
+        guru: { nama: "Guru Piket", password: "guru123", role: "Guru Piket", permissions: ["create", "read", "update"] }
       };
       
       // Merge with existing users, but always keep defaults
@@ -1351,6 +1588,7 @@ function doGet(e) {
         userRoleBadge.className = `role-badge ${roleClasses[currentUser.role]}`;
       }
       
+      // Update form section visibility (Admin & Guru Piket can input)
       if (formSection) {
         if (currentUser.permissions.includes('create')) {
           formSection.classList.remove('hidden');
@@ -1359,6 +1597,7 @@ function doGet(e) {
         }
       }
       
+      // Update export section visibility (Admin & Kepsek can export)
       if (exportSection) {
         if (currentUser.permissions.includes('export')) {
           exportSection.classList.remove('hidden');
@@ -1367,20 +1606,71 @@ function doGet(e) {
         }
       }
       
-      if (!currentUser.permissions.includes('create')) {
+      // Update navigation menu visibility based on role
+      updateNavigationAccess();
+      
+      // Show permission notice for view-only users
+      if (!currentUser.permissions.includes('create') && !currentUser.permissions.includes('manage_users')) {
         const notice = document.createElement('div');
         notice.className = 'permission-denied';
-        notice.innerHTML = `
-          <div class="flex items-center justify-center gap-2">
-            <span>👁️</span>
-            <span>Anda login sebagai ${currentUser.role} - Hanya dapat melihat data</span>
-          </div>
-        `;
+        
+        if (currentUser.role === 'Kepala Sekolah') {
+          notice.innerHTML = `
+            <div class="flex items-center justify-center gap-2">
+              <span>👁️</span>
+              <span>Anda login sebagai ${currentUser.role} - Dapat melihat data dan export laporan</span>
+            </div>
+          `;
+        } else {
+          notice.innerHTML = `
+            <div class="flex items-center justify-center gap-2">
+              <span>👁️</span>
+              <span>Anda login sebagai ${currentUser.role} - Hanya dapat melihat data</span>
+            </div>
+          `;
+        }
         
         const main = document.querySelector('main');
         if (main && !main.querySelector('.permission-denied')) {
           main.insertBefore(notice, main.firstChild);
         }
+      }
+    }
+    
+    function updateNavigationAccess() {
+      const navAbsensi = document.getElementById('nav-absensi');
+      const navRekap = document.getElementById('nav-rekap');
+      const navPanduan = document.getElementById('nav-panduan');
+      const navPengaturan = document.getElementById('nav-pengaturan');
+      const panduanPengaturanBtn = document.getElementById('panduan-pengaturan-btn');
+      
+      if (!currentUser) return;
+      
+      // Admin: Full access to all menus
+      if (currentUser.role === 'Admin') {
+        if (navAbsensi) navAbsensi.style.display = 'block';
+        if (navRekap) navRekap.style.display = 'block';
+        if (navPanduan) navPanduan.style.display = 'block';
+        if (navPengaturan) navPengaturan.style.display = 'block';
+        if (panduanPengaturanBtn) panduanPengaturanBtn.style.display = 'block';
+      }
+      
+      // Guru Piket: Absensi, Rekap, Panduan only
+      else if (currentUser.role === 'Guru Piket') {
+        if (navAbsensi) navAbsensi.style.display = 'block';
+        if (navRekap) navRekap.style.display = 'block';
+        if (navPanduan) navPanduan.style.display = 'block';
+        if (navPengaturan) navPengaturan.style.display = 'none';
+        if (panduanPengaturanBtn) panduanPengaturanBtn.style.display = 'none';
+      }
+      
+      // Kepala Sekolah: View only (Rekap, Panduan)
+      else if (currentUser.role === 'Kepala Sekolah') {
+        if (navAbsensi) navAbsensi.style.display = 'block'; // Can view data
+        if (navRekap) navRekap.style.display = 'block';
+        if (navPanduan) navPanduan.style.display = 'block';
+        if (navPengaturan) navPengaturan.style.display = 'none';
+        if (panduanPengaturanBtn) panduanPengaturanBtn.style.display = 'none';
       }
     }
 
@@ -1389,6 +1679,7 @@ function doGet(e) {
     }
 
     function updateStats(data) {
+      const totalStudentsCount = document.getElementById('total-students-count');
       const totalCount = document.getElementById('total-count');
       const hadirCount = document.getElementById('hadir-count');
       const izinCount = document.getElementById('izin-count');
@@ -1399,6 +1690,20 @@ function doGet(e) {
       const izin = data.filter(r => r.status === 'Izin').length;
       const sakit = data.filter(r => r.status === 'Sakit').length;
       const alpha = data.filter(r => r.status === 'Alpha').length;
+      
+      // Calculate total students from Google Sheets data
+      const totalStudents = Object.values(studentsByClass).reduce((sum, students) => sum + students.length, 0);
+      
+      if (totalStudentsCount) {
+        totalStudentsCount.textContent = totalStudents;
+        
+        // Add tooltip showing breakdown by class
+        const classBreakdown = Object.entries(studentsByClass)
+          .map(([kelas, students]) => `${kelas}: ${students.length}`)
+          .join('\n');
+        
+        totalStudentsCount.parentElement.parentElement.title = `Breakdown per kelas:\n${classBreakdown}`;
+      }
       
       if (totalCount) totalCount.textContent = data.length;
       if (hadirCount) hadirCount.textContent = hadir;
@@ -1768,6 +2073,9 @@ function doGet(e) {
         isStudentDataLoaded = true;
         updateClassDropdowns();
         
+        // Update stats to show new student count
+        updateStats(allRecords);
+        
         const totalStudents = Object.values(studentsByClass).reduce((sum, students) => sum + students.length, 0);
         const totalClasses = Object.keys(studentsByClass).length;
         
@@ -1801,8 +2109,13 @@ function doGet(e) {
       isStudentDataLoaded = true;
       updateClassDropdowns();
       
+      // Update stats to show student count
+      updateStats(allRecords);
+      
+      const totalStudents = Object.values(studentsByClass).reduce((sum, students) => sum + students.length, 0);
+      
       console.log('✅ Sample student data loaded successfully');
-      showToast('📋 Menggunakan data siswa sample. Hubungkan ke Google Sheets untuk data real.', 'success');
+      showToast(`📋 Data sample dimuat: ${totalStudents} siswa dari 9 kelas. Hubungkan ke Google Sheets untuk data real.`, 'success');
     }
 
     function updateClassDropdowns() {
@@ -1996,29 +2309,98 @@ function doGet(e) {
       document.body.appendChild(confirmDiv);
     };
 
+    // Optimized batch processing system for faster saves
+    let saveQueue = [];
+    let isSaving = false;
+    
+    async function processSaveQueue() {
+      if (isSaving || saveQueue.length === 0) return;
+      
+      isSaving = true;
+      const BATCH_SIZE = 10; // Process 10 records at once
+      const startTime = Date.now();
+      
+      console.log(`🚀 Starting batch processing: ${saveQueue.length} records in queue`);
+      
+      try {
+        // Process Google Sheets in batches (much faster)
+        if (isAttendanceSheetConnected && attendanceSheetUrl) {
+          const batches = [];
+          for (let i = 0; i < saveQueue.length; i += BATCH_SIZE) {
+            batches.push(saveQueue.slice(i, i + BATCH_SIZE));
+          }
+          
+          console.log(`📊 Sending ${batches.length} batches to Google Sheets`);
+          
+          // Send all batches to Google Sheets in parallel
+          const sheetsPromises = batches.map(async (batch, index) => {
+            try {
+              const response = await fetch(attendanceSheetUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  batch: true,
+                  data: batch
+                })
+              });
+              console.log(`✅ Batch ${index + 1} sent to Google Sheets`);
+              return { success: true, count: batch.length };
+            } catch (error) {
+              console.error(`❌ Batch ${index + 1} failed:`, error);
+              return { success: false, count: 0 };
+            }
+          });
+          
+          await Promise.all(sheetsPromises);
+        }
+        
+        // Process Data SDK in parallel (much faster than sequential)
+        console.log(`💾 Saving ${saveQueue.length} records to Data SDK in parallel`);
+        
+        const sdkPromises = saveQueue.map(async (record) => {
+          try {
+            const result = await window.dataSdk.create(record);
+            return { success: result.isOk, record };
+          } catch (error) {
+            console.error('SDK save error:', error);
+            return { success: false, record };
+          }
+        });
+        
+        const results = await Promise.all(sdkPromises);
+        const successCount = results.filter(r => r.success).length;
+        const errorCount = results.filter(r => !r.success).length;
+        
+        const endTime = Date.now();
+        const duration = ((endTime - startTime) / 1000).toFixed(2);
+        
+        console.log(`⚡ Batch processing completed in ${duration}s: ${successCount} success, ${errorCount} errors`);
+        
+        // Clear queue
+        saveQueue = [];
+        
+        return { successCount, errorCount, duration };
+        
+      } catch (error) {
+        console.error('❌ Batch processing error:', error);
+        saveQueue = [];
+        return { successCount: 0, errorCount: saveQueue.length, duration: 0 };
+      } finally {
+        isSaving = false;
+      }
+    }
+
     window.confirmSaveAllAttendance = async function() {
       const selectedClass = document.getElementById('form-filter-kelas').value;
       const wibTime = getWIBTime();
       const tanggal = wibTime.toISOString().split('T')[0];
       const waktu = wibTime.toTimeString().split(' ')[0].substring(0, 5);
       
-      let successCount = 0;
-      let errorCount = 0;
-      let sheetsSuccessCount = 0;
+      // Prepare all records for batch processing
+      saveQueue = [];
       
-      const loadingDiv = document.createElement('div');
-      loadingDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-      loadingDiv.innerHTML = `
-        <div class="bg-white rounded-lg p-6 max-w-sm mx-4 text-center shadow-2xl">
-          <div class="loading-spinner mx-auto mb-4"></div>
-          <h3 class="text-xl font-bold text-gray-800 mb-2">Menyimpan Absensi...</h3>
-          <p class="text-gray-600">Mohon tunggu sebentar</p>
-          <p class="text-sm text-gray-500 mt-2">Mengirim ke Google Sheets...</p>
-        </div>
-      `;
-      document.body.appendChild(loadingDiv);
-      
-      for (const student of currentClassStudents) {
+      currentClassStudents.forEach(student => {
         if (attendanceData[student] && attendanceData[student].status) {
           const newRecord = {
             id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
@@ -2032,35 +2414,41 @@ function doGet(e) {
             user_role: currentUser.role,
             timestamp: wibTime.toISOString()
           };
-          
-          const sheetsResult = await sendToGoogleSheets(newRecord);
-          if (sheetsResult.success) {
-            sheetsSuccessCount++;
-          }
-          
-          const result = await window.dataSdk.create(newRecord);
-          
-          if (result.isOk) {
-            successCount++;
-          } else {
-            errorCount++;
-          }
-          
-          await new Promise(resolve => setTimeout(resolve, 200));
+          saveQueue.push(newRecord);
         }
+      });
+      
+      if (saveQueue.length === 0) {
+        showToast('❌ Tidak ada data untuk disimpan!', 'error');
+        return;
       }
+      
+      // Show optimized loading screen
+      const loadingDiv = document.createElement('div');
+      loadingDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+      loadingDiv.innerHTML = `
+        <div class="bg-white rounded-lg p-6 max-w-md mx-4 text-center shadow-2xl">
+          <div class="loading-spinner mx-auto mb-4"></div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">⚡ Menyimpan ${saveQueue.length} Absensi</h3>
+          <p class="text-gray-600 mb-2">Menggunakan sistem batch processing...</p>
+          <div class="bg-blue-50 p-3 rounded-lg text-sm text-blue-800">
+            <p>🚀 Optimized: ${Math.ceil(saveQueue.length / 10)} batch ke Google Sheets</p>
+            <p>💾 Parallel processing ke sistem database</p>
+          </div>
+          <p class="text-xs text-gray-500 mt-3">Estimasi: 2-5 detik</p>
+        </div>
+      `;
+      document.body.appendChild(loadingDiv);
+      
+      // Process the queue with optimized batch system
+      const result = await processSaveQueue();
       
       loadingDiv.remove();
       
-      if (successCount > 0) {
-        if (sheetsSuccessCount === successCount) {
-          showToast(`✅ Berhasil menyimpan ${successCount} absensi ke sistem dan Google Sheets!`, 'success');
-        } else if (sheetsSuccessCount > 0) {
-          showToast(`✅ Berhasil menyimpan ${successCount} absensi. ${sheetsSuccessCount} berhasil ke Google Sheets.`, 'success');
-        } else {
-          showToast(`✅ Berhasil menyimpan ${successCount} absensi ke sistem. ⚠️ Gagal kirim ke Google Sheets.`, 'success');
-        }
+      if (result.successCount > 0) {
+        showToast(`⚡ Berhasil menyimpan ${result.successCount} absensi dalam ${result.duration}s! (${Math.ceil(result.successCount / parseFloat(result.duration))}/detik)`, 'success');
         
+        // Reset form
         document.getElementById('student-attendance-list').classList.add('hidden');
         document.getElementById('no-manual-input').classList.remove('hidden');
         document.getElementById('form-filter-kelas').value = '';
@@ -2070,8 +2458,8 @@ function doGet(e) {
         updateClassDropdowns();
       }
       
-      if (errorCount > 0) {
-        showToast(`⚠️ ${errorCount} data gagal disimpan. Silakan coba lagi.`, 'error');
+      if (result.errorCount > 0) {
+        showToast(`⚠️ ${result.errorCount} data gagal disimpan. Silakan coba lagi.`, 'error');
       }
     };
 
@@ -2168,14 +2556,16 @@ function doGet(e) {
         };
         
         const canDelete = hasPermission('manage_users') && username !== currentUser?.username;
+        const canEdit = hasPermission('manage_users');
         
         return `
           <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div class="flex items-center gap-3">
                 <div class="text-2xl">${roleIcons[userData.role]}</div>
                 <div>
-                  <h4 class="font-bold text-gray-800">${username}</h4>
+                  <h4 class="font-bold text-gray-800">${userData.nama || username}</h4>
+                  <p class="text-sm text-gray-600">Username: ${username}</p>
                   <span class="px-2 py-1 rounded-full text-xs font-medium ${roleColors[userData.role]}">
                     ${userData.role}
                   </span>
@@ -2186,6 +2576,11 @@ function doGet(e) {
                   '<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Anda</span>' : 
                   ''
                 }
+                ${canEdit ? `
+                  <button onclick="editUserPassword('${username}')" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-xs font-medium">
+                    🔑 Edit Password
+                  </button>
+                ` : ''}
                 ${canDelete ? `
                   <button onclick="deleteUser('${username}')" class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all text-xs font-medium">
                     🗑️ Hapus
@@ -2208,6 +2603,7 @@ function doGet(e) {
       
       setLoading(true, 'add-user-btn', 'add-user-text');
       
+      const namaUser = document.getElementById('new-nama-user').value;
       const username = document.getElementById('new-username').value;
       const password = document.getElementById('new-password').value;
       const role = document.getElementById('new-role').value;
@@ -2225,6 +2621,7 @@ function doGet(e) {
       };
       
       users[username] = {
+        nama: namaUser,
         password: password,
         role: role,
         permissions: rolePermissions[role]
@@ -2232,7 +2629,7 @@ function doGet(e) {
       
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      showToast(`✅ User ${username} berhasil ditambahkan!`, 'success');
+      showToast(`✅ User ${namaUser} (${username}) berhasil ditambahkan!`, 'success');
       document.getElementById('add-user-form').reset();
       renderUserList();
       
@@ -2274,6 +2671,111 @@ function doGet(e) {
       delete users[username];
       showToast(`✅ User ${username} berhasil dihapus!`, 'success');
       renderUserList();
+    };
+
+    // Edit User Password Function
+    window.editUserPassword = function(username) {
+      if (!hasPermission('manage_users')) {
+        showToast('❌ Anda tidak memiliki izin untuk mengelola user!', 'error');
+        return;
+      }
+      
+      const user = users[username];
+      if (!user) {
+        showToast('❌ User tidak ditemukan!', 'error');
+        return;
+      }
+      
+      const editDiv = document.createElement('div');
+      editDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+      editDiv.innerHTML = `
+        <div class="bg-white rounded-lg p-6 max-w-md mx-4 shadow-2xl">
+          <div class="text-center mb-6">
+            <div class="text-4xl mb-2">🔑</div>
+            <h3 class="text-xl font-bold text-gray-800">Edit Password User</h3>
+            <p class="text-gray-600 mt-2">
+              <strong>Nama:</strong> ${user.nama || username}<br>
+              <strong>Username:</strong> ${username}<br>
+              <strong>Role:</strong> ${user.role}
+            </p>
+          </div>
+          
+          <form id="edit-password-form" class="space-y-4">
+            <div>
+              <label for="edit-current-password" class="block text-sm font-medium text-gray-700 mb-2">Password Saat Ini</label>
+              <input type="password" id="edit-current-password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Masukkan password saat ini">
+            </div>
+            
+            <div>
+              <label for="edit-new-password" class="block text-sm font-medium text-gray-700 mb-2">Password Baru</label>
+              <input type="password" id="edit-new-password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Masukkan password baru">
+            </div>
+            
+            <div>
+              <label for="edit-confirm-password" class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password Baru</label>
+              <input type="password" id="edit-confirm-password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Konfirmasi password baru">
+            </div>
+            
+            <div class="flex gap-3 mt-6">
+              <button type="button" onclick="closeEditPasswordModal()" class="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all font-medium">
+                Batal
+              </button>
+              <button type="submit" class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium">
+                Update Password
+              </button>
+            </div>
+          </form>
+        </div>
+      `;
+      
+      document.body.appendChild(editDiv);
+      
+      // Handle form submission
+      document.getElementById('edit-password-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const currentPassword = document.getElementById('edit-current-password').value;
+        const newPassword = document.getElementById('edit-new-password').value;
+        const confirmPassword = document.getElementById('edit-confirm-password').value;
+        
+        // Validate current password
+        if (currentPassword !== user.password) {
+          showToast('❌ Password saat ini tidak sesuai!', 'error');
+          return;
+        }
+        
+        // Validate new password confirmation
+        if (newPassword !== confirmPassword) {
+          showToast('❌ Konfirmasi password tidak sesuai!', 'error');
+          return;
+        }
+        
+        // Validate new password length
+        if (newPassword.length < 6) {
+          showToast('❌ Password baru minimal 6 karakter!', 'error');
+          return;
+        }
+        
+        // Update password
+        users[username].password = newPassword;
+        
+        // Close modal
+        editDiv.remove();
+        
+        // Show success message
+        showToast(`✅ Password user ${user.nama || username} berhasil diupdate!`, 'success');
+        
+        // Refresh user list
+        renderUserList();
+      });
+    };
+
+    // Close Edit Password Modal
+    window.closeEditPasswordModal = function() {
+      const modal = document.querySelector('.fixed.inset-0.bg-black.bg-opacity-50');
+      if (modal) {
+        modal.remove();
+      }
     };
 
     // Save URL functions
@@ -2575,7 +3077,12 @@ function doGet(e) {
       updateClassDropdowns();
       updateStudentDataStatus(false);
       
-      showToast('📋 Data siswa sample berhasil dimuat ulang!', 'success');
+      // Update stats to show student count
+      updateStats(allRecords);
+      
+      const totalStudents = Object.values(studentsByClass).reduce((sum, students) => sum + students.length, 0);
+      
+      showToast(`📋 Data sample dimuat ulang: ${totalStudents} siswa dari 9 kelas!`, 'success');
     };
 
     // Rekap functions
@@ -2682,10 +3189,14 @@ function doGet(e) {
             <h3 class="text-2xl font-bold text-purple-800 mb-4">${title}</h3>
             
             <!-- Total Summary -->
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
+              <div class="bg-blue-50 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-blue-800">${Object.values(studentsByClass).reduce((sum, students) => sum + students.length, 0)}</div>
+                <div class="text-sm text-gray-600">Total Siswa</div>
+              </div>
               <div class="bg-gray-50 rounded-lg p-4 text-center">
                 <div class="text-2xl font-bold text-gray-800">${totalStats.total}</div>
-                <div class="text-sm text-gray-600">Total</div>
+                <div class="text-sm text-gray-600">Total Absensi</div>
               </div>
               <div class="bg-green-50 rounded-lg p-4 text-center">
                 <div class="text-2xl font-bold text-green-600">${totalStats.hadir}</div>
@@ -2708,13 +3219,24 @@ function doGet(e) {
           
           <!-- Per Class Summary -->
           <div class="bg-white rounded-lg shadow-lg p-6">
-            <h4 class="text-xl font-bold text-gray-800 mb-4">📊 Rekap Per Kelas</h4>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+              <h4 class="text-xl font-bold text-gray-800">📊 Rekap Per Kelas</h4>
+              <div class="flex gap-2">
+                <button onclick="exportRekapToExcel('${title}', ${JSON.stringify(classSummary).replace(/"/g, '&quot;')}, ${JSON.stringify(totalStats).replace(/"/g, '&quot;')})" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium text-sm">
+                  📊 Export Excel
+                </button>
+                <button onclick="printRekap()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium text-sm">
+                  🖨️ Print
+                </button>
+              </div>
+            </div>
             <div class="overflow-x-auto">
               <table class="w-full border-collapse border border-gray-300">
                 <thead>
                   <tr class="bg-gray-100">
                     <th class="border border-gray-300 px-4 py-2 text-left">Kelas</th>
-                    <th class="border border-gray-300 px-4 py-2 text-center">Total</th>
+                    <th class="border border-gray-300 px-4 py-2 text-center">Jumlah Siswa</th>
+                    <th class="border border-gray-300 px-4 py-2 text-center">Total Absensi</th>
                     <th class="border border-gray-300 px-4 py-2 text-center">Hadir</th>
                     <th class="border border-gray-300 px-4 py-2 text-center">Izin</th>
                     <th class="border border-gray-300 px-4 py-2 text-center">Sakit</th>
@@ -2725,9 +3247,11 @@ function doGet(e) {
                 <tbody>
                   ${Object.entries(classSummary).sort().map(([kelas, stats]) => {
                     const hadirPercentage = stats.total > 0 ? ((stats.hadir / stats.total) * 100).toFixed(1) : 0;
+                    const jumlahSiswaKelas = studentsByClass[kelas] ? studentsByClass[kelas].length : 0;
                     return `
                       <tr class="hover:bg-gray-50">
                         <td class="border border-gray-300 px-4 py-2 font-medium">${kelas}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center text-blue-600 font-medium">${jumlahSiswaKelas}</td>
                         <td class="border border-gray-300 px-4 py-2 text-center">${stats.total}</td>
                         <td class="border border-gray-300 px-4 py-2 text-center text-green-600 font-medium">${stats.hadir}</td>
                         <td class="border border-gray-300 px-4 py-2 text-center text-yellow-600">${stats.izin}</td>
@@ -2871,6 +3395,159 @@ function doGet(e) {
       }
     }
 
+    // Export functions for rekap
+    window.exportRekapToExcel = function(title, classSummary, totalStats) {
+      if (!hasPermission('export')) {
+        showToast('❌ Anda tidak memiliki izin untuk export data!', 'error');
+        return;
+      }
+      
+      try {
+        // Parse the JSON strings back to objects
+        const classData = typeof classSummary === 'string' ? JSON.parse(classSummary.replace(/&quot;/g, '"')) : classSummary;
+        const totals = typeof totalStats === 'string' ? JSON.parse(totalStats.replace(/&quot;/g, '"')) : totalStats;
+        
+        // Create Excel-compatible CSV with UTF-8 BOM
+        const BOM = '\uFEFF';
+        
+        // Header information
+        let csvContent = BOM;
+        csvContent += `"${title}"\n`;
+        csvContent += `"Tanggal Export: ${new Date().toLocaleDateString('id-ID')}"\n`;
+        csvContent += `"Waktu Export: ${new Date().toLocaleTimeString('id-ID')}"\n`;
+        csvContent += `"Exported by: ${currentUser ? currentUser.username : 'System'}"\n\n`;
+        
+        // Summary totals
+        csvContent += '"RINGKASAN TOTAL"\n';
+        csvContent += '"Status","Jumlah","Persentase"\n';
+        csvContent += `"Total Keseluruhan","${totals.total}","100%"\n`;
+        csvContent += `"Hadir","${totals.hadir}","${totals.total > 0 ? ((totals.hadir / totals.total) * 100).toFixed(1) : 0}%"\n`;
+        csvContent += `"Izin","${totals.izin}","${totals.total > 0 ? ((totals.izin / totals.total) * 100).toFixed(1) : 0}%"\n`;
+        csvContent += `"Sakit","${totals.sakit}","${totals.total > 0 ? ((totals.sakit / totals.total) * 100).toFixed(1) : 0}%"\n`;
+        csvContent += `"Alpha","${totals.alpha}","${totals.total > 0 ? ((totals.alpha / totals.total) * 100).toFixed(1) : 0}%"\n\n`;
+        
+        // Per class breakdown
+        csvContent += '"REKAP PER KELAS"\n';
+        csvContent += '"Kelas","Jumlah Siswa","Total Absensi","Hadir","Izin","Sakit","Alpha","% Hadir","Status Kehadiran"\n';
+        
+        Object.entries(classData).sort().forEach(([kelas, stats]) => {
+          const hadirPercentage = stats.total > 0 ? ((stats.hadir / stats.total) * 100).toFixed(1) : 0;
+          const statusKehadiran = hadirPercentage >= 90 ? 'Sangat Baik' : 
+                                 hadirPercentage >= 80 ? 'Baik' : 
+                                 hadirPercentage >= 70 ? 'Cukup' : 
+                                 hadirPercentage >= 60 ? 'Kurang' : 'Sangat Kurang';
+          const jumlahSiswaKelas = studentsByClass[kelas] ? studentsByClass[kelas].length : 0;
+          
+          csvContent += `"${kelas}","${jumlahSiswaKelas}","${stats.total}","${stats.hadir}","${stats.izin}","${stats.sakit}","${stats.alpha}","${hadirPercentage}%","${statusKehadiran}"\n`;
+        });
+        
+        // Add analysis section
+        csvContent += '\n"ANALISIS KEHADIRAN"\n';
+        const excellentClasses = Object.entries(classData).filter(([_, stats]) => 
+          stats.total > 0 && ((stats.hadir / stats.total) * 100) >= 90
+        ).length;
+        const goodClasses = Object.entries(classData).filter(([_, stats]) => 
+          stats.total > 0 && ((stats.hadir / stats.total) * 100) >= 80 && ((stats.hadir / stats.total) * 100) < 90
+        ).length;
+        const needAttentionClasses = Object.entries(classData).filter(([_, stats]) => 
+          stats.total > 0 && ((stats.hadir / stats.total) * 100) < 80
+        ).length;
+        
+        csvContent += `"Kelas dengan kehadiran sangat baik (≥90%)","${excellentClasses}"\n`;
+        csvContent += `"Kelas dengan kehadiran baik (80-89%)","${goodClasses}"\n`;
+        csvContent += `"Kelas yang perlu perhatian (<80%)","${needAttentionClasses}"\n`;
+        
+        // Create and download file
+        const blob = new Blob([csvContent], { 
+          type: 'text/csv;charset=utf-8;' 
+        });
+        
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        
+        // Generate filename with timestamp
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        const filename = `Rekap_Absensi_${title.replace(/[^a-zA-Z0-9]/g, '_')}_${timestamp}.csv`;
+        link.setAttribute('download', filename);
+        
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showToast('✅ Rekap berhasil di-export ke Excel!', 'success');
+        
+      } catch (error) {
+        console.error('Error exporting to Excel:', error);
+        showToast('❌ Gagal export ke Excel. Silakan coba lagi.', 'error');
+      }
+    };
+    
+    window.printRekap = function() {
+      if (!hasPermission('export')) {
+        showToast('❌ Anda tidak memiliki izin untuk print data!', 'error');
+        return;
+      }
+      
+      const printContent = document.getElementById('rekap-results').innerHTML;
+      const printWindow = window.open('', '_blank');
+      
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Print Rekap Absensi</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; font-weight: bold; }
+            .text-center { text-align: center; }
+            .text-green-600 { color: #059669; }
+            .text-yellow-600 { color: #d97706; }
+            .text-red-600 { color: #dc2626; }
+            .text-purple-600 { color: #9333ea; }
+            .bg-gray-50, .bg-green-50, .bg-yellow-50, .bg-red-50, .bg-purple-50 { background-color: #f9fafb; }
+            .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin: 1rem 0; }
+            .rounded-lg { border-radius: 0.5rem; }
+            .p-4 { padding: 1rem; }
+            .mb-4 { margin-bottom: 1rem; }
+            .font-bold { font-weight: bold; }
+            .text-2xl { font-size: 1.5rem; }
+            .text-xl { font-size: 1.25rem; }
+            .text-sm { font-size: 0.875rem; }
+            @media print {
+              body { margin: 0; }
+              .no-print { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1>Rekap Absensi</h1>
+            <p>Tanggal Print: ${new Date().toLocaleDateString('id-ID')}</p>
+            <p>Waktu Print: ${new Date().toLocaleTimeString('id-ID')}</p>
+          </div>
+          ${printContent}
+          <div style="margin-top: 30px; text-align: center; font-size: 12px; color: #666;">
+            <p>Dicetak oleh: ${currentUser ? currentUser.username : 'System'} | Sistem Absensi Online</p>
+          </div>
+        </body>
+        </html>
+      `);
+      
+      printWindow.document.close();
+      printWindow.focus();
+      
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 250);
+      
+      showToast('✅ Halaman print telah disiapkan!', 'success');
+    };
+
     // Start the app when DOM is ready
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initializeApp);
@@ -2878,5 +3555,5 @@ function doGet(e) {
       initializeApp();
     }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99718c3414225833',t:'MTc2MTg5Njg4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'997221730233aa0f',t:'MTc2MTkwMjk5NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
