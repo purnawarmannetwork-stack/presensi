@@ -745,103 +745,173 @@
     <div id="pengaturan-page" class="hidden">
      <div class="space-y-8"><!-- Management User dari Google Sheets -->
       <div class="bg-white rounded-lg shadow-lg p-6">
-       <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">👥 Management User Sistem</h2><!-- Connection Status -->
-       <div id="user-management-status" class="mb-6 p-4 rounded-lg border-l-4 border-l-green-400 bg-green-50">
-        <div class="flex items-center gap-3"><span class="text-2xl">✅</span>
-         <div>
-          <h3 class="font-bold text-green-800">Data User Terhubung ke Google Sheets</h3>
-          <p class="text-green-600 text-sm">Kelola user langsung di Google Sheets untuk sinkronisasi otomatis</p>
-          <p class="text-green-500 text-xs mt-1 break-all">https://script.google.com/macros/s/AKfycbw81cLUVTmwZF9GZNoQ8HzU1KMvkLRoKjcP9BJOQ6lopifTLQDNYrhuxlG9iisZWnrK/exec</p>
-         </div>
-        </div>
-       </div><!-- User Management Actions -->
-       <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        <h3 class="text-lg font-bold text-blue-800 mb-4">🔧 Kelola Data User</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-         <div class="space-y-3">
-          <div class="flex items-start gap-3"><span class="text-blue-600 text-xl">📝</span>
-           <div>
-            <h4 class="font-bold text-blue-800">Edit di Google Sheets</h4>
-            <p class="text-blue-700 text-sm">Buka Google Sheets yang terhubung untuk menambah, edit, atau hapus user</p>
-           </div>
-          </div>
-          <div class="flex items-start gap-3"><span class="text-blue-600 text-xl">🔄</span>
-           <div>
-            <h4 class="font-bold text-blue-800">Sinkronisasi Otomatis</h4>
-            <p class="text-blue-700 text-sm">Perubahan di Google Sheets akan otomatis tersinkron ke sistem</p>
-           </div>
-          </div>
-         </div>
-         <div class="space-y-3"><button onclick="refreshUserData()" class="w-full px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium"> 🔄 Refresh Data User </button> <button onclick="testUserDataConnection()" class="w-full px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium"> 🧪 Test Koneksi </button> <button onclick="openGoogleSheetsGuide()" class="w-full px-4 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all font-medium"> 📚 Panduan Google Sheets </button>
-         </div>
-        </div>
-       </div><!-- User List Display -->
+       <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">👥 Management User Sistem</h2><!-- User List Display -->
        <div>
         <div id="user-list" class="space-y-3"><!-- User items will be populated here -->
         </div>
        </div>
-      </div><!-- Informasi Apps Script Data User -->
+      </div><!-- Informasi Apps Script -->
       <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-       <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">👥 Informasi Apps Script Data User</h2>
-       <div class="space-y-6"><!-- Current Status -->
-        <div id="user-data-status" class="p-4 rounded-lg border-l-4 border-l-green-400 bg-green-50">
-         <div class="flex items-center gap-3"><span class="text-2xl">✅</span>
+       <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">📊 Informasi App Script</h2>
+       <div class="space-y-6"><!-- Overview -->
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border border-blue-200">
+         <h3 class="text-lg font-bold text-blue-800 mb-4">🔗 Apps Script yang Terhubung</h3>
+         <p class="text-blue-700 text-sm mb-4">Sistem ini menggunakan 2 Apps Script terpisah untuk mengelola data secara terpusat dan aman melalui Google Sheets.</p>
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white p-4 rounded-lg shadow-sm border border-blue-100">
+           <div class="flex items-center gap-2 mb-2"><span class="text-2xl">👥</span>
+            <h4 class="font-bold text-blue-800">Data User</h4>
+           </div>
+           <p class="text-sm text-gray-600 mb-2">Mengelola akun login dan permissions</p>
+           <div class="flex items-center gap-2">
+            <div class="w-2 h-2 bg-green-500 rounded-full"></div><span class="text-xs text-green-700 font-medium">Terhubung</span>
+           </div>
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow-sm border border-blue-100">
+           <div class="flex items-center gap-2 mb-2"><span class="text-2xl">📚</span>
+            <h4 class="font-bold text-blue-800">Data Siswa</h4>
+           </div>
+           <p class="text-sm text-gray-600 mb-2">Master data siswa per kelas</p>
+           <div class="flex items-center gap-2">
+            <div class="w-2 h-2 bg-green-500 rounded-full"></div><span class="text-xs text-green-700 font-medium">Terhubung</span>
+           </div>
+          </div>
+         </div>
+        </div><!-- Apps Script 1: Data User -->
+        <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+         <div class="flex items-center gap-3 mb-4"><span class="text-2xl">👥</span>
           <div>
-           <h3 class="font-bold text-green-800">Apps Script Data User Terhubung</h3>
+           <h3 class="text-lg font-bold text-green-800">1. Apps Script Data User</h3>
            <p class="text-green-600 text-sm">Sistem login menggunakan data dari Google Apps Script</p>
-           <p class="text-green-500 text-xs mt-1 break-all font-mono">https://script.google.com/macros/s/AKfycbw81cLUVTmwZF9GZNoQ8HzU1KMvkLRoKjcP9BJOQ6lopifTLQDNYrhuxlG9iisZWnrK/exec</p>
           </div>
          </div>
-        </div><!-- Connection Details -->
+         <div class="bg-white p-4 rounded-lg border border-green-200 mb-4">
+          <p class="text-sm text-gray-600 mb-2 font-medium">URL Apps Script:</p>
+          <p class="text-green-500 text-xs break-all font-mono bg-gray-50 p-2 rounded">https://script.google.com/macros/s/AKfycbw81cLUVTmwZF9GZNoQ8HzU1KMvkLRoKjcP9BJOQ6lopifTLQDNYrhuxlG9iisZWnrK/exec</p>
+         </div>
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="space-y-2">
+           <div class="flex items-center gap-2 text-sm"><span class="text-green-600">🔗</span> <span class="font-medium text-gray-700">Status:</span> <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Terhubung</span>
+           </div>
+           <div class="flex items-center gap-2 text-sm"><span class="text-green-600">🔄</span> <span class="font-medium text-gray-700">Auto-Load:</span> <span class="text-gray-600">Ya, saat sistem dimuat</span>
+           </div>
+           <div class="flex items-center gap-2 text-sm"><span class="text-green-600">🔐</span> <span class="font-medium text-gray-700">Keamanan:</span> <span class="text-gray-600">Google Apps Script</span>
+           </div>
+          </div>
+          <div class="space-y-2">
+           <div class="flex items-center gap-2 text-sm"><span class="text-green-600">👥</span> <span class="font-medium text-gray-700">Sumber Data:</span> <span class="text-gray-600">Google Sheets</span>
+           </div>
+           <div class="flex items-center gap-2 text-sm"><span class="text-green-600">⚡</span> <span class="font-medium text-gray-700">Sinkronisasi:</span> <span class="text-gray-600">Real-time</span>
+           </div>
+           <div class="flex items-center gap-2 text-sm"><span class="text-green-600">💾</span> <span class="font-medium text-gray-700">Backup:</span> <span class="text-gray-600">Google Drive</span>
+           </div>
+          </div>
+         </div>
+         <div class="flex gap-3"><button onclick="testUserDataConnection()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium text-sm"> 🧪 Test Koneksi </button> <button onclick="refreshUserData()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium text-sm"> 🔄 Refresh Data User </button>
+         </div>
+        </div><!-- Apps Script 2: Data Siswa -->
         <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
-         <h3 class="text-lg font-bold text-blue-800 mb-4">📊 Detail Koneksi Apps Script</h3>
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-3">
-           <div class="flex items-center gap-2"><span class="text-blue-600">🔗</span> <span class="font-medium text-gray-700">Status:</span> <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Terhubung</span>
+         <div class="flex items-center gap-3 mb-4"><span class="text-2xl">📚</span>
+          <div>
+           <h3 class="text-lg font-bold text-blue-800">2. Apps Script Data Siswa</h3>
+           <p class="text-blue-600 text-sm">Master data siswa untuk input absensi per kelas</p>
+          </div>
+         </div>
+         <div class="bg-white p-4 rounded-lg border border-blue-200 mb-4">
+          <p class="text-sm text-gray-600 mb-2 font-medium">URL Apps Script:</p>
+          <p class="text-blue-500 text-xs break-all font-mono bg-gray-50 p-2 rounded">https://script.google.com/macros/s/AKfycbylVccQ68eu_vlt0URi242-LTNQIRZTLSpz10x4E-xdKrwS7dUedo3Usdnm9HSJrSTBrw/exec</p>
+         </div>
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="space-y-2">
+           <div class="flex items-center gap-2 text-sm"><span class="text-blue-600">🔗</span> <span class="font-medium text-gray-700">Status:</span> <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Terhubung</span>
            </div>
-           <div class="flex items-center gap-2"><span class="text-blue-600">🔄</span> <span class="font-medium text-gray-700">Auto-Load:</span> <span class="text-gray-600">Ya, saat sistem dimuat</span>
+           <div class="flex items-center gap-2 text-sm"><span class="text-blue-600">🔄</span> <span class="font-medium text-gray-700">Auto-Load:</span> <span class="text-gray-600">Ya, saat sistem dimuat</span>
            </div>
-           <div class="flex items-center gap-2"><span class="text-blue-600">🔐</span> <span class="font-medium text-gray-700">Keamanan:</span> <span class="text-gray-600">Google Apps Script</span>
+           <div class="flex items-center gap-2 text-sm"><span class="text-blue-600">📊</span> <span class="font-medium text-gray-700">Total Siswa:</span> <span class="text-gray-600">135 siswa</span>
            </div>
           </div>
-          <div class="space-y-3">
-           <div class="flex items-center gap-2"><span class="text-blue-600">👥</span> <span class="font-medium text-gray-700">Sumber Data:</span> <span class="text-gray-600">Google Sheets</span>
+          <div class="space-y-2">
+           <div class="flex items-center gap-2 text-sm"><span class="text-blue-600">🎓</span> <span class="font-medium text-gray-700">Total Kelas:</span> <span class="text-gray-600">9 kelas</span>
            </div>
-           <div class="flex items-center gap-2"><span class="text-blue-600">⚡</span> <span class="font-medium text-gray-700">Sinkronisasi:</span> <span class="text-gray-600">Real-time</span>
+           <div class="flex items-center gap-2 text-sm"><span class="text-blue-600">⚡</span> <span class="font-medium text-gray-700">Sinkronisasi:</span> <span class="text-gray-600">Real-time</span>
            </div>
-           <div class="flex items-center gap-2"><span class="text-blue-600">💾</span> <span class="font-medium text-gray-700">Backup:</span> <span class="text-gray-600">Google Drive</span>
+           <div class="flex items-center gap-2 text-sm"><span class="text-blue-600">💾</span> <span class="font-medium text-gray-700">Backup:</span> <span class="text-gray-600">Google Drive</span>
            </div>
           </div>
          </div>
-         <div class="mt-4 flex gap-3"><button onclick="testUserDataConnection()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium text-sm"> 🧪 Test Koneksi </button> <button onclick="refreshUserData()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium text-sm"> 🔄 Refresh Data User </button>
+         <div class="flex gap-3"><button onclick="testStudentDataConnection()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium text-sm"> 🧪 Test Koneksi </button> <button onclick="refreshStudentData()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium text-sm"> 🔄 Refresh Data Siswa </button>
          </div>
-        </div><!-- User Management Info -->
+        </div><!-- Apps Script 3: Data Absensi (Auto-Connected) -->
+        <div class="bg-purple-50 p-6 rounded-lg border border-purple-200">
+         <div class="flex items-center gap-3 mb-4"><span class="text-2xl">📝</span>
+          <div>
+           <h3 class="text-lg font-bold text-purple-800">3. Apps Script Data Absensi</h3>
+           <p class="text-purple-600 text-sm">Penyimpanan otomatis data absensi harian ke Google Sheets</p>
+          </div>
+         </div>
+         <div class="bg-white p-4 rounded-lg border border-purple-200 mb-4">
+          <p class="text-sm text-gray-600 mb-2 font-medium">URL Apps Script:</p>
+          <p class="text-purple-500 text-xs break-all font-mono bg-gray-50 p-2 rounded">https://script.google.com/macros/s/AKfycbwTFf2vKfXdQz3CWLnj1Cm2Qo53iz_8aB0rdkZ7403og5pLcUe6l8xft1LBbPj1BNBi/exec</p>
+         </div>
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="space-y-2">
+           <div class="flex items-center gap-2 text-sm"><span class="text-purple-600">🔗</span> <span class="font-medium text-gray-700">Status:</span> <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Terhubung</span>
+           </div>
+           <div class="flex items-center gap-2 text-sm"><span class="text-purple-600">🔄</span> <span class="font-medium text-gray-700">Auto-Save:</span> <span class="text-gray-600">Ya, setiap input absensi</span>
+           </div>
+           <div class="flex items-center gap-2 text-sm"><span class="text-purple-600">⚡</span> <span class="font-medium text-gray-700">Mode:</span> <span class="text-gray-600">Batch Processing</span>
+           </div>
+          </div>
+          <div class="space-y-2">
+           <div class="flex items-center gap-2 text-sm"><span class="text-purple-600">📊</span> <span class="font-medium text-gray-700">Performance:</span> <span class="text-gray-600">Ultra-fast</span>
+           </div>
+           <div class="flex items-center gap-2 text-sm"><span class="text-purple-600">🔐</span> <span class="font-medium text-gray-700">Keamanan:</span> <span class="text-gray-600">Google Apps Script</span>
+           </div>
+           <div class="flex items-center gap-2 text-sm"><span class="text-purple-600">💾</span> <span class="font-medium text-gray-700">Backup:</span> <span class="text-gray-600">Google Drive</span>
+           </div>
+          </div>
+         </div>
+         <div class="flex gap-3"><button onclick="testGoogleSheetsConnection()" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all font-medium text-sm"> 🧪 Test Koneksi </button> <button onclick="loadAttendanceFromGoogleSheets()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium text-sm"> 📥 Muat Data Absensi </button>
+         </div>
+        </div><!-- Management Info -->
         <div class="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-         <h3 class="text-lg font-bold text-yellow-800 mb-4">⚙️ Kelola Data User</h3>
-         <div class="space-y-3">
-          <div class="flex items-start gap-3"><span class="text-yellow-600 text-xl">📝</span>
-           <div>
-            <h4 class="font-bold text-yellow-800">Edit Data User</h4>
-            <p class="text-yellow-700 text-sm">Untuk menambah, mengedit, atau menghapus user, edit langsung di Google Sheets yang terhubung dengan Apps Script ini.</p>
+         <h3 class="text-lg font-bold text-yellow-800 mb-4">⚙️ Pengelolaan Apps Script</h3>
+         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="space-y-3">
+           <div class="flex items-start gap-3"><span class="text-yellow-600 text-xl">👥</span>
+            <div>
+             <h4 class="font-bold text-yellow-800">Data User</h4>
+             <p class="text-yellow-700 text-sm">Edit langsung di Google Sheets untuk menambah, mengedit, atau menghapus user.</p>
+            </div>
            </div>
           </div>
-          <div class="flex items-start gap-3"><span class="text-yellow-600 text-xl">🔄</span>
-           <div>
-            <h4 class="font-bold text-yellow-800">Sinkronisasi Otomatis</h4>
-            <p class="text-yellow-700 text-sm">Perubahan di Google Sheets akan otomatis tersinkron ke sistem login. Gunakan tombol "Refresh Data User" jika diperlukan.</p>
+          <div class="space-y-3">
+           <div class="flex items-start gap-3"><span class="text-yellow-600 text-xl">📚</span>
+            <div>
+             <h4 class="font-bold text-yellow-800">Data Siswa</h4>
+             <p class="text-yellow-700 text-sm">Update master data siswa di Google Sheets untuk menambah siswa baru atau mengubah kelas.</p>
+            </div>
            </div>
           </div>
-          <div class="flex items-start gap-3"><span class="text-yellow-600 text-xl">🔐</span>
-           <div>
-            <h4 class="font-bold text-yellow-800">Keamanan Data</h4>
-            <p class="text-yellow-700 text-sm">Data user tersimpan aman di Google Sheets dengan akses terbatas. Pastikan hanya admin yang memiliki akses edit ke spreadsheet.</p>
+          <div class="space-y-3">
+           <div class="flex items-start gap-3"><span class="text-yellow-600 text-xl">📝</span>
+            <div>
+             <h4 class="font-bold text-yellow-800">Data Absensi</h4>
+             <p class="text-yellow-700 text-sm">Otomatis tersimpan setiap input. Lihat hasil di Google Sheets untuk laporan.</p>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="mt-4 p-3 bg-white rounded-lg border border-yellow-200">
+          <div class="flex items-start gap-2"><span class="text-yellow-600 text-lg">💡</span>
+           <div class="text-yellow-800 text-sm"><strong>Tips:</strong> Semua perubahan di Google Sheets akan otomatis tersinkron ke sistem. Gunakan tombol "Refresh" jika perubahan tidak langsung terlihat.
            </div>
           </div>
          </div>
         </div>
        </div>
-      </div><!-- Student Data Configuration -->
-      <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+      </div><!-- Student Data Configuration - Hidden (using permanent URL) -->
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-8" style="display: none;">
        <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">👥 Konfigurasi Data Siswa</h2>
        <div class="space-y-6"><!-- Current Status -->
         <div id="student-data-status" class="p-4 rounded-lg border-l-4">
@@ -868,8 +938,8 @@
          </div>
         </div>
        </div>
-      </div><!-- Attendance Sheets Configuration -->
-      <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+      </div><!-- Attendance Sheets Configuration - Hidden (using permanent URL) -->
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-8" style="display: none;">
        <h2 class="text-2xl font-bold mb-6" style="color: #667eea;">📊 Konfigurasi Google Sheets Absensi</h2>
        <div class="space-y-4"><!-- Current Attendance Sheets Status -->
         <div id="attendance-sheets-status" class="p-4 rounded-lg border-l-4 border-l-green-400 bg-green-50">
@@ -5469,5 +5539,5 @@ function getStats(e) {
     };
 
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99776b4ff5bd252c',t:'MTc2MTk1ODQ0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'997783e330ee252c',t:'MTc2MTk1OTQ1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
