@@ -678,18 +678,40 @@
         </div>
        </div><!-- Filter Section -->
        <div class="bg-gray-50 rounded-lg p-4">
-        <h3 class="text-lg font-bold text-gray-800 mb-4">🔍 Filter Rekap</h3>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-         <div><label for="rekap-filter-kelas" class="block text-sm font-medium text-gray-700 mb-2">Kelas</label> <select id="rekap-filter-kelas" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"> <option value="">Semua Kelas</option> </select>
+        <h3 class="text-lg font-bold text-gray-800 mb-4">🔍 Filter Rekap</h3><!-- Tab Navigation -->
+        <div class="flex flex-wrap gap-2 mb-4 border-b border-gray-200"><button onclick="switchRekapTab('periode')" id="tab-periode" class="px-4 py-2 font-medium text-sm border-b-2 border-purple-500 text-purple-600 bg-purple-50"> 📅 Rekap Periode </button> <button onclick="switchRekapTab('bulanan')" id="tab-bulanan" class="px-4 py-2 font-medium text-sm border-b-2 border-transparent text-gray-600 hover:text-gray-800"> 📊 Rekap Bulanan Per Kelas </button>
+        </div><!-- Rekap Periode Tab -->
+        <div id="rekap-periode-tab" class="space-y-4">
+         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div><label for="rekap-filter-kelas" class="block text-sm font-medium text-gray-700 mb-2">Kelas</label> <select id="rekap-filter-kelas" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"> <option value="">Semua Kelas</option> </select>
+          </div>
+          <div><label for="rekap-filter-tanggal-dari" class="block text-sm font-medium text-gray-700 mb-2">Dari Tanggal</label> <input type="date" id="rekap-filter-tanggal-dari" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+          </div>
+          <div><label for="rekap-filter-tanggal-sampai" class="block text-sm font-medium text-gray-700 mb-2">Sampai Tanggal</label> <input type="date" id="rekap-filter-tanggal-sampai" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+          </div>
+          <div class="flex items-end"><button type="button" onclick="generateRekapWithFilters()" class="w-full px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all font-medium"> 📊 Generate Rekap </button>
+          </div>
+         </div><!-- Quick Date Buttons -->
+         <div class="flex flex-wrap gap-2"><button onclick="setQuickDate('today')" class="px-3 py-1 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-all text-sm font-medium"> 📅 Hari Ini </button> <button onclick="setQuickDate('yesterday')" class="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-all text-sm font-medium"> 📅 Kemarin </button> <button onclick="setQuickDate('thisWeek')" class="px-3 py-1 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-all text-sm font-medium"> 📅 Minggu Ini </button> <button onclick="setQuickDate('thisMonth')" class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-all text-sm font-medium"> 📅 Bulan Ini </button> <button onclick="setQuickDate('lastMonth')" class="px-3 py-1 bg-red-100 text-red-800 rounded-lg hover:bg-red-200 transition-all text-sm font-medium"> 📅 Bulan Lalu </button>
          </div>
-         <div><label for="rekap-filter-tanggal-dari" class="block text-sm font-medium text-gray-700 mb-2">Dari Tanggal</label> <input type="date" id="rekap-filter-tanggal-dari" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+        </div><!-- Rekap Bulanan Per Kelas Tab -->
+        <div id="rekap-bulanan-tab" class="space-y-4 hidden">
+         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div><label for="rekap-bulanan-kelas" class="block text-sm font-medium text-gray-700 mb-2">Pilih Kelas</label> <select id="rekap-bulanan-kelas" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Pilih Kelas</option> </select>
+          </div>
+          <div><label for="rekap-bulanan-bulan" class="block text-sm font-medium text-gray-700 mb-2">Bulan</label> <select id="rekap-bulanan-bulan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Pilih Bulan</option> <option value="01">Januari</option> <option value="02">Februari</option> <option value="03">Maret</option> <option value="04">April</option> <option value="05">Mei</option> <option value="06">Juni</option> <option value="07">Juli</option> <option value="08">Agustus</option> <option value="09">September</option> <option value="10">Oktober</option> <option value="11">November</option> <option value="12">Desember</option> </select>
+          </div>
+          <div><label for="rekap-bulanan-tahun" class="block text-sm font-medium text-gray-700 mb-2">Tahun</label> <select id="rekap-bulanan-tahun" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"> <option value="">Pilih Tahun</option> </select>
+          </div>
          </div>
-         <div><label for="rekap-filter-tanggal-sampai" class="block text-sm font-medium text-gray-700 mb-2">Sampai Tanggal</label> <input type="date" id="rekap-filter-tanggal-sampai" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+         <div class="flex gap-3"><button type="button" onclick="generateRekapBulananPerKelas()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium"> 📊 Generate Rekap Bulanan </button> <button type="button" onclick="setCurrentMonth()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium text-sm"> 📅 Bulan Ini </button>
          </div>
-         <div class="flex items-end"><button type="button" onclick="generateRekapWithFilters()" class="w-full px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all font-medium"> 📊 Generate Rekap </button>
+         <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
+          <div class="flex items-start gap-2"><span class="text-blue-600 text-lg">💡</span>
+           <div class="text-blue-800 text-sm"><strong>Rekap Bulanan Per Kelas:</strong> Menampilkan detail kehadiran setiap siswa dalam satu kelas untuk bulan tertentu, termasuk total hadir, sakit, izin, dan alpha per siswa.
+           </div>
+          </div>
          </div>
-        </div><!-- Quick Date Buttons -->
-        <div class="mt-4 flex flex-wrap gap-2"><button onclick="setQuickDate('today')" class="px-3 py-1 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-all text-sm font-medium"> 📅 Hari Ini </button> <button onclick="setQuickDate('yesterday')" class="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-all text-sm font-medium"> 📅 Kemarin </button> <button onclick="setQuickDate('thisWeek')" class="px-3 py-1 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-all text-sm font-medium"> 📅 Minggu Ini </button> <button onclick="setQuickDate('thisMonth')" class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-all text-sm font-medium"> 📅 Bulan Ini </button> <button onclick="setQuickDate('lastMonth')" class="px-3 py-1 bg-red-100 text-red-800 rounded-lg hover:bg-red-200 transition-all text-sm font-medium"> 📅 Bulan Lalu </button>
         </div>
        </div>
       </div><!-- Rekap Results -->
@@ -2351,11 +2373,21 @@ function getStats(e) {
     }
 
     // Update rekap stats when showing rekap page
-    window.showRekapPage = function() {
+    window.showRekapPage = async function() {
       console.log('🔄 Switching to Rekap page');
       hideAllPages();
       document.getElementById('rekap-page').classList.remove('hidden');
       updateNavigation('nav-rekap');
+      
+      // Auto-refresh data from Google Sheets when opening rekap page
+      showToast('🔄 Memuat data terbaru untuk rekap...', 'success');
+      
+      try {
+        await loadAttendanceFromGoogleSheets();
+        console.log('✅ Data refreshed for rekap page');
+      } catch (error) {
+        console.error('⚠️ Failed to refresh data for rekap:', error);
+      }
       
       // Update quick stats when page loads
       updateRekapQuickStats();
@@ -2381,7 +2413,10 @@ function getStats(e) {
     // Update filter options for rekap
     function updateRekapFilterOptions() {
       const rekapFilterKelas = document.getElementById('rekap-filter-kelas');
+      const rekapBulananKelas = document.getElementById('rekap-bulanan-kelas');
+      const rekapBulananTahun = document.getElementById('rekap-bulanan-tahun');
       
+      // Update regular filter
       if (rekapFilterKelas) {
         const kelasSet = new Set(allRecords.map(r => r.kelas).filter(Boolean));
         const currentValue = rekapFilterKelas.value;
@@ -2396,7 +2431,85 @@ function getStats(e) {
         
         rekapFilterKelas.value = currentValue;
       }
+      
+      // Update monthly recap class filter
+      if (rekapBulananKelas) {
+        const kelasSet = new Set(Object.keys(studentsByClass));
+        const currentValue = rekapBulananKelas.value;
+        
+        rekapBulananKelas.innerHTML = '<option value="">Pilih Kelas</option>';
+        Array.from(kelasSet).sort().forEach(kelas => {
+          const option = document.createElement('option');
+          option.value = kelas;
+          option.textContent = `${kelas} (${studentsByClass[kelas].length} siswa)`;
+          rekapBulananKelas.appendChild(option);
+        });
+        
+        rekapBulananKelas.value = currentValue;
+      }
+      
+      // Update year filter with available years from data
+      if (rekapBulananTahun) {
+        const yearSet = new Set(allRecords.map(r => {
+          if (r.tanggal) {
+            return r.tanggal.split('-')[0];
+          }
+          return null;
+        }).filter(Boolean));
+        
+        const currentValue = rekapBulananTahun.value;
+        
+        rekapBulananTahun.innerHTML = '<option value="">Pilih Tahun</option>';
+        
+        // Add current year if not in data
+        const currentYear = new Date().getFullYear().toString();
+        yearSet.add(currentYear);
+        
+        Array.from(yearSet).sort((a, b) => b - a).forEach(year => {
+          const option = document.createElement('option');
+          option.value = year;
+          option.textContent = year;
+          rekapBulananTahun.appendChild(option);
+        });
+        
+        rekapBulananTahun.value = currentValue;
+      }
     }
+    
+    // Switch between rekap tabs
+    window.switchRekapTab = function(tabName) {
+      const periodeTab = document.getElementById('rekap-periode-tab');
+      const bulananTab = document.getElementById('rekap-bulanan-tab');
+      const periodeBtn = document.getElementById('tab-periode');
+      const bulananBtn = document.getElementById('tab-bulanan');
+      
+      if (tabName === 'periode') {
+        periodeTab.classList.remove('hidden');
+        bulananTab.classList.add('hidden');
+        periodeBtn.className = 'px-4 py-2 font-medium text-sm border-b-2 border-purple-500 text-purple-600 bg-purple-50';
+        bulananBtn.className = 'px-4 py-2 font-medium text-sm border-b-2 border-transparent text-gray-600 hover:text-gray-800';
+      } else {
+        periodeTab.classList.add('hidden');
+        bulananTab.classList.remove('hidden');
+        periodeBtn.className = 'px-4 py-2 font-medium text-sm border-b-2 border-transparent text-gray-600 hover:text-gray-800';
+        bulananBtn.className = 'px-4 py-2 font-medium text-sm border-b-2 border-blue-500 text-blue-600 bg-blue-50';
+      }
+    };
+    
+    // Set current month for monthly recap
+    window.setCurrentMonth = function() {
+      const now = new Date();
+      const currentMonth = (now.getMonth() + 1).toString().padStart(2, '0');
+      const currentYear = now.getFullYear().toString();
+      
+      const monthSelect = document.getElementById('rekap-bulanan-bulan');
+      const yearSelect = document.getElementById('rekap-bulanan-tahun');
+      
+      if (monthSelect) monthSelect.value = currentMonth;
+      if (yearSelect) yearSelect.value = currentYear;
+      
+      showToast('📅 Filter diset ke bulan ini!', 'success');
+    };
     
     // Set quick date filters
     window.setQuickDate = function(period) {
@@ -2940,6 +3053,356 @@ function getStats(e) {
     }
 
     // Export and print functions
+    // Generate monthly recap per class
+    window.generateRekapBulananPerKelas = async function() {
+      const kelasSelect = document.getElementById('rekap-bulanan-kelas');
+      const bulanSelect = document.getElementById('rekap-bulanan-bulan');
+      const tahunSelect = document.getElementById('rekap-bulanan-tahun');
+      const rekapResults = document.getElementById('rekap-results');
+      
+      if (!kelasSelect || !bulanSelect || !tahunSelect || !rekapResults) {
+        showToast('❌ Elemen form tidak ditemukan!', 'error');
+        return;
+      }
+      
+      const selectedKelas = kelasSelect.value.trim();
+      const selectedBulan = bulanSelect.value.trim();
+      const selectedTahun = tahunSelect.value.trim();
+      
+      if (!selectedKelas || !selectedBulan || !selectedTahun) {
+        showToast('❌ Pilih kelas, bulan, dan tahun terlebih dahulu!', 'error');
+        return;
+      }
+      
+      // Show loading
+      rekapResults.innerHTML = `
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="text-center py-12">
+            <div class="relative w-16 h-16 mx-auto mb-4">
+              <div class="absolute inset-0 border-4 border-blue-200 rounded-full"></div>
+              <div class="absolute inset-0 border-4 border-blue-600 rounded-full animate-spin border-t-transparent"></div>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="text-2xl">📊</span>
+              </div>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Memuat Rekap Bulanan</h3>
+            <p class="text-gray-600">Kelas ${selectedKelas} • ${getMonthName(selectedBulan)} ${selectedTahun}</p>
+          </div>
+        </div>
+      `;
+      
+      try {
+        // Refresh data first
+        await loadAttendanceFromGoogleSheets();
+        
+        // Filter data for the selected month and class
+        const monthlyData = allRecords.filter(record => {
+          if (!record.tanggal || !record.kelas) return false;
+          
+          const recordDate = record.tanggal.split('-');
+          const recordYear = recordDate[0];
+          const recordMonth = recordDate[1];
+          
+          return record.kelas === selectedKelas && 
+                 recordYear === selectedTahun && 
+                 recordMonth === selectedBulan;
+        });
+        
+        // Get students for this class
+        const classStudents = studentsByClass[selectedKelas] || [];
+        
+        if (classStudents.length === 0) {
+          rekapResults.innerHTML = `
+            <div class="bg-white rounded-lg shadow-lg p-6">
+              <div class="text-center py-12">
+                <div class="text-6xl mb-4">❌</div>
+                <h3 class="text-xl font-bold text-red-800 mb-2">Data Siswa Tidak Ditemukan</h3>
+                <p class="text-gray-600 mb-4">Tidak ada data siswa untuk kelas ${selectedKelas}</p>
+                <button onclick="loadStudentDataFromSheets('${studentDataUrl}')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all">
+                  🔄 Muat Data Siswa
+                </button>
+              </div>
+            </div>
+          `;
+          return;
+        }
+        
+        // Generate student statistics
+        const studentStats = classStudents.map(studentName => {
+          const studentRecords = monthlyData.filter(record => record.nama_siswa === studentName);
+          
+          const hadir = studentRecords.filter(r => r.status === 'Hadir').length;
+          const sakit = studentRecords.filter(r => r.status === 'Sakit').length;
+          const izin = studentRecords.filter(r => r.status === 'Izin').length;
+          const alpha = studentRecords.filter(r => r.status === 'Alpha').length;
+          const total = studentRecords.length;
+          
+          const persentaseHadir = total > 0 ? ((hadir / total) * 100).toFixed(1) : '0.0';
+          
+          return {
+            nama: studentName,
+            hadir,
+            sakit,
+            izin,
+            alpha,
+            total,
+            persentaseHadir: parseFloat(persentaseHadir)
+          };
+        });
+        
+        // Sort by attendance percentage (highest first)
+        studentStats.sort((a, b) => b.persentaseHadir - a.persentaseHadir);
+        
+        // Calculate class totals
+        const classTotals = {
+          hadir: studentStats.reduce((sum, s) => sum + s.hadir, 0),
+          sakit: studentStats.reduce((sum, s) => sum + s.sakit, 0),
+          izin: studentStats.reduce((sum, s) => sum + s.izin, 0),
+          alpha: studentStats.reduce((sum, s) => sum + s.alpha, 0),
+          total: studentStats.reduce((sum, s) => sum + s.total, 0)
+        };
+        
+        const classAvgAttendance = studentStats.length > 0 ? 
+          (studentStats.reduce((sum, s) => sum + s.persentaseHadir, 0) / studentStats.length).toFixed(1) : '0.0';
+        
+        generateMonthlyClassRekapDisplay(selectedKelas, selectedBulan, selectedTahun, studentStats, classTotals, classAvgAttendance);
+        
+      } catch (error) {
+        console.error('❌ Error generating monthly recap:', error);
+        rekapResults.innerHTML = `
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="text-center py-12">
+              <div class="text-6xl mb-4">❌</div>
+              <h3 class="text-xl font-bold text-red-800 mb-2">Gagal Memuat Rekap</h3>
+              <p class="text-gray-600 mb-4">Terjadi kesalahan: ${error.message}</p>
+              <button onclick="generateRekapBulananPerKelas()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all">
+                🔄 Coba Lagi
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    };
+    
+    // Generate monthly class recap display
+    function generateMonthlyClassRekapDisplay(kelas, bulan, tahun, studentStats, classTotals, classAvgAttendance) {
+      const monthName = getMonthName(bulan);
+      const title = `Rekap Bulanan Kelas ${kelas} - ${monthName} ${tahun}`;
+      const canExport = hasPermission('export');
+      
+      document.getElementById('rekap-results').innerHTML = `
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div>
+              <h3 class="text-2xl font-bold" style="color: #667eea;">${title}</h3>
+              <p class="text-gray-600 mt-1">Total ${studentStats.length} siswa • Rata-rata kehadiran: ${classAvgAttendance}%</p>
+            </div>
+            <div class="flex gap-2">
+              ${canExport ? `
+                <button onclick="exportMonthlyRekapToExcel('${title}', ${JSON.stringify(studentStats).replace(/"/g, '&quot;')}, '${kelas}', '${monthName}', '${tahun}')" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all font-medium text-sm">
+                  📊 Export Excel
+                </button>
+                <button onclick="printRekap()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium text-sm">
+                  🖨️ Print
+                </button>
+              ` : ''}
+            </div>
+          </div>
+          
+          <!-- Summary Stats -->
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+            <div class="bg-gray-50 rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-gray-800">${classTotals.total}</div>
+              <div class="text-sm text-gray-600">Total Absensi</div>
+            </div>
+            <div class="bg-green-50 rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-green-600">${classTotals.hadir}</div>
+              <div class="text-sm text-gray-600">Total Hadir</div>
+            </div>
+            <div class="bg-red-50 rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-red-600">${classTotals.sakit}</div>
+              <div class="text-sm text-gray-600">Total Sakit</div>
+            </div>
+            <div class="bg-yellow-50 rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-yellow-600">${classTotals.izin}</div>
+              <div class="text-sm text-gray-600">Total Izin</div>
+            </div>
+            <div class="bg-purple-50 rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-purple-600">${classTotals.alpha}</div>
+              <div class="text-sm text-gray-600">Total Alpha</div>
+            </div>
+          </div>
+          
+          <!-- Student Details Table -->
+          <div class="space-y-4">
+            <h4 class="text-lg font-bold text-gray-800">👥 Detail Kehadiran Per Siswa</h4>
+            <div class="overflow-x-auto">
+              <table class="w-full border-collapse border border-gray-300 bg-white rounded-lg overflow-hidden shadow-sm">
+                <thead>
+                  <tr class="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                    <th class="border border-gray-300 px-4 py-3 text-left font-bold">No</th>
+                    <th class="border border-gray-300 px-4 py-3 text-left font-bold">Nama Siswa</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-bold">Total Absensi</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-bold">Hadir</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-bold">Sakit</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-bold">Izin</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-bold">Alpha</th>
+                    <th class="border border-gray-300 px-4 py-3 text-center font-bold">% Kehadiran</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${studentStats.map((student, index) => `
+                    <tr class="${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-blue-50 transition-colors">
+                      <td class="border border-gray-300 px-4 py-3 text-center font-medium text-gray-700">${index + 1}</td>
+                      <td class="border border-gray-300 px-4 py-3 font-bold text-gray-800">${student.nama}</td>
+                      <td class="border border-gray-300 px-4 py-3 text-center font-medium text-gray-800">${student.total}</td>
+                      <td class="border border-gray-300 px-4 py-3 text-center">
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                          ✅ ${student.hadir}
+                        </span>
+                      </td>
+                      <td class="border border-gray-300 px-4 py-3 text-center">
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                          🏥 ${student.sakit}
+                        </span>
+                      </td>
+                      <td class="border border-gray-300 px-4 py-3 text-center">
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                          📝 ${student.izin}
+                        </span>
+                      </td>
+                      <td class="border border-gray-300 px-4 py-3 text-center">
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                          ❌ ${student.alpha}
+                        </span>
+                      </td>
+                      <td class="border border-gray-300 px-4 py-3 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                          <span class="font-bold text-lg ${student.persentaseHadir >= 80 ? 'text-green-600' : student.persentaseHadir >= 60 ? 'text-yellow-600' : 'text-red-600'}">${student.persentaseHadir}%</span>
+                          <div class="w-16 bg-gray-200 rounded-full h-2">
+                            <div class="h-2 rounded-full ${student.persentaseHadir >= 80 ? 'bg-green-500' : student.persentaseHadir >= 60 ? 'bg-yellow-500' : 'bg-red-500'}" style="width: ${student.persentaseHadir}%"></div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+                <tfoot>
+                  <tr class="bg-gradient-to-r from-gray-100 to-gray-200 font-bold">
+                    <td colspan="2" class="border border-gray-300 px-4 py-3 text-gray-800">TOTAL KELAS</td>
+                    <td class="border border-gray-300 px-4 py-3 text-center text-gray-800">${classTotals.total}</td>
+                    <td class="border border-gray-300 px-4 py-3 text-center text-green-800">${classTotals.hadir}</td>
+                    <td class="border border-gray-300 px-4 py-3 text-center text-red-800">${classTotals.sakit}</td>
+                    <td class="border border-gray-300 px-4 py-3 text-center text-yellow-800">${classTotals.izin}</td>
+                    <td class="border border-gray-300 px-4 py-3 text-center text-purple-800">${classTotals.alpha}</td>
+                    <td class="border border-gray-300 px-4 py-3 text-center text-gray-800">
+                      <span class="font-bold text-lg">${classAvgAttendance}%</span>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            
+            <!-- Analysis -->
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                <h5 class="font-bold text-green-800 mb-2">🏆 Siswa dengan Kehadiran Terbaik</h5>
+                <div class="space-y-2">
+                  ${studentStats.slice(0, 3).map((student, index) => `
+                    <div class="flex justify-between items-center">
+                      <span class="text-green-700">${index + 1}. ${student.nama}</span>
+                      <span class="font-bold text-green-800">${student.persentaseHadir}%</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                <h5 class="font-bold text-red-800 mb-2">⚠️ Siswa yang Perlu Perhatian</h5>
+                <div class="space-y-2">
+                  ${studentStats.filter(s => s.persentaseHadir < 80).slice(-3).reverse().map(student => `
+                    <div class="flex justify-between items-center">
+                      <span class="text-red-700">${student.nama}</span>
+                      <span class="font-bold text-red-800">${student.persentaseHadir}%</span>
+                    </div>
+                  `).join('') || '<p class="text-red-600 text-sm">Semua siswa memiliki kehadiran baik (≥80%)</p>'}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Legend -->
+            <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+              <h5 class="font-bold text-gray-800 mb-2">📋 Keterangan:</h5>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div class="space-y-1">
+                  <p><strong>Total Absensi:</strong> Jumlah hari siswa tercatat absen dalam bulan ini</p>
+                  <p><strong>% Kehadiran:</strong> Persentase hadir dari total hari absensi</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-green-700"><strong>≥ 80%:</strong> Kehadiran Baik</p>
+                  <p class="text-yellow-700"><strong>60-79%:</strong> Kehadiran Cukup</p>
+                  <p class="text-red-700"><strong>< 60%:</strong> Perlu Perhatian</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      showToast(`✅ Rekap bulanan kelas ${kelas} berhasil dibuat!`, 'success');
+    }
+    
+    // Helper function to get month name
+    function getMonthName(monthNumber) {
+      const months = {
+        '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April',
+        '05': 'Mei', '06': 'Juni', '07': 'Juli', '08': 'Agustus',
+        '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember'
+      };
+      return months[monthNumber] || monthNumber;
+    }
+    
+    // Export monthly recap to Excel
+    window.exportMonthlyRekapToExcel = function(title, studentStats, kelas, monthName, tahun) {
+      if (!hasPermission('export')) {
+        showToast('❌ Anda tidak memiliki izin untuk export!', 'error');
+        return;
+      }
+      
+      const parsedData = typeof studentStats === 'string' ? JSON.parse(studentStats) : studentStats;
+      
+      const headers = ['No', 'Nama Siswa', 'Total Absensi', 'Hadir', 'Sakit', 'Izin', 'Alpha', 'Persentase Kehadiran'];
+      const csvContent = [
+        `"${title}"`,
+        `"Kelas: ${kelas}"`,
+        `"Periode: ${monthName} ${tahun}"`,
+        '',
+        headers.join(','),
+        ...parsedData.map((student, index) => [
+          index + 1,
+          `"${student.nama}"`,
+          student.total,
+          student.hadir,
+          student.sakit,
+          student.izin,
+          student.alpha,
+          `"${student.persentaseHadir}%"`
+        ].join(','))
+      ].join('\n');
+      
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `Rekap_Bulanan_${kelas}_${monthName}_${tahun}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      showToast('✅ Rekap bulanan berhasil di-export!', 'success');
+    };
+
     window.exportRekapToExcel = function(title, data) {
       if (!hasPermission('export')) {
         showToast('❌ Anda tidak memiliki izin untuk export!', 'error');
@@ -4905,7 +5368,7 @@ function getStats(e) {
         
         const today = new Date().toISOString().split('T')[0];
         
-        // Get classes that have attendance today - but ALWAYS allow selection
+        // Get classes that have attendance today
         const classesWithAttendanceToday = new Set(
           allRecords
             .filter(record => record.tanggal === today)
@@ -4915,18 +5378,39 @@ function getStats(e) {
         Object.keys(studentsByClass).sort().forEach(kelas => {
           const option = document.createElement('option');
           option.value = kelas;
-          // NEVER disable options - always allow selection
-          option.disabled = false;
           
           if (classesWithAttendanceToday.has(kelas)) {
-            // Show as completed but KEEP CLICKABLE
-            option.textContent = `${kelas} (${studentsByClass[kelas].length} siswa) - ✅ Sudah Diabsen`;
-            option.style.color = '#059669'; // Green color
+            // Get the user who input attendance for this class today
+            const classAttendanceToday = allRecords.filter(record => 
+              record.tanggal === today && record.kelas === kelas
+            );
+            
+            // Get unique users who input attendance for this class
+            const inputUsers = [...new Set(classAttendanceToday.map(record => record.input_by))].filter(Boolean);
+            const userText = inputUsers.length > 0 ? ` oleh ${inputUsers.join(', ')}` : '';
+            
+            // Show as completed - different behavior for Admin vs other users
+            option.textContent = `${kelas} (${studentsByClass[kelas].length} siswa) - ✅ Sudah Diabsen${userText}`;
             option.style.fontWeight = 'bold';
+            
+            // Admin can always access all classes, including those already attended
+            if (currentUser && currentUser.role === 'Admin') {
+              option.disabled = false;
+              option.style.color = '#059669'; // Keep green color for admin
+              option.style.fontWeight = 'bold';
+              option.title = 'Admin dapat mengakses kelas yang sudah diabsen untuk koreksi atau input ulang';
+            } else {
+              // Disable for non-admin users to prevent double attendance
+              option.disabled = true;
+              option.style.color = '#9CA3AF'; // Gray color for disabled
+              option.style.fontStyle = 'italic';
+              option.title = 'Kelas sudah diabsen hari ini. Hanya Admin yang dapat mengakses ulang.';
+            }
           } else {
             option.textContent = `${kelas} (${studentsByClass[kelas].length} siswa)`;
             option.style.color = '#374151'; // Normal color
             option.style.fontWeight = 'normal';
+            option.disabled = false;
           }
           
           formFilterKelas.appendChild(option);
@@ -5090,81 +5574,81 @@ function getStats(e) {
       document.body.appendChild(confirmDiv);
     };
 
-    // Reliable batch processing system with guaranteed delivery
-    let saveQueue = [];
+    // Centralized loading overlay with blocking
     let isSaving = false;
     let loadingOverlay = null;
-    let progressInterval = null;
 
-    // Loading overlay functions
-    function showSaveLoadingOverlay(totalRecords, className) {
-      // Remove existing overlay if any
-      hideSaveLoadingOverlay();
+    // Centralized loading overlay that blocks all interactions
+    function showCentralLoadingOverlay(totalRecords, className) {
+      hideCentralLoadingOverlay();
       
       loadingOverlay = document.createElement('div');
-      loadingOverlay.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+      loadingOverlay.className = 'fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50';
+      loadingOverlay.style.pointerEvents = 'all'; // Block all interactions
       loadingOverlay.innerHTML = `
-        <div class="bg-white rounded-2xl p-8 max-w-md mx-4 text-center shadow-2xl">
+        <div class="bg-white rounded-xl p-8 max-w-md mx-4 text-center shadow-2xl">
           <div class="mb-6">
-            <div class="relative w-24 h-24 mx-auto mb-4">
+            <div class="relative w-20 h-20 mx-auto mb-4">
               <div class="absolute inset-0 border-4 border-blue-200 rounded-full"></div>
               <div class="absolute inset-0 border-4 border-blue-600 rounded-full animate-spin border-t-transparent"></div>
               <div class="absolute inset-0 flex items-center justify-center">
                 <span class="text-2xl">💾</span>
               </div>
             </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">Menyimpan Data Absensi</h3>
-            <p class="text-gray-600 text-sm">Kelas ${className} • ${totalRecords} siswa</p>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Menyimpan Absensi</h3>
+            <p class="text-gray-600">Kelas ${className} • ${totalRecords} siswa</p>
           </div>
           
           <div class="space-y-4">
             <div class="bg-gray-100 rounded-lg p-4">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm font-medium text-gray-700">Progress:</span>
-                <span id="progress-text" class="text-sm font-bold text-blue-600">0%</span>
+                <span id="central-progress-text" class="text-sm font-bold text-blue-600">0%</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-3">
-                <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                <div id="central-progress-bar" class="bg-blue-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
               </div>
             </div>
             
-            <div class="text-left space-y-2 text-sm">
-              <div class="flex items-center gap-2">
-                <div id="sheets-status" class="w-3 h-3 bg-gray-300 rounded-full"></div>
-                <span class="text-gray-600">Mengirim ke Google Sheets...</span>
-              </div>
+            <div id="central-status" class="text-sm text-gray-600 bg-gray-50 rounded-lg p-3 min-h-[50px] flex items-center justify-center">
+              Memulai penyimpanan...
             </div>
             
-            <div id="current-student" class="text-xs text-gray-500 bg-gray-50 rounded-lg p-2">
-              Memulai proses penyimpanan...
+            <div id="central-results" class="hidden space-y-2">
+              <div class="flex justify-between text-sm">
+                <span class="text-green-600">✅ Berhasil:</span>
+                <span id="success-count" class="font-bold text-green-600">0</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-red-600">❌ Gagal:</span>
+                <span id="failed-count" class="font-bold text-red-600">0</span>
+              </div>
             </div>
           </div>
           
-          <div class="mt-6 text-xs text-gray-400">
-            Mohon tunggu, jangan tutup halaman ini
+          <div class="mt-6">
+            <div class="text-sm text-gray-500 mb-3">
+              Mohon tunggu, jangan tutup halaman...
+            </div>
+            <button id="close-loading-btn" onclick="hideCentralLoadingOverlay()" class="hidden px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all font-medium">
+              Selesai
+            </button>
           </div>
         </div>
       `;
       
       document.body.appendChild(loadingOverlay);
-      
-      // Start progress animation
-      let progress = 0;
-      progressInterval = setInterval(() => {
-        if (progress < 95) {
-          progress += Math.random() * 3;
-          updateLoadingProgress(Math.min(progress, 95));
-        }
-      }, 200);
     }
 
-    function updateLoadingProgress(percentage, currentStudent = null, localDone = false, sheetsDone = false) {
+    function updateCentralProgress(percentage, message = '', successCount = 0, failedCount = 0) {
       if (!loadingOverlay) return;
       
-      const progressBar = loadingOverlay.querySelector('#progress-bar');
-      const progressText = loadingOverlay.querySelector('#progress-text');
-      const currentStudentEl = loadingOverlay.querySelector('#current-student');
-      const sheetsStatus = loadingOverlay.querySelector('#sheets-status');
+      const progressBar = loadingOverlay.querySelector('#central-progress-bar');
+      const progressText = loadingOverlay.querySelector('#central-progress-text');
+      const statusEl = loadingOverlay.querySelector('#central-status');
+      const resultsEl = loadingOverlay.querySelector('#central-results');
+      const successEl = loadingOverlay.querySelector('#success-count');
+      const failedEl = loadingOverlay.querySelector('#failed-count');
       
       if (progressBar) {
         progressBar.style.width = `${percentage}%`;
@@ -5174,336 +5658,227 @@ function getStats(e) {
         progressText.textContent = `${Math.round(percentage)}%`;
       }
       
-      if (currentStudent && currentStudentEl) {
-        currentStudentEl.textContent = `Memproses: ${currentStudent}`;
+      if (message && statusEl) {
+        statusEl.textContent = message;
       }
       
-      if (sheetsStatus) {
-        if (sheetsDone) {
-          sheetsStatus.className = 'w-3 h-3 bg-green-500 rounded-full animate-pulse';
-        } else if (percentage > 10) {
-          sheetsStatus.className = 'w-3 h-3 bg-yellow-500 rounded-full animate-pulse';
-        }
+      // Show results when we have counts
+      if ((successCount > 0 || failedCount > 0) && resultsEl) {
+        resultsEl.classList.remove('hidden');
+        if (successEl) successEl.textContent = successCount;
+        if (failedEl) failedEl.textContent = failedCount;
       }
     }
 
-    function hideSaveLoadingOverlay() {
-      if (progressInterval) {
-        clearInterval(progressInterval);
-        progressInterval = null;
+    function showCentralLoadingComplete(successCount, failedCount, totalTime, failedRecords = []) {
+      if (!loadingOverlay) return;
+      
+      const statusEl = loadingOverlay.querySelector('#central-status');
+      const closeBtn = loadingOverlay.querySelector('#close-loading-btn');
+      
+      if (statusEl) {
+        if (failedCount === 0) {
+          statusEl.innerHTML = `
+            <div class="text-green-600 font-medium">
+              🎉 Semua data berhasil disimpan!<br>
+              <span class="text-xs text-gray-500">Waktu: ${(totalTime / 1000).toFixed(1)} detik</span>
+            </div>
+          `;
+        } else {
+          // Show failed records details
+          const failedList = failedRecords.map(record => 
+            `${record.nama_siswa} (${record.status}) - ${record.attempts} percobaan`
+          ).join('<br>');
+          
+          statusEl.innerHTML = `
+            <div class="text-red-600 font-medium">
+              ❌ ${failedCount} siswa gagal disimpan setelah 3x percobaan<br>
+              <span class="text-xs text-gray-500">Waktu: ${(totalTime / 1000).toFixed(1)} detik</span>
+            </div>
+            <div class="mt-3 p-3 bg-red-50 rounded-lg border border-red-200 text-left">
+              <div class="text-sm font-bold text-red-800 mb-2">📋 Daftar Siswa yang Gagal:</div>
+              <div class="text-xs text-red-700 max-h-32 overflow-y-auto">
+                ${failedList}
+              </div>
+              <div class="mt-2 text-xs text-red-600 font-medium">
+                💡 Silakan input ulang absensi untuk siswa yang gagal
+              </div>
+            </div>
+          `;
+        }
       }
       
+      if (closeBtn) {
+        closeBtn.classList.remove('hidden');
+      }
+    }
+
+    function hideCentralLoadingOverlay() {
       if (loadingOverlay) {
-        // Complete the progress bar first
-        updateLoadingProgress(100, 'Selesai!', true, true);
-        
-        // Add completion animation
+        loadingOverlay.style.animation = 'fadeOut 0.3s ease-out';
         setTimeout(() => {
-          if (loadingOverlay) {
-            loadingOverlay.style.animation = 'fadeOut 0.3s ease-out';
-            setTimeout(() => {
-              if (loadingOverlay && loadingOverlay.parentElement) {
-                loadingOverlay.remove();
-              }
-              loadingOverlay = null;
-            }, 300);
+          if (loadingOverlay && loadingOverlay.parentElement) {
+            loadingOverlay.remove();
           }
-        }, 500);
+          loadingOverlay = null;
+        }, 300);
       }
     }
     
-    async function processSaveQueue() {
-      if (isSaving || saveQueue.length === 0) return;
+    // Enhanced Google Sheets sending with immediate retry mechanism (max 3 attempts)
+    async function sendToGoogleSheetsWithRetry(record) {
+      if (!isAttendanceSheetConnected || !attendanceSheetUrl) {
+        console.log('Google Sheets not connected, skipping');
+        return { success: false, error: 'Not connected', attempts: 0 };
+      }
       
-      isSaving = true;
-      const BATCH_SIZE = 5; // Smaller batch for better progress tracking
-      const startTime = Date.now();
-      const totalRecords = saveQueue.length;
+      const maxRetries = 3;
+      let lastError = null;
       
-      console.log(`🚀 Starting Google Sheets batch processing: ${totalRecords} records in queue`);
-      console.log(`📡 Google Sheets URL: ${attendanceSheetUrl}`);
-      console.log(`🔗 Connection status: ${isAttendanceSheetConnected ? 'Connected' : 'Disconnected'}`);
-      
-      let totalProcessed = 0;
-      let totalFailed = 0;
-      let sheetsSaveCount = 0;
-      
-      try {
-        while (saveQueue.length > 0) {
-          const batch = saveQueue.splice(0, BATCH_SIZE);
-          console.log(`📦 Processing batch of ${batch.length} records`);
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          console.log(`📡 Sending to Google Sheets (attempt ${attempt}/${maxRetries}): ${record.nama_siswa}`);
           
-          // Process records sequentially for reliability
-          for (const record of batch) {
-            let recordSaved = false;
-            
-            // Update progress with current student
-            const progressPercentage = (totalProcessed / totalRecords) * 100;
-            updateLoadingProgress(progressPercentage, record.nama_siswa);
-            
-            try {
-              // Send to Google Sheets (primary and only storage)
-              if (isAttendanceSheetConnected && attendanceSheetUrl) {
-                try {
-                  await sendToGoogleSheetsReliable(record);
-                  console.log(`📡 Google Sheets save successful: ${record.nama_siswa}`);
-                  sheetsSaveCount++;
-                  recordSaved = true;
-                  updateLoadingProgress(progressPercentage, record.nama_siswa, false, true);
-                  
-                  // Add to local array for immediate UI update
-                  allRecords.push({
-                    ...record,
-                    __backendId: `sheets_${Date.now()}_${Math.random()}`
-                  });
-                  recordCount = allRecords.length;
-                  
-                } catch (error) {
-                  console.warn(`⚠️ Google Sheets save failed for ${record.nama_siswa}:`, error.message);
-                }
-              }
-              
-              if (recordSaved) {
-                totalProcessed++;
-              } else {
-                console.error(`❌ Google Sheets save failed for: ${record.nama_siswa}`);
-                totalFailed++;
-              }
-              
-            } catch (error) {
-              console.error('❌ Record processing failed:', error);
-              totalFailed++;
-            }
-            
-            // Small delay between records for better UX
-            await new Promise(resolve => setTimeout(resolve, 50));
+          // Enhanced payload with validation
+          const payload = {
+            nama_siswa: String(record.nama_siswa || '').trim(),
+            kelas: String(record.kelas || '').trim(),
+            status: String(record.status || '').trim(),
+            tanggal: String(record.tanggal || '').trim(),
+            waktu: String(record.waktu || '').trim(),
+            keterangan: String(record.keterangan || '').trim(),
+            input_by: String(record.input_by || '').trim(),
+            user_role: String(record.user_role || '').trim()
+          };
+          
+          // Validate required fields
+          if (!payload.nama_siswa || !payload.kelas || !payload.status || !payload.tanggal) {
+            throw new Error('Missing required fields');
           }
           
-          // Small delay between batches for system stability
-          if (saveQueue.length > 0) {
-            await new Promise(resolve => setTimeout(resolve, 200));
+          // Enhanced fetch with timeout and better error handling
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+          
+          const response = await fetch(attendanceSheetUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+            signal: controller.signal
+          });
+          
+          clearTimeout(timeoutId);
+          
+          console.log(`✅ Google Sheets save successful: ${record.nama_siswa} (attempt ${attempt})`);
+          return { success: true, attempts: attempt };
+          
+        } catch (error) {
+          lastError = error;
+          console.error(`❌ Google Sheets error for ${record.nama_siswa} (attempt ${attempt}/${maxRetries}):`, error.message);
+          
+          // If this is not the last attempt, wait before retrying
+          if (attempt < maxRetries) {
+            const retryDelay = 2000 * attempt; // Increasing delay: 2s, 4s
+            console.log(`🔄 Retrying in ${retryDelay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
           }
         }
-        
-        // Final progress update
-        updateLoadingProgress(100, 'Menyelesaikan...', false, sheetsSaveCount > 0);
-        
-        const totalTime = Date.now() - startTime;
-        console.log(`🎉 Google Sheets batch processing completed in ${totalTime}ms`);
-        console.log(`📊 Results: ${totalProcessed} successful, ${totalFailed} failed`);
-        console.log(`📡 Google Sheets saves: ${sheetsSaveCount}`);
-        
-        // Update UI with new data
-        updateStats(allRecords);
-        updateFilterOptions(allRecords);
-        updateClassDropdowns();
-        
-        // Wait a moment to show completion
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        if (totalProcessed > 0) {
-          showToast(`✅ ${totalProcessed} data absensi berhasil disimpan ke Google Sheets!`, 'success');
-        }
-        
-        if (totalFailed > 0) {
-          showToast(`⚠️ ${totalFailed} data gagal disimpan. Silakan coba lagi.`, 'error');
-        }
-        
-      } catch (error) {
-        console.error('❌ Batch processing error:', error);
-        showToast('❌ Terjadi kesalahan saat menyimpan data.', 'error');
-      } finally {
-        isSaving = false;
       }
+      
+      // All attempts failed
+      console.error(`❌ All ${maxRetries} attempts failed for ${record.nama_siswa}`);
+      return { 
+        success: false, 
+        error: lastError?.message || 'Unknown error', 
+        attempts: maxRetries 
+      };
     }
     
-    // ULTRA-FAST Google Sheets sync with 100% delivery guarantee
-    async function sendToGoogleSheetsReliable(record, retryCount = 0) {
-      if (!isAttendanceSheetConnected || !attendanceSheetUrl) {
-        console.log('Google Sheets not connected, skipping sync');
-        return;
-      }
-      
-      const MAX_RETRIES = 3; // Increased retries for 100% guarantee
-      const TIMEOUT = 5000; // Reduced timeout for faster processing
-      
-      try {
-        console.log(`🚀 Ultra-fast sending to Google Sheets (attempt ${retryCount + 1}): ${record.nama_siswa}`);
-        
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
-        
-        // Optimized payload for faster processing
-        const payload = {
-          nama_siswa: record.nama_siswa,
-          kelas: record.kelas,
-          status: record.status,
-          tanggal: record.tanggal,
-          waktu: record.waktu,
-          keterangan: record.keterangan || '',
-          input_by: record.input_by,
-          user_role: record.user_role
-        };
-        
-        const response = await fetch(attendanceSheetUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          signal: controller.signal,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload)
-        });
-        
-        clearTimeout(timeoutId);
-        console.log(`⚡ Ultra-fast Google Sheets sync successful: ${record.nama_siswa} (${Date.now() - record.startTime}ms)`);
-        return { success: true };
-        
-      } catch (error) {
-        clearTimeout(timeoutId);
-        
-        if (error.name === 'AbortError') {
-          console.warn(`⏱️ Google Sheets timeout for ${record.nama_siswa} (attempt ${retryCount + 1}) - retrying faster...`);
-        } else {
-          console.warn(`⚠️ Google Sheets error for ${record.nama_siswa} (attempt ${retryCount + 1}):`, error.message);
-        }
-        
-        // Aggressive retry logic with faster backoff
-        if (retryCount < MAX_RETRIES) {
-          console.log(`🔄 Fast retry Google Sheets sync for ${record.nama_siswa}...`);
-          // Faster exponential backoff: 200ms, 400ms, 800ms
-          await new Promise(resolve => setTimeout(resolve, 200 * Math.pow(2, retryCount)));
-          return await sendToGoogleSheetsReliable(record, retryCount + 1);
-        } else {
-          console.error(`❌ Google Sheets sync failed permanently for ${record.nama_siswa} after ${MAX_RETRIES + 1} attempts`);
-          throw new Error(`Failed after ${MAX_RETRIES + 1} attempts: ${error.message}`);
-        }
-      }
-    }
-    
-    // ULTRA-FAST batch processing with parallel execution and 100% delivery guarantee
-    async function sendBatchToGoogleSheetsUltraFast(records) {
-      if (!isAttendanceSheetConnected || !attendanceSheetUrl) {
-        console.log('Google Sheets not connected, skipping batch sync');
-        return { success: false, message: 'Not connected' };
-      }
-      
+    // Process records one by one with immediate retry (no end retry)
+    async function processRecordsSequentially(records, className) {
       const startTime = Date.now();
-      console.log(`🚀 Starting ULTRA-FAST batch processing: ${records.length} records`);
+      let processed = 0;
+      let failed = 0;
+      let failedRecords = []; // Track permanently failed records
+      let totalRecords = records.length;
       
-      try {
-        // Use the optimized batch endpoint with ultra-fast processing
-        const batchPayload = {
-          batch: true,
-          data: records.map(record => ({
+      console.log(`🚀 Starting sequential processing: ${records.length} records`);
+      
+      // Show centralized loading overlay
+      showCentralLoadingOverlay(records.length, className);
+      
+      // Process all records in order with immediate retry
+      for (let i = 0; i < records.length; i++) {
+        const record = records[i];
+        const currentIndex = i + 1;
+        const progressPercentage = (currentIndex / totalRecords) * 100;
+        
+        updateCentralProgress(progressPercentage, `Menyimpan: ${record.nama_siswa} (${currentIndex}/${totalRecords})`, processed, failed);
+        
+        try {
+          // Send to Google Sheets with immediate retry (max 3 attempts)
+          const result = await sendToGoogleSheetsWithRetry(record);
+          
+          if (result.success) {
+            processed++;
+            console.log(`✅ Processed ${currentIndex}/${totalRecords}: ${record.nama_siswa} (${result.attempts} attempts)`);
+            
+            // Add to local array immediately
+            allRecords.push({
+              ...record,
+              __backendId: `sheets_${Date.now()}_${Math.random()}`
+            });
+            
+          } else {
+            failed++;
+            failedRecords.push({
+              nama_siswa: record.nama_siswa,
+              kelas: record.kelas,
+              status: record.status,
+              error: result.error,
+              attempts: result.attempts
+            });
+            console.error(`❌ Failed ${currentIndex}/${totalRecords}: ${record.nama_siswa} after ${result.attempts} attempts`);
+          }
+          
+        } catch (error) {
+          failed++;
+          failedRecords.push({
             nama_siswa: record.nama_siswa,
             kelas: record.kelas,
             status: record.status,
-            tanggal: record.tanggal,
-            waktu: record.waktu,
-            keterangan: record.keterangan || '',
-            input_by: record.input_by,
-            user_role: record.user_role
-          }))
-        };
-        
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout for batch
-        
-        console.log(`📡 Sending batch of ${records.length} records to ultra-fast endpoint...`);
-        
-        const response = await fetch(attendanceSheetUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          signal: controller.signal,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(batchPayload)
-        });
-        
-        clearTimeout(timeoutId);
-        
-        const processingTime = Date.now() - startTime;
-        console.log(`⚡ ULTRA-FAST batch processing completed in ${processingTime}ms`);
-        console.log(`🎯 Performance: ${(records.length / (processingTime / 1000)).toFixed(1)} records/second`);
-        
-        return { 
-          success: true, 
-          processed: records.length,
-          processingTime: processingTime,
-          performance: `${(records.length / (processingTime / 1000)).toFixed(1)} records/sec`
-        };
-        
-      } catch (error) {
-        const processingTime = Date.now() - startTime;
-        console.error(`❌ Ultra-fast batch processing failed after ${processingTime}ms:`, error);
-        
-        // Fallback to individual processing with parallel execution for 100% guarantee
-        console.log('🔄 Falling back to parallel individual processing for 100% delivery guarantee...');
-        return await sendRecordsParallelWithGuarantee(records);
-      }
-    }
-    
-    // Parallel processing with 100% delivery guarantee
-    async function sendRecordsParallelWithGuarantee(records) {
-      const startTime = Date.now();
-      const PARALLEL_LIMIT = 3; // Process 3 records simultaneously for optimal speed
-      
-      console.log(`🚀 Starting parallel processing with 100% delivery guarantee: ${records.length} records`);
-      
-      let processed = 0;
-      let failed = 0;
-      const results = [];
-      
-      // Process records in parallel batches
-      for (let i = 0; i < records.length; i += PARALLEL_LIMIT) {
-        const batch = records.slice(i, i + PARALLEL_LIMIT);
-        
-        console.log(`📦 Processing parallel batch ${Math.floor(i / PARALLEL_LIMIT) + 1}: ${batch.length} records`);
-        
-        // Process batch in parallel with individual retry guarantee
-        const batchPromises = batch.map(async (record, index) => {
-          record.startTime = Date.now(); // Track individual timing
-          
-          try {
-            await sendToGoogleSheetsReliable(record);
-            processed++;
-            return { success: true, record: record.nama_siswa };
-          } catch (error) {
-            failed++;
-            console.error(`❌ Final failure for ${record.nama_siswa}:`, error.message);
-            return { success: false, record: record.nama_siswa, error: error.message };
-          }
-        });
-        
-        // Wait for all records in this batch to complete
-        const batchResults = await Promise.all(batchPromises);
-        results.push(...batchResults);
-        
-        // Small delay between batches to prevent overwhelming the server
-        if (i + PARALLEL_LIMIT < records.length) {
-          await new Promise(resolve => setTimeout(resolve, 100));
+            error: error.message,
+            attempts: 0
+          });
+          console.error(`❌ Error processing ${record.nama_siswa}:`, error);
         }
+        
+        // Update progress with current counts
+        updateCentralProgress(progressPercentage, `Menyimpan: ${record.nama_siswa} (${currentIndex}/${totalRecords})`, processed, failed);
+        
+        // Small delay between records for reliability
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
       
       const totalTime = Date.now() - startTime;
-      const successRate = (processed / records.length) * 100;
+      console.log(`🎉 Sequential processing completed in ${totalTime}ms`);
+      console.log(`📊 Final Results: ${processed} successful, ${failed} failed`);
       
-      console.log(`🎯 Parallel processing completed in ${totalTime}ms`);
-      console.log(`📊 Results: ${processed} successful, ${failed} failed (${successRate.toFixed(1)}% success rate)`);
-      console.log(`⚡ Performance: ${(processed / (totalTime / 1000)).toFixed(1)} successful records/second`);
+      if (failedRecords.length > 0) {
+        console.log(`❌ Failed Records:`, failedRecords);
+      }
       
-      return {
-        success: processed > 0,
-        processed: processed,
-        failed: failed,
-        successRate: successRate,
-        processingTime: totalTime,
-        performance: `${(processed / (totalTime / 1000)).toFixed(1)} records/sec`,
-        results: results
-      };
+      // Show completion status with failed records info
+      showCentralLoadingComplete(processed, failed, totalTime, failedRecords);
+      
+      return { processed, failed, totalTime, failedRecords };
     }
+
+    // Global function to make hideCentralLoadingOverlay accessible
+    window.hideCentralLoadingOverlay = hideCentralLoadingOverlay;
 
     window.confirmSaveAllAttendance = async function() {
       if (isSaving) {
@@ -5523,14 +5898,11 @@ function getStats(e) {
       
       isSaving = true;
       
-      // Show enhanced loading overlay for ultra-fast processing
-      showUltraFastLoadingOverlay(studentsWithStatus.length, selectedClass);
-      
       const wibTime = getWIBTime();
       const tanggal = wibTime.toISOString().split('T')[0];
       const waktu = wibTime.toTimeString().split(' ')[0].substring(0, 5);
       
-      // Prepare all records for ultra-fast Google Sheets processing
+      // Prepare records for processing
       const records = studentsWithStatus.map(student => ({
         nama_siswa: student,
         kelas: selectedClass,
@@ -5543,248 +5915,45 @@ function getStats(e) {
         timestamp: wibTime.toISOString()
       }));
       
-      console.log(`🚀 Prepared ${records.length} records for ULTRA-FAST Google Sheets processing`);
+      console.log(`🚀 Starting centralized processing for ${records.length} records`);
       
       try {
-        const startTime = Date.now();
+        // Process records with centralized loading
+        const result = await processRecordsSequentially(records, selectedClass);
         
-        // Try ultra-fast batch processing first
-        updateUltraFastProgress(10, 'Mengirim batch ke Google Sheets...', 'batch');
+        // Update UI after processing
+        recordCount = allRecords.length;
+        updateStats(allRecords);
+        updateFilterOptions(allRecords);
+        updateClassDropdowns();
         
-        const batchResult = await sendBatchToGoogleSheetsUltraFast(records);
+        // Reset form after successful save
+        attendanceData = {};
+        document.getElementById('student-attendance-list').classList.add('hidden');
+        document.getElementById('no-manual-input').classList.remove('hidden');
+        document.getElementById('form-filter-kelas').value = '';
         
-        if (batchResult.success) {
-          // Ultra-fast batch processing succeeded
-          const processingTime = Date.now() - startTime;
-          
-          updateUltraFastProgress(90, `Batch berhasil dalam ${processingTime}ms!`, 'success');
-          
-          // Add all records to local array immediately
-          records.forEach(record => {
-            allRecords.push({
-              ...record,
-              __backendId: `sheets_${Date.now()}_${Math.random()}`
-            });
-          });
-          
-          recordCount = allRecords.length;
-          
-          // Update UI immediately
-          updateStats(allRecords);
-          updateFilterOptions(allRecords);
-          updateClassDropdowns();
-          
-          updateUltraFastProgress(100, 'Selesai!', 'complete');
-          
-          setTimeout(() => {
-            hideUltraFastLoadingOverlay();
-            showToast(`⚡ ULTRA-FAST: ${records.length} data berhasil disimpan dalam ${processingTime}ms! (${batchResult.performance})`, 'success');
-          }, 1000);
-          
+        // Show final result toast
+        if (result.failed === 0) {
+          showToast(`✅ Semua ${result.processed} data absensi berhasil disimpan ke Google Sheets!`, 'success');
         } else {
-          // Fallback to parallel processing with 100% guarantee
-          updateUltraFastProgress(20, 'Menggunakan mode paralel untuk jaminan 100%...', 'parallel');
-          
-          const parallelResult = await sendRecordsParallelWithGuarantee(records);
-          
-          if (parallelResult.processed > 0) {
-            // Add successful records to local array
-            const successfulRecords = records.slice(0, parallelResult.processed);
-            successfulRecords.forEach(record => {
-              allRecords.push({
-                ...record,
-                __backendId: `sheets_${Date.now()}_${Math.random()}`
-              });
-            });
-            
-            recordCount = allRecords.length;
-            
-            // Update UI
-            updateStats(allRecords);
-            updateFilterOptions(allRecords);
-            updateClassDropdowns();
-            
-            updateUltraFastProgress(100, `${parallelResult.processed} berhasil, ${parallelResult.failed} gagal`, 'partial');
-            
-            setTimeout(() => {
-              hideUltraFastLoadingOverlay();
-              
-              if (parallelResult.successRate === 100) {
-                showToast(`✅ 100% BERHASIL: ${parallelResult.processed} data tersimpan dalam ${parallelResult.processingTime}ms! (${parallelResult.performance})`, 'success');
-              } else {
-                showToast(`⚠️ ${parallelResult.processed} data berhasil, ${parallelResult.failed} gagal. Success rate: ${parallelResult.successRate.toFixed(1)}%`, 'error');
-              }
-            }, 1000);
-            
-          } else {
-            throw new Error('Semua data gagal disimpan');
-          }
+          const failedNames = result.failedRecords.map(r => r.nama_siswa).join(', ');
+          showToast(`⚠️ ${result.processed} berhasil, ${result.failed} gagal disimpan setelah 3x percobaan. Siswa gagal: ${failedNames}`, 'error');
         }
         
       } catch (error) {
-        console.error('❌ Ultra-fast save process failed:', error);
-        
-        updateUltraFastProgress(100, 'Gagal menyimpan data', 'error');
-        
-        setTimeout(() => {
-          hideUltraFastLoadingOverlay();
-          showToast(`❌ Gagal menyimpan data: ${error.message}`, 'error');
-        }, 1000);
-        
-      } finally {
-        isSaving = false;
-        
-        // Reset form after processing completes
-        setTimeout(() => {
-          attendanceData = {};
-          document.getElementById('student-attendance-list').classList.add('hidden');
-          document.getElementById('no-manual-input').classList.remove('hidden');
-          document.getElementById('form-filter-kelas').value = '';
-          
-          // Update class dropdown to show this class as completed
-          updateClassDropdowns();
-        }, 1500);
+        console.error('❌ Error in save process:', error);
+        showToast(`❌ Gagal menyimpan data: ${error.message}`, 'error');
+        hideCentralLoadingOverlay();
       }
+      
+      isSaving = false;
     };
     
-    // Ultra-fast loading overlay with enhanced progress tracking
-    function showUltraFastLoadingOverlay(totalRecords, className) {
-      hideUltraFastLoadingOverlay(); // Remove existing overlay
-      
-      loadingOverlay = document.createElement('div');
-      loadingOverlay.className = 'fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50';
-      loadingOverlay.innerHTML = `
-        <div class="bg-white rounded-2xl p-8 max-w-lg mx-4 text-center shadow-2xl">
-          <div class="mb-6">
-            <div class="relative w-32 h-32 mx-auto mb-4">
-              <div class="absolute inset-0 border-4 border-purple-200 rounded-full"></div>
-              <div class="absolute inset-0 border-4 border-purple-600 rounded-full animate-spin border-t-transparent"></div>
-              <div class="absolute inset-0 flex items-center justify-center">
-                <span class="text-4xl">⚡</span>
-              </div>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-800 mb-2">ULTRA-FAST Processing</h3>
-            <p class="text-gray-600 mb-1">Kelas ${className} • ${totalRecords} siswa</p>
-            <p class="text-sm text-purple-600 font-medium">Jaminan 100% data terkirim</p>
-          </div>
-          
-          <div class="space-y-4">
-            <div class="bg-gray-100 rounded-lg p-4">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-gray-700">Progress:</span>
-                <span id="ultra-progress-text" class="text-sm font-bold text-purple-600">0%</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-4">
-                <div id="ultra-progress-bar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-4 rounded-full transition-all duration-300" style="width: 0%"></div>
-              </div>
-            </div>
-            
-            <div class="text-left space-y-3 text-sm">
-              <div class="flex items-center gap-3">
-                <div id="batch-status" class="w-4 h-4 bg-gray-300 rounded-full"></div>
-                <span class="text-gray-600">Ultra-fast batch processing...</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <div id="parallel-status" class="w-4 h-4 bg-gray-300 rounded-full"></div>
-                <span class="text-gray-600">Parallel processing (jika diperlukan)...</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <div id="guarantee-status" class="w-4 h-4 bg-gray-300 rounded-full"></div>
-                <span class="text-gray-600">100% delivery guarantee...</span>
-              </div>
-            </div>
-            
-            <div id="ultra-current-status" class="text-sm text-gray-500 bg-gray-50 rounded-lg p-3 font-mono">
-              Memulai ultra-fast processing...
-            </div>
-            
-            <div id="performance-stats" class="text-xs text-purple-600 bg-purple-50 rounded-lg p-2 hidden">
-              <div class="grid grid-cols-2 gap-2">
-                <div>Speed: <span id="speed-stat">-</span></div>
-                <div>Time: <span id="time-stat">-</span></div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="mt-6 text-xs text-gray-400">
-            ⚡ Ultra-fast mode aktif • Jangan tutup halaman
-          </div>
-        </div>
-      `;
-      
-      document.body.appendChild(loadingOverlay);
-    }
+
     
-    function updateUltraFastProgress(percentage, message, status = 'processing') {
-      if (!loadingOverlay) return;
-      
-      const progressBar = loadingOverlay.querySelector('#ultra-progress-bar');
-      const progressText = loadingOverlay.querySelector('#ultra-progress-text');
-      const currentStatus = loadingOverlay.querySelector('#ultra-current-status');
-      const batchStatus = loadingOverlay.querySelector('#batch-status');
-      const parallelStatus = loadingOverlay.querySelector('#parallel-status');
-      const guaranteeStatus = loadingOverlay.querySelector('#guarantee-status');
-      const performanceStats = loadingOverlay.querySelector('#performance-stats');
-      
-      if (progressBar) {
-        progressBar.style.width = `${percentage}%`;
-      }
-      
-      if (progressText) {
-        progressText.textContent = `${Math.round(percentage)}%`;
-      }
-      
-      if (currentStatus) {
-        currentStatus.textContent = message;
-      }
-      
-      // Update status indicators
-      if (batchStatus && parallelStatus && guaranteeStatus) {
-        switch (status) {
-          case 'batch':
-            batchStatus.className = 'w-4 h-4 bg-yellow-500 rounded-full animate-pulse';
-            break;
-          case 'parallel':
-            batchStatus.className = 'w-4 h-4 bg-red-500 rounded-full';
-            parallelStatus.className = 'w-4 h-4 bg-yellow-500 rounded-full animate-pulse';
-            break;
-          case 'success':
-            batchStatus.className = 'w-4 h-4 bg-green-500 rounded-full';
-            guaranteeStatus.className = 'w-4 h-4 bg-green-500 rounded-full';
-            if (performanceStats) {
-              performanceStats.classList.remove('hidden');
-            }
-            break;
-          case 'partial':
-            parallelStatus.className = 'w-4 h-4 bg-green-500 rounded-full';
-            guaranteeStatus.className = 'w-4 h-4 bg-yellow-500 rounded-full';
-            break;
-          case 'complete':
-            batchStatus.className = 'w-4 h-4 bg-green-500 rounded-full';
-            parallelStatus.className = 'w-4 h-4 bg-green-500 rounded-full';
-            guaranteeStatus.className = 'w-4 h-4 bg-green-500 rounded-full';
-            break;
-          case 'error':
-            batchStatus.className = 'w-4 h-4 bg-red-500 rounded-full';
-            parallelStatus.className = 'w-4 h-4 bg-red-500 rounded-full';
-            guaranteeStatus.className = 'w-4 h-4 bg-red-500 rounded-full';
-            break;
-        }
-      }
-    }
-    
-    function hideUltraFastLoadingOverlay() {
-      if (loadingOverlay) {
-        loadingOverlay.style.animation = 'fadeOut 0.5s ease-out';
-        setTimeout(() => {
-          if (loadingOverlay && loadingOverlay.parentElement) {
-            loadingOverlay.remove();
-          }
-          loadingOverlay = null;
-        }, 500);
-      }
-    }
+
 
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998d14773618dd4a',t:'MTc2MjE4NTU3OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998d949766efa146',t:'MTc2MjE5MDgyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
