@@ -675,6 +675,88 @@
                 grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             }
         }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .header, .nav-tabs, .filter-row, #customDateRange, 
+            .view-toggle, button, .btn, .logout-btn, 
+            #summaryCards, .connection-status {
+                display: none !important;
+            }
+
+            .card {
+                box-shadow: none;
+                padding: 20px;
+                page-break-inside: avoid;
+            }
+
+            .report-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .report-table th {
+                background: #667eea !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .report-table td, .report-table th {
+                border: 1px solid #333;
+                padding: 8px;
+            }
+
+            .status-badge {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .print-header {
+                display: block !important;
+                text-align: center;
+                margin-bottom: 20px;
+                border-bottom: 3px solid #667eea;
+                padding-bottom: 15px;
+            }
+
+            .print-header h1 {
+                color: #667eea;
+                margin: 0 0 5px 0;
+                font-size: 1.8em;
+            }
+
+            .print-header h2 {
+                color: #333;
+                margin: 5px 0;
+                font-size: 1.3em;
+            }
+
+            .print-header p {
+                color: #666;
+                margin: 3px 0;
+                font-size: 0.9em;
+            }
+
+            .print-footer {
+                display: block !important;
+                margin-top: 30px;
+                padding-top: 15px;
+                border-top: 2px solid #667eea;
+                text-align: right;
+                font-size: 0.85em;
+                color: #666;
+            }
+
+            .page-break {
+                page-break-after: always;
+            }
+        }
     </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
@@ -981,7 +1063,9 @@
            <tbody id="reportTableBody">
            </tbody>
           </table>
-         </div><button class="btn btn-export" onclick="exportToCSV()" style="margin-top: 15px;"> 📥 Export ke CSV </button>
+         </div>
+         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;"><button class="btn btn-export" onclick="printDetailReport()" style="margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"> 🖨️ Print Laporan </button> <button class="btn btn-export" onclick="exportToCSV()" style="margin: 0;"> 📥 Export ke CSV </button>
+         </div>
         </div>
        </div><!-- Student View -->
        <div id="studentView" class="report-view">
@@ -1004,7 +1088,9 @@
            <tbody id="studentTableBody">
            </tbody>
           </table>
-         </div><button class="btn btn-export" onclick="exportStudentToCSV()" style="margin-top: 15px;"> 📥 Export Detail Per Siswa ke CSV </button>
+         </div>
+         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;"><button class="btn btn-export" onclick="printStudentReport()" style="margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"> 🖨️ Print Laporan </button> <button class="btn btn-export" onclick="exportStudentToCSV()" style="margin: 0;"> 📥 Export ke CSV </button>
+         </div>
         </div>
        </div><!-- Summary View -->
        <div id="summaryView" class="report-view">
@@ -1025,7 +1111,9 @@
            <tbody id="summaryTableBody">
            </tbody>
           </table>
-         </div><button class="btn btn-export" onclick="exportSummaryToCSV()" style="margin-top: 15px;"> 📥 Export Ringkasan ke CSV </button>
+         </div>
+         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;"><button class="btn btn-export" onclick="printSummaryReport()" style="margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"> 🖨️ Print Laporan </button> <button class="btn btn-export" onclick="exportSummaryToCSV()" style="margin: 0;"> 📥 Export Ringkasan ke CSV </button>
+         </div>
         </div>
        </div><!-- Empty State -->
        <div id="reportEmpty" style="display: none; text-align: center; padding: 40px; color: #666;">
@@ -2143,6 +2231,459 @@
         }
 
         // ============================================
+        // PRINT FUNCTIONS
+        // ============================================
+        function getPrintHeader() {
+            const kelas = document.getElementById('reportKelas').value;
+            const period = document.getElementById('reportPeriod').value;
+            const periodText = document.getElementById('reportPeriod').selectedOptions[0].text;
+            
+            let dateRangeText = periodText;
+            if (period === 'custom') {
+                const startDate = document.getElementById('reportStartDate').value;
+                const endDate = document.getElementById('reportEndDate').value;
+                dateRangeText = `${startDate} s/d ${endDate}`;
+            }
+            
+            const kelasText = kelas ? `Kelas ${kelas}` : 'Semua Kelas';
+            
+            return `
+                <div class="print-header" style="display: none;">
+                    <h1>📚 SISTEM ABSENSI SISWA</h1>
+                    <h2>SMP PURNAWARMAN</h2>
+                    <p><strong>Periode:</strong> ${dateRangeText}</p>
+                    <p><strong>Kelas:</strong> ${kelasText}</p>
+                    <p><strong>Dicetak pada:</strong> ${new Date().toLocaleString('id-ID')}</p>
+                </div>
+            `;
+        }
+
+        function getPrintFooter() {
+            return `
+                <div class="print-footer" style="display: none;">
+                    <p>Dicetak oleh: ${currentUser.nama} (${currentUser.role})</p>
+                    <p>Aplikasi Absensi SMP PURNAWARMAN - ${new Date().getFullYear()}</p>
+                </div>
+            `;
+        }
+
+        function printDetailReport() {
+            if (currentReportData.length === 0) {
+                showToast('error', '❌ Tidak ada data untuk di-print');
+                return;
+            }
+
+            const printWindow = window.open('', '_blank');
+            
+            const summary = {
+                hadir: 0,
+                sakit: 0,
+                izin: 0,
+                alpa: 0
+            };
+            
+            currentReportData.forEach(d => {
+                if (d.status === 'Hadir') summary.hadir++;
+                else if (d.status === 'Sakit') summary.sakit++;
+                else if (d.status === 'Izin') summary.izin++;
+                else if (d.status === 'Alpa') summary.alpa++;
+            });
+            
+            const tidakHadir = summary.sakit + summary.izin + summary.alpa;
+            
+            // Sort data by student name alphabetically
+            const sortedData = [...currentReportData].sort((a, b) => {
+                return a.nama_siswa.localeCompare(b.nama_siswa, 'id');
+            });
+            
+            let tableRows = '';
+            sortedData.forEach((row, index) => {
+                let statusClass = '';
+                if (row.status === 'Hadir') statusClass = 'status-hadir';
+                else if (row.status === 'Sakit') statusClass = 'status-sakit';
+                else if (row.status === 'Izin') statusClass = 'status-izin';
+                else if (row.status === 'Alpa') statusClass = 'status-alpa';
+                
+                tableRows += `
+                    <tr>
+                        <td style="text-align: center;">${index + 1}</td>
+                        <td>${row.tanggal}</td>
+                        <td>${row.nama_siswa}</td>
+                        <td>${row.kelas}</td>
+                        <td><span class="status-badge ${statusClass}">${row.status}</span></td>
+                        <td>${row.keterangan || '-'}</td>
+                        <td>${row.input_by || '-'}</td>
+                    </tr>
+                `;
+            });
+            
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Laporan Absensi Detail</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        .print-header { text-align: center; margin-bottom: 20px; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+                        .print-header h1 { color: #667eea; margin: 0 0 5px 0; font-size: 1.8em; }
+                        .print-header h2 { color: #333; margin: 5px 0; font-size: 1.3em; }
+                        .print-header p { color: #666; margin: 3px 0; font-size: 0.9em; }
+                        .summary-section { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; }
+                        .summary-section h3 { margin: 0 0 10px 0; color: #667eea; }
+                        .summary-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+                        .summary-item { text-align: center; padding: 10px; background: white; border-radius: 5px; }
+                        .summary-item .label { font-size: 0.85em; color: #666; margin-bottom: 5px; }
+                        .summary-item .value { font-size: 1.5em; font-weight: bold; color: #333; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                        th { background: #667eea; color: white; padding: 10px; text-align: left; font-weight: 600; }
+                        td { padding: 8px; border-bottom: 1px solid #ddd; }
+                        tr:hover { background: #f8f9fa; }
+                        .status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.85em; font-weight: 600; display: inline-block; }
+                        .status-hadir { background: #d4edda; color: #155724; }
+                        .status-sakit { background: #fff3cd; color: #856404; }
+                        .status-izin { background: #d1ecf1; color: #0c5460; }
+                        .status-alpa { background: #f8d7da; color: #721c24; }
+                        .print-footer { margin-top: 30px; padding-top: 15px; border-top: 2px solid #667eea; text-align: right; font-size: 0.85em; color: #666; }
+                        @media print {
+                            body { padding: 15px; }
+                            .summary-section { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                            th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                            .status-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${getPrintHeader()}
+                    
+                    <div class="summary-section">
+                        <h3>📊 Ringkasan Kehadiran</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="label">✅ Hadir</div>
+                                <div class="value">${summary.hadir}</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="label">🤒 Sakit</div>
+                                <div class="value">${summary.sakit}</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="label">📝 Izin</div>
+                                <div class="value">${summary.izin}</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="label">❌ Alpa</div>
+                                <div class="value">${summary.alpa}</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="label">🚫 Tidak Hadir</div>
+                                <div class="value">${tidakHadir}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">No</th>
+                                <th>Tanggal</th>
+                                <th>Nama Siswa</th>
+                                <th>Kelas</th>
+                                <th>Status</th>
+                                <th>Keterangan</th>
+                                <th>Input By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                    
+                    ${getPrintFooter()}
+                </body>
+                </html>
+            `;
+            
+            printWindow.document.write(htmlContent);
+            printWindow.document.close();
+            
+            printWindow.onload = function() {
+                printWindow.print();
+            };
+            
+            showToast('success', '✅ Membuka jendela print...');
+        }
+
+        function printStudentReport() {
+            if (currentReportData.length === 0) {
+                showToast('error', '❌ Tidak ada data untuk di-print');
+                return;
+            }
+
+            const printWindow = window.open('', '_blank');
+            
+            // Group by student
+            const studentSummary = {};
+            
+            currentReportData.forEach(row => {
+                const key = `${row.nama_siswa}|${row.kelas}`;
+                
+                if (!studentSummary[key]) {
+                    studentSummary[key] = {
+                        nama_siswa: row.nama_siswa,
+                        kelas: row.kelas,
+                        hadir: 0,
+                        sakit: 0,
+                        izin: 0,
+                        alpa: 0,
+                        total: 0
+                    };
+                }
+                
+                studentSummary[key].total++;
+                
+                if (row.status === 'Hadir') studentSummary[key].hadir++;
+                else if (row.status === 'Sakit') studentSummary[key].sakit++;
+                else if (row.status === 'Izin') studentSummary[key].izin++;
+                else if (row.status === 'Alpa') studentSummary[key].alpa++;
+            });
+            
+            // Sort by student name alphabetically
+            const sortedStudents = Object.values(studentSummary).sort((a, b) => {
+                return a.nama_siswa.localeCompare(b.nama_siswa, 'id');
+            });
+            
+            let tableRows = '';
+            sortedStudents.forEach((student, index) => {
+                const persentase = ((student.hadir / student.total) * 100).toFixed(1);
+                
+                tableRows += `
+                    <tr>
+                        <td style="text-align: center;">${index + 1}</td>
+                        <td><strong>${student.nama_siswa}</strong></td>
+                        <td>${student.kelas}</td>
+                        <td style="text-align: center;"><span class="status-badge status-hadir">${student.hadir}</span></td>
+                        <td style="text-align: center;"><span class="status-badge status-sakit">${student.sakit}</span></td>
+                        <td style="text-align: center;"><span class="status-badge status-izin">${student.izin}</span></td>
+                        <td style="text-align: center;"><span class="status-badge status-alpa">${student.alpa}</span></td>
+                        <td style="text-align: center;"><strong>${student.total}</strong></td>
+                        <td style="text-align: center;"><strong>${persentase}%</strong></td>
+                    </tr>
+                `;
+            });
+            
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Laporan Absensi Per Siswa</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        .print-header { text-align: center; margin-bottom: 20px; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+                        .print-header h1 { color: #667eea; margin: 0 0 5px 0; font-size: 1.8em; }
+                        .print-header h2 { color: #333; margin: 5px 0; font-size: 1.3em; }
+                        .print-header p { color: #666; margin: 3px 0; font-size: 0.9em; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                        th { background: #667eea; color: white; padding: 10px; text-align: left; font-weight: 600; }
+                        td { padding: 8px; border-bottom: 1px solid #ddd; }
+                        tr:hover { background: #f8f9fa; }
+                        .status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.85em; font-weight: 600; display: inline-block; }
+                        .status-hadir { background: #d4edda; color: #155724; }
+                        .status-sakit { background: #fff3cd; color: #856404; }
+                        .status-izin { background: #d1ecf1; color: #0c5460; }
+                        .status-alpa { background: #f8d7da; color: #721c24; }
+                        .print-footer { margin-top: 30px; padding-top: 15px; border-top: 2px solid #667eea; text-align: right; font-size: 0.85em; color: #666; }
+                        @media print {
+                            body { padding: 15px; }
+                            th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                            .status-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${getPrintHeader()}
+                    
+                    <h3 style="color: #667eea; margin-top: 20px;">👤 Detail Kehadiran Per Siswa</h3>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">No</th>
+                                <th>Nama Siswa</th>
+                                <th>Kelas</th>
+                                <th style="text-align: center;">Hadir</th>
+                                <th style="text-align: center;">Sakit</th>
+                                <th style="text-align: center;">Izin</th>
+                                <th style="text-align: center;">Alpa</th>
+                                <th style="text-align: center;">Total</th>
+                                <th style="text-align: center;">Persentase Hadir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                    
+                    ${getPrintFooter()}
+                </body>
+                </html>
+            `;
+            
+            printWindow.document.write(htmlContent);
+            printWindow.document.close();
+            
+            printWindow.onload = function() {
+                printWindow.print();
+            };
+            
+            showToast('success', '✅ Membuka jendela print...');
+        }
+
+        function printSummaryReport() {
+            if (currentReportData.length === 0) {
+                showToast('error', '❌ Tidak ada data untuk di-print');
+                return;
+            }
+
+            const printWindow = window.open('', '_blank');
+            
+            // Group by class
+            const classSummary = {};
+            
+            currentReportData.forEach(row => {
+                if (!classSummary[row.kelas]) {
+                    classSummary[row.kelas] = {
+                        hadir: 0,
+                        sakit: 0,
+                        izin: 0,
+                        alpa: 0,
+                        total: 0
+                    };
+                }
+                
+                classSummary[row.kelas].total++;
+                
+                if (row.status === 'Hadir') classSummary[row.kelas].hadir++;
+                else if (row.status === 'Sakit') classSummary[row.kelas].sakit++;
+                else if (row.status === 'Izin') classSummary[row.kelas].izin++;
+                else if (row.status === 'Alpa') classSummary[row.kelas].alpa++;
+            });
+            
+            const sortedClasses = Object.keys(classSummary).sort();
+            
+            // Variables for total calculation
+            let totalHadir = 0;
+            let totalSakit = 0;
+            let totalIzin = 0;
+            let totalAlpa = 0;
+            let totalAll = 0;
+            
+            let tableRows = '';
+            sortedClasses.forEach((kelas, index) => {
+                const summary = classSummary[kelas];
+                const persentase = ((summary.hadir / summary.total) * 100).toFixed(1);
+                
+                // Add to totals
+                totalHadir += summary.hadir;
+                totalSakit += summary.sakit;
+                totalIzin += summary.izin;
+                totalAlpa += summary.alpa;
+                totalAll += summary.total;
+                
+                tableRows += `
+                    <tr>
+                        <td style="text-align: center;">${index + 1}</td>
+                        <td><strong>${kelas}</strong></td>
+                        <td style="text-align: center;"><span class="status-badge status-hadir">${summary.hadir}</span></td>
+                        <td style="text-align: center;"><span class="status-badge status-sakit">${summary.sakit}</span></td>
+                        <td style="text-align: center;"><span class="status-badge status-izin">${summary.izin}</span></td>
+                        <td style="text-align: center;"><span class="status-badge status-alpa">${summary.alpa}</span></td>
+                        <td style="text-align: center;"><strong>${persentase}%</strong></td>
+                    </tr>
+                `;
+            });
+            
+            // Add total row if there are multiple classes
+            if (sortedClasses.length > 1) {
+                const totalPersentase = ((totalHadir / totalAll) * 100).toFixed(1);
+                
+                tableRows += `
+                    <tr style="background: #f8f9fa; font-weight: bold; border-top: 3px solid #667eea;">
+                        <td style="text-align: center;" colspan="2"><strong>TOTAL</strong></td>
+                        <td style="text-align: center;"><span class="status-badge status-hadir">${totalHadir}</span></td>
+                        <td style="text-align: center;"><span class="status-badge status-sakit">${totalSakit}</span></td>
+                        <td style="text-align: center;"><span class="status-badge status-izin">${totalIzin}</span></td>
+                        <td style="text-align: center;"><span class="status-badge status-alpa">${totalAlpa}</span></td>
+                        <td style="text-align: center;"><strong>${totalPersentase}%</strong></td>
+                    </tr>
+                `;
+            }
+            
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Laporan Ringkasan Per Kelas</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        .print-header { text-align: center; margin-bottom: 20px; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+                        .print-header h1 { color: #667eea; margin: 0 0 5px 0; font-size: 1.8em; }
+                        .print-header h2 { color: #333; margin: 5px 0; font-size: 1.3em; }
+                        .print-header p { color: #666; margin: 3px 0; font-size: 0.9em; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                        th { background: #667eea; color: white; padding: 10px; text-align: left; font-weight: 600; }
+                        td { padding: 8px; border-bottom: 1px solid #ddd; }
+                        tr:hover { background: #f8f9fa; }
+                        .status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.85em; font-weight: 600; display: inline-block; }
+                        .status-hadir { background: #d4edda; color: #155724; }
+                        .status-sakit { background: #fff3cd; color: #856404; }
+                        .status-izin { background: #d1ecf1; color: #0c5460; }
+                        .status-alpa { background: #f8d7da; color: #721c24; }
+                        .print-footer { margin-top: 30px; padding-top: 15px; border-top: 2px solid #667eea; text-align: right; font-size: 0.85em; color: #666; }
+                        @media print {
+                            body { padding: 15px; }
+                            th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                            .status-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${getPrintHeader()}
+                    
+                    <h3 style="color: #667eea; margin-top: 20px;">📊 Ringkasan Kehadiran Per Kelas</h3>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">No</th>
+                                <th>Kelas</th>
+                                <th style="text-align: center;">Hadir</th>
+                                <th style="text-align: center;">Sakit</th>
+                                <th style="text-align: center;">Izin</th>
+                                <th style="text-align: center;">Alpa</th>
+                                <th style="text-align: center;">Persentase Hadir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                    
+                    ${getPrintFooter()}
+                </body>
+                </html>
+            `;
+            
+            printWindow.document.write(htmlContent);
+            printWindow.document.close();
+            
+            printWindow.onload = function() {
+                printWindow.print();
+            };
+            
+            showToast('success', '✅ Membuka jendela print...');
+        }
+
+        // ============================================
         // INFORMASI PAGE FUNCTIONS - TERPISAH
         // ============================================
         
@@ -2595,5 +3136,5 @@
             });
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99c6155326285888',t:'MTc2Mjc4MzMwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99c61ee0205b5888',t:'MTc2Mjc4MzY5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
