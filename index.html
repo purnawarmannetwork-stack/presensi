@@ -1064,7 +1064,7 @@
            </tbody>
           </table>
          </div>
-         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;"><button class="btn btn-export" onclick="printDetailReport()" style="margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"> 🖨️ Print Laporan </button> <button class="btn btn-export" onclick="exportToCSV()" style="margin: 0;"> 📥 Export ke CSV </button>
+         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 15px;"><button class="btn btn-export" onclick="printDetailReport()" style="margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"> 🖨️ Print Laporan </button> <button class="btn btn-export" onclick="exportToCSV()" style="margin: 0;"> 📥 Export ke CSV </button> <button class="btn btn-export" onclick="shareToWhatsApp('detail')" style="margin: 0; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);"> 📱 Share ke WA </button>
          </div>
         </div>
        </div><!-- Student View -->
@@ -1089,7 +1089,7 @@
            </tbody>
           </table>
          </div>
-         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;"><button class="btn btn-export" onclick="printStudentReport()" style="margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"> 🖨️ Print Laporan </button> <button class="btn btn-export" onclick="exportStudentToCSV()" style="margin: 0;"> 📥 Export ke CSV </button>
+         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 15px;"><button class="btn btn-export" onclick="printStudentReport()" style="margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"> 🖨️ Print Laporan </button> <button class="btn btn-export" onclick="exportStudentToCSV()" style="margin: 0;"> 📥 Export ke CSV </button> <button class="btn btn-export" onclick="shareToWhatsApp('student')" style="margin: 0; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);"> 📱 Share ke WA </button>
          </div>
         </div>
        </div><!-- Summary View -->
@@ -1112,7 +1112,7 @@
            </tbody>
           </table>
          </div>
-         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;"><button class="btn btn-export" onclick="printSummaryReport()" style="margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"> 🖨️ Print Laporan </button> <button class="btn btn-export" onclick="exportSummaryToCSV()" style="margin: 0;"> 📥 Export Ringkasan ke CSV </button>
+         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 15px;"><button class="btn btn-export" onclick="printSummaryReport()" style="margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"> 🖨️ Print Laporan </button> <button class="btn btn-export" onclick="exportSummaryToCSV()" style="margin: 0;"> 📥 Export Ringkasan ke CSV </button> <button class="btn btn-export" onclick="shareToWhatsApp('summary')" style="margin: 0; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);"> 📱 Share ke WA </button>
          </div>
         </div>
        </div><!-- Empty State -->
@@ -1290,10 +1290,28 @@
         }
 
         // ============================================
-        // FUNGSI UNTUK DISABLE/ENABLE FORM ELEMENTS
+        // FUNGSI UNTUK DISABLE/ENABLE SEMUA HALAMAN
         // ============================================
-        function disableFormElements(disable) {
-            // Disable/enable all form inputs
+        function disableAllPages(disable) {
+            // Disable/enable navigation tabs
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => {
+                tab.disabled = disable;
+                tab.style.cursor = disable ? 'not-allowed' : 'pointer';
+                tab.style.opacity = disable ? '0.5' : '1';
+                tab.style.pointerEvents = disable ? 'none' : 'auto';
+            });
+            
+            // Disable/enable logout button
+            const logoutBtn = document.querySelector('.logout-btn');
+            if (logoutBtn) {
+                logoutBtn.disabled = disable;
+                logoutBtn.style.cursor = disable ? 'not-allowed' : 'pointer';
+                logoutBtn.style.opacity = disable ? '0.5' : '1';
+                logoutBtn.style.pointerEvents = disable ? 'none' : 'auto';
+            }
+            
+            // Disable/enable all form inputs in Form Absensi
             document.getElementById('kelasSelect').disabled = disable;
             document.getElementById('tanggal').disabled = disable;
             document.getElementById('selectAllHadirBtn').disabled = disable;
@@ -1311,6 +1329,36 @@
             const keteranganInputs = document.querySelectorAll('#selectedStudentsList input[type="text"]');
             keteranganInputs.forEach(input => {
                 input.disabled = disable;
+            });
+            
+            // Disable/enable all buttons in Laporan page
+            const laporanButtons = document.querySelectorAll('#pageLaporan button');
+            laporanButtons.forEach(btn => {
+                btn.disabled = disable;
+                btn.style.cursor = disable ? 'not-allowed' : 'pointer';
+                btn.style.opacity = disable ? '0.5' : '1';
+                btn.style.pointerEvents = disable ? 'none' : 'auto';
+            });
+            
+            // Disable/enable all selects and inputs in Laporan page
+            const laporanSelects = document.querySelectorAll('#pageLaporan select, #pageLaporan input');
+            laporanSelects.forEach(el => {
+                el.disabled = disable;
+            });
+            
+            // Disable/enable all buttons in Informasi page
+            const informasiButtons = document.querySelectorAll('#pageInformasi button');
+            informasiButtons.forEach(btn => {
+                btn.disabled = disable;
+                btn.style.cursor = disable ? 'not-allowed' : 'pointer';
+                btn.style.opacity = disable ? '0.5' : '1';
+                btn.style.pointerEvents = disable ? 'none' : 'auto';
+            });
+            
+            // Disable/enable all selects and inputs in Informasi page
+            const informasiInputs = document.querySelectorAll('#pageInformasi select, #pageInformasi input');
+            informasiInputs.forEach(el => {
+                el.disabled = disable;
             });
         }
         
@@ -1591,12 +1639,12 @@
                 return;
             }
             
-            // Disable all form elements
-            disableFormElements(true);
+            // Disable all pages
+            disableAllPages(true);
             
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.textContent = '⏳ Menyimpan...';
+            submitBtn.textContent = '⏳ Sedang Menyimpan...';
             
             const tanggal = document.getElementById('tanggal').value;
             
@@ -1607,7 +1655,9 @@
             let successCount = 0;
             let errorCount = 0;
             
-            for (const item of studentsWithStatus) {
+            for (let i = 0; i < studentsWithStatus.length; i++) {
+                const item = studentsWithStatus[i];
+                
                 const studentNote = window.studentNotes && window.studentNotes[item.student.nis] ? window.studentNotes[item.student.nis] : '';
                 
                 const params = new URLSearchParams({
@@ -1641,21 +1691,23 @@
                 }
             }
             
+            // Reset button text
+            submitBtn.disabled = false;
+            submitBtn.textContent = '💾 Simpan Absensi';
+            
             if (successCount > 0 && errorCount === 0) {
                 showToast('success', `✅ Berhasil menyimpan absensi ${successCount} siswa!`);
                 resetForm();
+                // Re-enable all pages after successful save
+                disableAllPages(false);
             } else if (successCount > 0 && errorCount > 0) {
                 showToast('info', `⚠️ Berhasil: ${successCount} siswa, Gagal: ${errorCount} siswa`);
-                // Re-enable form if there are errors
-                disableFormElements(false);
-                submitBtn.disabled = false;
-                submitBtn.textContent = '💾 Simpan Absensi';
+                // Re-enable all pages if there are errors
+                disableAllPages(false);
             } else {
                 showToast('error', `❌ Gagal menyimpan semua absensi!`);
-                // Re-enable form if all failed
-                disableFormElements(false);
-                submitBtn.disabled = false;
-                submitBtn.textContent = '💾 Simpan Absensi';
+                // Re-enable all pages if all failed
+                disableAllPages(false);
             }
         }
 
@@ -1674,8 +1726,8 @@
             document.getElementById('selectedStudentsContainer').style.display = 'none';
             document.getElementById('loadingStudents').style.display = 'none';
             
-            // Re-enable all form elements after reset
-            disableFormElements(false);
+            // Re-enable all pages after reset
+            disableAllPages(false);
             
             loadClassFilter();
             
@@ -1691,6 +1743,48 @@
             setTimeout(() => {
                 toast.style.display = 'none';
             }, 5000);
+        }
+
+        // ============================================
+        // LOADING OVERLAY FUNCTIONS
+        // ============================================
+        function showLoadingOverlay(message) {
+            // Remove existing overlay if any
+            hideLoadingOverlay();
+            
+            const overlay = document.createElement('div');
+            overlay.id = 'loadingOverlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                backdrop-filter: blur(3px);
+            `;
+            
+            overlay.innerHTML = `
+                <div style="background: white; padding: 40px 50px; border-radius: 15px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); max-width: 400px;">
+                    <div class="spinner" style="width: 50px; height: 50px; margin: 0 auto 20px;"></div>
+                    <h3 style="color: #667eea; margin: 0 0 10px 0; font-size: 1.3em;">⏳ Mohon Tunggu</h3>
+                    <p style="color: #666; margin: 0; font-size: 1em;">${message}</p>
+                    <p style="color: #999; margin: 10px 0 0 0; font-size: 0.85em;">Jangan tutup atau refresh halaman ini</p>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+        }
+
+        function hideLoadingOverlay() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.remove();
+            }
         }
 
         // ============================================
@@ -1998,6 +2092,22 @@
         }
 
         function renderSummaryView(data) {
+            // Check if period is "today" or "custom" with 1 day range
+            const period = document.getElementById('reportPeriod').value;
+            let isOneDayRange = false;
+            
+            if (period === 'today') {
+                isOneDayRange = true;
+            } else if (period === 'custom') {
+                const startDate = document.getElementById('reportStartDate').value;
+                const endDate = document.getElementById('reportEndDate').value;
+                
+                // Check if start and end date are the same (1 day range)
+                if (startDate === endDate) {
+                    isOneDayRange = true;
+                }
+            }
+            
             // Group by class
             const classSummary = {};
             
@@ -2020,6 +2130,37 @@
                 else if (row.status === 'Alpa') classSummary[row.kelas].alpa++;
             });
             
+            // Update table header based on period
+            const summaryTable = document.getElementById('summaryTable');
+            const thead = summaryTable.querySelector('thead');
+            
+            if (isOneDayRange) {
+                thead.innerHTML = `
+                    <tr>
+                        <th class="text-center">No</th>
+                        <th>Kelas</th>
+                        <th class="text-center">Hadir</th>
+                        <th class="text-center">Sakit</th>
+                        <th class="text-center">Izin</th>
+                        <th class="text-center">Alpa</th>
+                        <th class="text-center">Jumlah Kehadiran</th>
+                        <th class="text-center">Persentase Hadir</th>
+                    </tr>
+                `;
+            } else {
+                thead.innerHTML = `
+                    <tr>
+                        <th class="text-center">No</th>
+                        <th>Kelas</th>
+                        <th class="text-center">Hadir</th>
+                        <th class="text-center">Sakit</th>
+                        <th class="text-center">Izin</th>
+                        <th class="text-center">Alpa</th>
+                        <th class="text-center">Persentase Hadir</th>
+                    </tr>
+                `;
+            }
+            
             const tbody = document.getElementById('summaryTableBody');
             tbody.innerHTML = '';
             
@@ -2031,6 +2172,7 @@
             let totalIzin = 0;
             let totalAlpa = 0;
             let totalAll = 0;
+            let totalJumlahSiswa = 0;
             
             sortedClasses.forEach((kelas, index) => {
                 const summary = classSummary[kelas];
@@ -2043,16 +2185,37 @@
                 totalAlpa += summary.alpa;
                 totalAll += summary.total;
                 
+                // Get total students in this class (for one day range only)
+                let jumlahSiswaKelas = 0;
+                if (isOneDayRange) {
+                    jumlahSiswaKelas = allStudents.filter(s => String(s.kelas) === String(kelas)).length;
+                    totalJumlahSiswa += jumlahSiswaKelas;
+                }
+                
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="text-center">${index + 1}</td>
-                    <td><strong>${kelas}</strong></td>
-                    <td class="text-center"><span class="status-badge status-hadir">${summary.hadir}</span></td>
-                    <td class="text-center"><span class="status-badge status-sakit">${summary.sakit}</span></td>
-                    <td class="text-center"><span class="status-badge status-izin">${summary.izin}</span></td>
-                    <td class="text-center"><span class="status-badge status-alpa">${summary.alpa}</span></td>
-                    <td class="text-center"><strong>${persentase}%</strong></td>
-                `;
+                
+                if (isOneDayRange) {
+                    tr.innerHTML = `
+                        <td class="text-center">${index + 1}</td>
+                        <td><strong>${kelas}</strong></td>
+                        <td class="text-center"><span class="status-badge status-hadir">${summary.hadir}</span></td>
+                        <td class="text-center"><span class="status-badge status-sakit">${summary.sakit}</span></td>
+                        <td class="text-center"><span class="status-badge status-izin">${summary.izin}</span></td>
+                        <td class="text-center"><span class="status-badge status-alpa">${summary.alpa}</span></td>
+                        <td class="text-center"><strong>${jumlahSiswaKelas}</strong></td>
+                        <td class="text-center"><strong>${persentase}%</strong></td>
+                    `;
+                } else {
+                    tr.innerHTML = `
+                        <td class="text-center">${index + 1}</td>
+                        <td><strong>${kelas}</strong></td>
+                        <td class="text-center"><span class="status-badge status-hadir">${summary.hadir}</span></td>
+                        <td class="text-center"><span class="status-badge status-sakit">${summary.sakit}</span></td>
+                        <td class="text-center"><span class="status-badge status-izin">${summary.izin}</span></td>
+                        <td class="text-center"><span class="status-badge status-alpa">${summary.alpa}</span></td>
+                        <td class="text-center"><strong>${persentase}%</strong></td>
+                    `;
+                }
                 
                 tbody.appendChild(tr);
             });
@@ -2065,16 +2228,65 @@
                 totalTr.style.background = '#f8f9fa';
                 totalTr.style.fontWeight = 'bold';
                 totalTr.style.borderTop = '3px solid #667eea';
-                totalTr.innerHTML = `
-                    <td class="text-center" colspan="2"><strong>TOTAL</strong></td>
-                    <td class="text-center"><span class="status-badge status-hadir">${totalHadir}</span></td>
-                    <td class="text-center"><span class="status-badge status-sakit">${totalSakit}</span></td>
-                    <td class="text-center"><span class="status-badge status-izin">${totalIzin}</span></td>
-                    <td class="text-center"><span class="status-badge status-alpa">${totalAlpa}</span></td>
-                    <td class="text-center"><strong>${totalPersentase}%</strong></td>
-                `;
+                
+                if (isOneDayRange) {
+                    totalTr.innerHTML = `
+                        <td class="text-center" colspan="2"><strong>TOTAL</strong></td>
+                        <td class="text-center"><span class="status-badge status-hadir">${totalHadir}</span></td>
+                        <td class="text-center"><span class="status-badge status-sakit">${totalSakit}</span></td>
+                        <td class="text-center"><span class="status-badge status-izin">${totalIzin}</span></td>
+                        <td class="text-center"><span class="status-badge status-alpa">${totalAlpa}</span></td>
+                        <td class="text-center"><strong>${totalJumlahSiswa}</strong></td>
+                        <td class="text-center"><strong>${totalPersentase}%</strong></td>
+                    `;
+                } else {
+                    totalTr.innerHTML = `
+                        <td class="text-center" colspan="2"><strong>TOTAL</strong></td>
+                        <td class="text-center"><span class="status-badge status-hadir">${totalHadir}</span></td>
+                        <td class="text-center"><span class="status-badge status-sakit">${totalSakit}</span></td>
+                        <td class="text-center"><span class="status-badge status-izin">${totalIzin}</span></td>
+                        <td class="text-center"><span class="status-badge status-alpa">${totalAlpa}</span></td>
+                        <td class="text-center"><strong>${totalPersentase}%</strong></td>
+                    `;
+                }
                 
                 tbody.appendChild(totalTr);
+            }
+            
+            // Add keterangan below table (only for one day range)
+            const summaryTableContainer = document.getElementById('summaryTableContainer');
+            
+            // Remove existing keterangan if any
+            const existingKeterangan = summaryTableContainer.querySelector('.keterangan-absensi');
+            if (existingKeterangan) {
+                existingKeterangan.remove();
+            }
+            
+            if (isOneDayRange) {
+                // Get the date for the title
+                let dateTitle = 'Hari Ini';
+                if (period === 'custom') {
+                    const startDate = document.getElementById('reportStartDate').value;
+                    dateTitle = startDate;
+                }
+                
+                const keteranganDiv = document.createElement('div');
+                keteranganDiv.className = 'keterangan-absensi';
+                keteranganDiv.style.cssText = 'margin-top: 20px; padding: 15px; background: #e7f3ff; border-left: 4px solid #2196F3; border-radius: 4px;';
+                
+                keteranganDiv.innerHTML = `
+                    <h4 style="margin: 0 0 10px 0; color: #2196F3; font-size: 1.1em;">📊 Keterangan Kehadiran ${dateTitle}</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 0.95em; color: #333;">
+                        <div><strong>Total Siswa Seluruhnya:</strong> ${totalJumlahSiswa} siswa</div>
+                        <div><strong>Total Yang Diabsen:</strong> ${totalAll} siswa</div>
+                        <div><strong>Siswa Belum Diabsen:</strong> ${totalJumlahSiswa - totalAll} siswa</div>
+                    </div>
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(33, 150, 243, 0.3); font-size: 0.9em; color: #666;">
+                        <strong>Rincian:</strong> Hadir: ${totalHadir} | Sakit: ${totalSakit} | Izin: ${totalIzin} | Alpa: ${totalAlpa}
+                    </div>
+                `;
+                
+                summaryTableContainer.appendChild(keteranganDiv);
             }
             
             document.getElementById('summaryTableContainer').style.display = 'block';
@@ -2228,6 +2440,290 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        // ============================================
+        // SHARE TO WHATSAPP FUNCTIONS
+        // ============================================
+        async function shareToWhatsApp(reportType) {
+            if (currentReportData.length === 0) {
+                showToast('error', '❌ Tidak ada data untuk dibagikan');
+                return;
+            }
+
+            // Show loading overlay
+            showLoadingOverlay('Menyiapkan laporan untuk WhatsApp...');
+
+            try {
+                // Generate report text based on type
+                let reportText = '';
+                
+                if (reportType === 'detail') {
+                    reportText = generateDetailReportText();
+                } else if (reportType === 'student') {
+                    reportText = generateStudentReportText();
+                } else if (reportType === 'summary') {
+                    reportText = generateSummaryReportText();
+                }
+
+                // Encode for WhatsApp URL
+                const encodedText = encodeURIComponent(reportText);
+                
+                // Open WhatsApp with the text
+                const whatsappUrl = `https://wa.me/?text=${encodedText}`;
+                
+                // Hide loading overlay
+                hideLoadingOverlay();
+                
+                // Open WhatsApp in new tab
+                window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+                
+                showToast('success', '✅ Membuka WhatsApp...');
+            } catch (error) {
+                console.error('Error sharing to WhatsApp:', error);
+                hideLoadingOverlay();
+                showToast('error', '❌ Gagal membagikan ke WhatsApp: ' + error.message);
+            }
+        }
+
+        function generateDetailReportText() {
+            const kelas = document.getElementById('reportKelas').value;
+            const period = document.getElementById('reportPeriod').value;
+            const periodText = document.getElementById('reportPeriod').selectedOptions[0].text;
+            
+            let dateRangeText = periodText;
+            if (period === 'custom') {
+                const startDate = document.getElementById('reportStartDate').value;
+                const endDate = document.getElementById('reportEndDate').value;
+                dateRangeText = `${startDate} s/d ${endDate}`;
+            }
+            
+            const kelasText = kelas ? `Kelas ${kelas}` : 'Semua Kelas';
+            
+            // Calculate summary
+            const summary = {
+                hadir: 0,
+                sakit: 0,
+                izin: 0,
+                alpa: 0
+            };
+            
+            currentReportData.forEach(d => {
+                if (d.status === 'Hadir') summary.hadir++;
+                else if (d.status === 'Sakit') summary.sakit++;
+                else if (d.status === 'Izin') summary.izin++;
+                else if (d.status === 'Alpa') summary.alpa++;
+            });
+            
+            const tidakHadir = summary.sakit + summary.izin + summary.alpa;
+            
+            // Sort data by student name
+            const sortedData = [...currentReportData].sort((a, b) => {
+                return a.nama_siswa.localeCompare(b.nama_siswa, 'id');
+            });
+            
+            // Build text report
+            let text = `📚 *LAPORAN ABSENSI SISWA*\n`;
+            text += `🏫 *SMP PURNAWARMAN*\n\n`;
+            text += `📅 *Periode:* ${dateRangeText}\n`;
+            text += `📋 *Kelas:* ${kelasText}\n`;
+            text += `⏰ *Dicetak:* ${new Date().toLocaleString('id-ID')}\n`;
+            text += `👤 *Oleh:* ${currentUser.nama} (${currentUser.role})\n\n`;
+            
+            text += `📊 *RINGKASAN KEHADIRAN*\n`;
+            text += `━━━━━━━━━━━━━━━━━━━━\n`;
+            text += `✅ Hadir: ${summary.hadir}\n`;
+            text += `🤒 Sakit: ${summary.sakit}\n`;
+            text += `📝 Izin: ${summary.izin}\n`;
+            text += `❌ Alpa: ${summary.alpa}\n`;
+            text += `🚫 Tidak Hadir: ${tidakHadir}\n`;
+            text += `📌 Total: ${currentReportData.length}\n\n`;
+            
+            text += `📋 *DETAIL ABSENSI*\n`;
+            text += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+            
+            sortedData.forEach((row, index) => {
+                let statusEmoji = '';
+                if (row.status === 'Hadir') statusEmoji = '✅';
+                else if (row.status === 'Sakit') statusEmoji = '🤒';
+                else if (row.status === 'Izin') statusEmoji = '📝';
+                else if (row.status === 'Alpa') statusEmoji = '❌';
+                
+                text += `${index + 1}. *${row.nama_siswa}*\n`;
+                text += `   📅 ${row.tanggal} | 🏫 ${row.kelas}\n`;
+                text += `   ${statusEmoji} ${row.status}`;
+                if (row.keterangan) {
+                    text += ` | 📌 ${row.keterangan}`;
+                }
+                text += `\n\n`;
+            });
+            
+            text += `━━━━━━━━━━━━━━━━━━━━\n`;
+            text += `_Aplikasi Absensi SMP PURNAWARMAN ${new Date().getFullYear()}_`;
+            
+            return text;
+        }
+
+        function generateStudentReportText() {
+            const kelas = document.getElementById('reportKelas').value;
+            const period = document.getElementById('reportPeriod').value;
+            const periodText = document.getElementById('reportPeriod').selectedOptions[0].text;
+            
+            let dateRangeText = periodText;
+            if (period === 'custom') {
+                const startDate = document.getElementById('reportStartDate').value;
+                const endDate = document.getElementById('reportEndDate').value;
+                dateRangeText = `${startDate} s/d ${endDate}`;
+            }
+            
+            const kelasText = kelas ? `Kelas ${kelas}` : 'Semua Kelas';
+            
+            // Group by student
+            const studentSummary = {};
+            
+            currentReportData.forEach(row => {
+                const key = `${row.nama_siswa}|${row.kelas}`;
+                
+                if (!studentSummary[key]) {
+                    studentSummary[key] = {
+                        nama_siswa: row.nama_siswa,
+                        kelas: row.kelas,
+                        hadir: 0,
+                        sakit: 0,
+                        izin: 0,
+                        alpa: 0,
+                        total: 0
+                    };
+                }
+                
+                studentSummary[key].total++;
+                
+                if (row.status === 'Hadir') studentSummary[key].hadir++;
+                else if (row.status === 'Sakit') studentSummary[key].sakit++;
+                else if (row.status === 'Izin') studentSummary[key].izin++;
+                else if (row.status === 'Alpa') studentSummary[key].alpa++;
+            });
+            
+            // Sort by student name
+            const sortedStudents = Object.values(studentSummary).sort((a, b) => {
+                return a.nama_siswa.localeCompare(b.nama_siswa, 'id');
+            });
+            
+            // Build text report
+            let text = `📚 *LAPORAN ABSENSI PER SISWA*\n`;
+            text += `🏫 *SMP PURNAWARMAN*\n\n`;
+            text += `📅 *Periode:* ${dateRangeText}\n`;
+            text += `📋 *Kelas:* ${kelasText}\n`;
+            text += `⏰ *Dicetak:* ${new Date().toLocaleString('id-ID')}\n`;
+            text += `👤 *Oleh:* ${currentUser.nama} (${currentUser.role})\n\n`;
+            
+            text += `👥 *DETAIL KEHADIRAN PER SISWA*\n`;
+            text += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+            
+            sortedStudents.forEach((student, index) => {
+                const persentase = ((student.hadir / student.total) * 100).toFixed(1);
+                
+                text += `${index + 1}. *${student.nama_siswa}* (${student.kelas})\n`;
+                text += `   ✅ Hadir: ${student.hadir} | 🤒 Sakit: ${student.sakit}\n`;
+                text += `   📝 Izin: ${student.izin} | ❌ Alpa: ${student.alpa}\n`;
+                text += `   📊 Total: ${student.total} | 📈 Kehadiran: ${persentase}%\n\n`;
+            });
+            
+            text += `━━━━━━━━━━━━━━━━━━━━\n`;
+            text += `_Aplikasi Absensi SMP PURNAWARMAN ${new Date().getFullYear()}_`;
+            
+            return text;
+        }
+
+        function generateSummaryReportText() {
+            const kelas = document.getElementById('reportKelas').value;
+            const period = document.getElementById('reportPeriod').value;
+            const periodText = document.getElementById('reportPeriod').selectedOptions[0].text;
+            
+            let dateRangeText = periodText;
+            if (period === 'custom') {
+                const startDate = document.getElementById('reportStartDate').value;
+                const endDate = document.getElementById('reportEndDate').value;
+                dateRangeText = `${startDate} s/d ${endDate}`;
+            }
+            
+            const kelasText = kelas ? `Kelas ${kelas}` : 'Semua Kelas';
+            
+            // Group by class
+            const classSummary = {};
+            
+            currentReportData.forEach(row => {
+                if (!classSummary[row.kelas]) {
+                    classSummary[row.kelas] = {
+                        hadir: 0,
+                        sakit: 0,
+                        izin: 0,
+                        alpa: 0,
+                        total: 0
+                    };
+                }
+                
+                classSummary[row.kelas].total++;
+                
+                if (row.status === 'Hadir') classSummary[row.kelas].hadir++;
+                else if (row.status === 'Sakit') classSummary[row.kelas].sakit++;
+                else if (row.status === 'Izin') classSummary[row.kelas].izin++;
+                else if (row.status === 'Alpa') classSummary[row.kelas].alpa++;
+            });
+            
+            const sortedClasses = Object.keys(classSummary).sort();
+            
+            // Calculate totals
+            let totalHadir = 0;
+            let totalSakit = 0;
+            let totalIzin = 0;
+            let totalAlpa = 0;
+            let totalAll = 0;
+            
+            sortedClasses.forEach(kelas => {
+                const summary = classSummary[kelas];
+                totalHadir += summary.hadir;
+                totalSakit += summary.sakit;
+                totalIzin += summary.izin;
+                totalAlpa += summary.alpa;
+                totalAll += summary.total;
+            });
+            
+            // Build text report
+            let text = `📚 *LAPORAN RINGKASAN PER KELAS*\n`;
+            text += `🏫 *SMP PURNAWARMAN*\n\n`;
+            text += `📅 *Periode:* ${dateRangeText}\n`;
+            text += `📋 *Kelas:* ${kelasText}\n`;
+            text += `⏰ *Dicetak:* ${new Date().toLocaleString('id-ID')}\n`;
+            text += `👤 *Oleh:* ${currentUser.nama} (${currentUser.role})\n\n`;
+            
+            text += `📊 *RINGKASAN KEHADIRAN PER KELAS*\n`;
+            text += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+            
+            sortedClasses.forEach((kelas, index) => {
+                const summary = classSummary[kelas];
+                const persentase = ((summary.hadir / summary.total) * 100).toFixed(1);
+                
+                text += `${index + 1}. *Kelas ${kelas}*\n`;
+                text += `   ✅ Hadir: ${summary.hadir} | 🤒 Sakit: ${summary.sakit}\n`;
+                text += `   📝 Izin: ${summary.izin} | ❌ Alpa: ${summary.alpa}\n`;
+                text += `   📈 Kehadiran: ${persentase}%\n\n`;
+            });
+            
+            if (sortedClasses.length > 1) {
+                const totalPersentase = ((totalHadir / totalAll) * 100).toFixed(1);
+                
+                text += `━━━━━━━━━━━━━━━━━━━━\n`;
+                text += `📌 *TOTAL KESELURUHAN*\n`;
+                text += `   ✅ Hadir: ${totalHadir} | 🤒 Sakit: ${totalSakit}\n`;
+                text += `   📝 Izin: ${totalIzin} | ❌ Alpa: ${totalAlpa}\n`;
+                text += `   📈 Kehadiran: ${totalPersentase}%\n\n`;
+            }
+            
+            text += `━━━━━━━━━━━━━━━━━━━━\n`;
+            text += `_Aplikasi Absensi SMP PURNAWARMAN ${new Date().getFullYear()}_`;
+            
+            return text;
         }
 
         // ============================================
@@ -3136,5 +3632,5 @@
             });
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99c61ee0205b5888',t:'MTc2Mjc4MzY5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99d34f08a76b6494',t:'MTc2MjkyMTk4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
